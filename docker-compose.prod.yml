@@ -1,0 +1,30 @@
+version: "3.9"
+# Usar con: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  backend:
+    image: ghcr.io/${GITHUB_REPOSITORY}/backend:latest
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+    volumes: []          # sin bind mount en producción
+    environment:
+      ENVIRONMENT: production
+      DEBUG: "false"
+
+  frontend:
+    image: ghcr.io/${GITHUB_REPOSITORY}/frontend:latest
+    build:
+      target: production  # usa stage de nginx, no vite dev
+
+  db:
+    volumes:
+      - /data/postgres:/var/lib/postgresql/data   # path externo en el host
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}     # desde .env del host
+
+  nginx:
+    volumes:
+      - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro      # SSL certs
+    ports:
+      - "80:80"
+      - "443:443"
