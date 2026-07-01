@@ -190,7 +190,7 @@ export default function App() {
       )}
 
       {isMobile && (
-        <div className={`fixed top-0 left-0 h-screen z-100 bg-surface border-r border-border flex flex-col overflow-hidden shadow-lg transition-transform duration-250 sidebar-mobile ${mobileOpen ? 'translate-x-0' : '-translate-x-[260px]'}`}
+        <div className={`fixed top-0 left-0 h-screen z-[100] bg-surface border-r border-border flex flex-col overflow-hidden shadow-lg transition-transform duration-250 sidebar-mobile ${mobileOpen ? 'translate-x-0' : '-translate-x-[260px]'}`}
           style={{ width: 240 }}>
           <SidebarContent />
         </div>
