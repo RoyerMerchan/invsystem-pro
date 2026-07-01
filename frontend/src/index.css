@@ -105,3 +105,8 @@ body {
 
 ::-webkit-scrollbar { width:5px; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius:3px; }
+
+/* ── Fix sidebar movil transparente ── */
+.sidebar-mobile {
+  background: var(--surface);
+}

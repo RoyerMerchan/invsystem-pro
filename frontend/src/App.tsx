@@ -190,14 +190,14 @@ export default function App() {
       )}
 
       {isMobile && (
-        <div className="fixed top-0 left-0 h-screen z-100 bg-surface border-r border-border flex flex-col overflow-hidden shadow-lg transition-[left] duration-250"
-          style={{ width: 240, left: mobileOpen ? 0 : -260 }}>
+        <div className={`fixed top-0 left-0 h-screen z-100 bg-surface border-r border-border flex flex-col overflow-hidden shadow-lg transition-transform duration-250 sidebar-mobile ${mobileOpen ? 'translate-x-0' : '-translate-x-[260px]'}`}
+          style={{ width: 240 }}>
           <SidebarContent />
         </div>
       )}
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="sticky top-0 z-20 h-14 bg-surface/80 backdrop-blur-md border-b border-border flex items-center gap-3 px-5">
+        <header className="sticky top-0 z-20 h-14 bg-surface border-b border-border flex items-center gap-3 px-5">
           {isMobile && (
             <button onClick={() => setMobileOpen(o => !o)} className="bg-transparent border-none cursor-pointer text-t1 p-1.5 rounded-md hover:bg-bg2 transition-colors" aria-label="Abrir menú">
               <Menu className="w-5 h-5" />
