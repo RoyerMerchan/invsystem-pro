@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const BASE = ''
+const BASE = import.meta.env.VITE_API_URL || ''
 
 // ── Types ─────────────────────────────────────────────────────────
 interface LoginProps  { onLogin: (token: string, usuario: any) => void; onGoRegister: () => void }
