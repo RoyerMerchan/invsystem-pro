@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { CircleX, AlertTriangle, TrendingUp, CheckCircle, Package } from 'lucide-react'
 import { api, fmt } from '../services/api'
 import type { Alerta, Producto } from '../types'
 import { FloatCard, FloatSection, KpiFloat } from '../components/FloatCard'
@@ -33,16 +34,19 @@ export default function AlertasPage() {
 
       {/* KPIs flotantes */}
       <div className="grid-4 mb-5">
-        <KpiFloat label="Sin stock"     value={alertas.resumen.sin_stock}    sub="productos agotados"            color="#DC2626" icon="🚫" />
-        <KpiFloat label="Stock bajo"    value={alertas.resumen.stock_bajo}   sub="requieren reposición"          color="#D97706" icon="⚠️" />
-        <KpiFloat label="Sobreexistencia" value={alertas.resumen.stock_exceso} sub="exceden el máximo"           color="#2563EB" icon="📈" />
-        <KpiFloat label="Normal"        value={alertas.resumen.normal}       sub="en niveles adecuados"          color="#1D9E75" icon="✅" />
+        <KpiFloat label="Sin stock"        value={alertas.resumen.sin_stock}    sub="productos agotados"            color="var(--danger)"  icon={<CircleX className="w-5 h-5" />} />
+        <KpiFloat label="Stock bajo"       value={alertas.resumen.stock_bajo}   sub="requieren reposición"          color="var(--warning)" icon={<AlertTriangle className="w-5 h-5" />} />
+        <KpiFloat label="Sobreexistencia"  value={alertas.resumen.stock_exceso} sub="exceden el máximo"            color="var(--info)"    icon={<TrendingUp className="w-5 h-5" />} />
+        <KpiFloat label="Normal"           value={alertas.resumen.normal}       sub="en niveles adecuados"          color="var(--success)" icon={<CheckCircle className="w-5 h-5" />} />
       </div>
 
       {/* Sin stock */}
-      <FloatSection title="🚫 Sin stock — acción urgente" sub="Estos productos están completamente agotados">
+      <FloatSection
+        title={<span className="flex items-center gap-2"><CircleX className="w-4 h-4 text-danger" /> Sin stock — acción urgente</span>}
+        sub="Estos productos están completamente agotados"
+      >
         {alertas.sin_stock.length === 0
-          ? <EmptyMsg msg="No hay productos sin stock. ¡Todo en orden! 🎉" />
+          ? <EmptyMsg msg="No hay productos sin stock. ¡Todo en orden!" />
           : <div className="flex flex-col gap-2">
               {alertas.sin_stock.map(p => <AlertCard key={p.id} p={p} tipo="danger" />)}
             </div>
@@ -50,7 +54,10 @@ export default function AlertasPage() {
       </FloatSection>
 
       {/* Stock bajo */}
-      <FloatSection title="⚠️ Stock bajo — reabastecer pronto" sub="Stock por debajo del mínimo requerido">
+      <FloatSection
+        title={<span className="flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-warning" /> Stock bajo — reabastecer pronto</span>}
+        sub="Stock por debajo del mínimo requerido"
+      >
         {alertas.stock_bajo.length === 0
           ? <EmptyMsg msg="Ningún producto con stock bajo. ¡Excelente gestión!" />
           : <div className="flex flex-col gap-2">
@@ -60,7 +67,10 @@ export default function AlertasPage() {
       </FloatSection>
 
       {/* Sobreexistencia */}
-      <FloatSection title="📈 Sobreexistencia — exceden el máximo" sub="Stock por encima del máximo configurado">
+      <FloatSection
+        title={<span className="flex items-center gap-2"><TrendingUp className="w-4 h-4 text-info" /> Sobreexistencia — exceden el máximo</span>}
+        sub="Stock por encima del máximo configurado"
+      >
         {!alertas.stock_exceso || alertas.stock_exceso.length === 0
           ? <EmptyMsg msg="Ningún producto excede su stock máximo." />
           : <div className="flex flex-col gap-2">
@@ -76,8 +86,8 @@ function AlertCard({ p, tipo }: { p: Producto; tipo: 'danger' | 'warn' | 'exceso
   const [hov, setHov] = useState(false)
   const isCrit = tipo === 'danger'
   const isExceso = tipo === 'exceso'
-  const color  = isExceso ? '#2563EB' : (isCrit ? '#DC2626' : '#D97706')
-  const bg     = isExceso ? '#EFF6FF' : (isCrit ? '#FEF2F2' : '#FFFBEB')
+  const color  = isExceso ? 'var(--info)' : (isCrit ? 'var(--danger)' : 'var(--warning)')
+  const bgClass = isExceso ? 'bg-info-subtle' : (isCrit ? 'bg-danger-subtle' : 'bg-warning-subtle')
   const faltante = p.stock_minimo - p.stock_actual
   const exceso = isExceso ? p.stock_actual - p.stock_maximo : 0
 
@@ -85,16 +95,15 @@ function AlertCard({ p, tipo }: { p: Producto; tipo: 'danger' | 'warn' | 'exceso
     <div
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
-      className="flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-[0.18s] ease-in-out"
+      className={`flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-[0.18s] ease-in-out ${bgClass}`}
       style={{
-        background: bg,
-        border: `1px solid ${color}22`,
-        boxShadow: hov ? `0 8px 24px ${color}18` : '0 1px 4px rgba(0,0,0,0.04)',
+        border: `1px solid color-mix(in srgb, ${color} 13%, transparent)`,
+        boxShadow: hov ? `0 8px 24px color-mix(in srgb, ${color} 9%, transparent)` : '0 1px 4px rgba(0,0,0,0.04)',
         transform: hov ? 'translateX(4px)' : 'translateX(0)',
       }}
     >
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background: `${color}15` }}>
-        {isExceso ? '📈' : (isCrit ? '📦' : '⚠️')}
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `color-mix(in srgb, ${color} 8%, transparent)` }}>
+        {isExceso ? <TrendingUp className="w-5 h-5" style={{ color }} /> : (isCrit ? <Package className="w-5 h-5" style={{ color }} /> : <AlertTriangle className="w-5 h-5" style={{ color }} />)}
       </div>
       <div className="flex-1 min-w-0">
         <div className="text-xs font-bold text-t1 mb-0.5">{p.nombre}</div>

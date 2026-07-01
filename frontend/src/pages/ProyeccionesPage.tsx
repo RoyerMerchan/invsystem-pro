@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { ComposedChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { TrendingUp, ClipboardList, Crosshair, Package, Timer, ShoppingCart, BarChart3, Trophy, RefreshCw, AlertTriangle, CheckCircle, Loader2, Brain, Ruler } from 'lucide-react'
 import { api } from '../services/api'
 import type { Producto, Proyeccion, ProyeccionHistorialItem, ProyeccionComparacion } from '../types'
 import { FloatCard, FloatSection, KpiFloat } from '../components/FloatCard'
@@ -84,10 +85,10 @@ export default function ProyeccionesPage() {
       <div className="flex gap-1 mb-4">
         {(['proyectar', 'historial', 'comparar'] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-[7px] rounded-lg border-[0.5px] border-border cursor-pointer text-xs transition-all duration-150 ${
+            className={`px-4 py-[7px] rounded-lg border-[0.5px] border-border cursor-pointer text-xs transition-all duration-150 flex items-center gap-1.5 ${
               tab === t ? 'bg-primary text-white font-semibold' : 'bg-transparent text-t2 font-normal'
             }`}>
-            {t === 'proyectar' ? '📈 Proyectar' : t === 'historial' ? '📋 Historial' : '🎯 Comparar'}
+            {t === 'proyectar' ? <><TrendingUp className="w-4 h-4" /> Proyectar</> : t === 'historial' ? <><ClipboardList className="w-4 h-4" /> Historial</> : <><Crosshair className="w-4 h-4" /> Comparar</>}
           </button>
         ))}
       </div>
@@ -105,21 +106,21 @@ export default function ProyeccionesPage() {
             <div>
               <label className="text-[11px] font-bold text-t2 block mb-1.5 uppercase tracking-[0.05em]">Modelo</label>
               <select className="text-sm px-2.5 py-2 rounded-lg border-[0.5px] border-border bg-bg1 text-t1 w-full" value={modelo} onChange={e => setModelo(e.target.value)}>
-                <option value="auto">🤖 Auto (mejor modelo)</option>
-                <option value="promedio_movil">📊 Promedio Móvil</option>
-                <option value="suavizacion_simple">🔵 Suavización Simple</option>
-                <option value="tendencia_lineal">📉 Tendencia Lineal</option>
-                <option value="holt_winters">📈 Holt-Winters</option>
-                <option value="arima">🔁 ARIMA</option>
-                <option value="prophet">🔮 Prophet</option>
+                <option value="auto">Auto (mejor modelo)</option>
+                <option value="promedio_movil">Promedio Móvil</option>
+                <option value="suavizacion_simple">Suavización Simple</option>
+                <option value="tendencia_lineal">Tendencia Lineal</option>
+                <option value="holt_winters">Holt-Winters</option>
+                <option value="arima">ARIMA</option>
+                <option value="prophet">Prophet</option>
               </select>
             </div>
             <div>
               <label className="text-[11px] font-bold text-t2 block mb-1.5 uppercase tracking-[0.05em]">Agrupar</label>
               <select className="text-sm px-2.5 py-2 rounded-lg border-[0.5px] border-border bg-bg1 text-t1 w-full" value={agrupacion} onChange={e => setAgrupacion(e.target.value)}>
-                <option value="diaria">📅 Diaria</option>
-                <option value="semanal">📆 Semanal</option>
-                <option value="mensual">📊 Mensual</option>
+                <option value="diaria">Diaria</option>
+                <option value="semanal">Semanal</option>
+                <option value="mensual">Mensual</option>
               </select>
             </div>
             <div>
@@ -137,25 +138,25 @@ export default function ProyeccionesPage() {
                 className="w-full" style={{ accentColor: '#1D9E75' }} />
             </div>
             <button onClick={proyectar} disabled={loading || !prodId}
-              className="py-2.5 rounded-xl border-none cursor-pointer text-sm font-bold font-sans transition-all duration-150"
+              className="py-2.5 rounded-xl border-none cursor-pointer text-sm font-bold font-sans transition-all duration-150 flex items-center justify-center gap-2"
               style={{
                 background: loading ? 'var(--bg2)' : 'linear-gradient(135deg, #1D9E75, #0d7a59)',
                 color: loading ? 'var(--t2)' : 'white',
               }}>
-              {loading ? '⏳ Calculando…' : '📈 Proyectar'}
+              {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Calculando…</> : <><TrendingUp className="w-4 h-4" /> Proyectar</>}
             </button>
           </div>
         </FloatCard>
 
         {error && (
           <FloatCard color="#DC2626" style={{ padding: '12px 16px', marginBottom: 16 }}>
-            <div className="text-sm" style={{ color: '#DC2626' }}>⚠ {error}</div>
+            <div className="text-sm flex items-center gap-1.5" style={{ color: '#DC2626' }}><AlertTriangle className="w-4 h-4" /> {error}</div>
           </FloatCard>
         )}
 
         {!proyeccion && !loading && (
           <FloatCard hover={false} style={{ padding: 60, textAlign: 'center' }}>
-            <div className="text-[52px] mb-3">📈</div>
+            <div className="flex justify-center mb-3"><TrendingUp className="w-[52px] h-[52px]" style={{color: 'var(--t3)'}} /></div>
             <div className="text-[15px] font-bold mb-1.5">Selecciona un producto y proyecta</div>
             <div className="text-sm text-t2 max-w-[380px] mx-auto leading-relaxed">
               El sistema seleccionará automáticamente el mejor modelo o elige uno manualmente. Puedes filtrar por rango de fechas históricas y agrupar por día, semana o mes.
@@ -165,13 +166,13 @@ export default function ProyeccionesPage() {
 
         {proyeccion && (<> {/* KPIs, chart, model comparison, warnings - same as before */}
           <div className="grid-4 mb-4">
-            <KpiFloat label="Modelo usado" value={proyeccion.modelo_usado.split(' ')[0]} sub={proyeccion.modelo_usado} color={color} icon="🤖" />
-            <KpiFloat label="Stock actual" value={`${proyeccion.stock_actual} u.`} sub="unidades disponibles" color="#2563EB" icon="📦" />
-            <KpiFloat label="Días hasta agotarse" value={proyeccion.dias_hasta_agotamiento != null ? `${proyeccion.dias_hasta_agotamiento}d` : '∞'} sub="estimado" color={(proyeccion.dias_hasta_agotamiento ?? 999) < 14 ? '#DC2626' : '#1D9E75'} icon="⏱️" />
-            <KpiFloat label="Reposición sugerida" value={`${proyeccion.reposicion_recomendada} u.`} sub="para cubrir horizonte" color="#D97706" icon="🛒" />
+            <KpiFloat label="Modelo usado" value={proyeccion.modelo_usado.split(' ')[0]} sub={proyeccion.modelo_usado} color={color} icon={<Brain className="w-5 h-5" />} />
+            <KpiFloat label="Stock actual" value={`${proyeccion.stock_actual} u.`} sub="unidades disponibles" color="#2563EB" icon={<Package className="w-5 h-5" />} />
+            <KpiFloat label="Días hasta agotarse" value={proyeccion.dias_hasta_agotamiento != null ? `${proyeccion.dias_hasta_agotamiento}d` : '∞'} sub="estimado" color={(proyeccion.dias_hasta_agotamiento ?? 999) < 14 ? '#DC2626' : '#1D9E75'} icon={<Timer className="w-5 h-5" />} />
+            <KpiFloat label="Reposición sugerida" value={`${proyeccion.reposicion_recomendada} u.`} sub="para cubrir horizonte" color="#D97706" icon={<ShoppingCart className="w-5 h-5" />} />
           </div>
           {proyeccion.guardado_id && (
-            <div className="text-[11px] text-primary mb-3 text-right">✅ Proyección guardada (ID: {proyeccion.guardado_id})</div>
+            <div className="text-[11px] text-primary mb-3 text-right flex items-center justify-end gap-1"><CheckCircle className="w-3.5 h-3.5" /> Proyección guardada (ID: {proyeccion.guardado_id})</div>
           )}
           {proyeccion.metricas && (<div className="grid-4 mb-4">
             {[
@@ -187,7 +188,7 @@ export default function ProyeccionesPage() {
               </FloatCard>
             ))}
           </div>)}
-          <FloatSection title="📈 Proyección con intervalo de confianza 95%" sub="La banda sombreada representa la incertidumbre del modelo">
+          <FloatSection title="Proyección con intervalo de confianza 95%" sub="La banda sombreada representa la incertidumbre del modelo">
             <ResponsiveContainer width="100%" height={240}>
               <ComposedChart data={chartData} margin={{ left: -10, right: 4 }}>
                 <defs><linearGradient id="projGrad" x1="0" y1="0" x2="0" y2="1">
@@ -207,7 +208,7 @@ export default function ProyeccionesPage() {
               </ComposedChart>
             </ResponsiveContainer>
           </FloatSection>
-          {proyeccion.comparacion_modelos && (<FloatSection title="🏆 Comparación de modelos" sub="Menor MAPE = mejor precisión">
+          {proyeccion.comparacion_modelos && (<FloatSection title="Comparación de modelos" sub="Menor MAPE = mejor precisión">
             <div className="flex flex-col gap-2">
               {proyeccion.comparacion_modelos.sort((a, b) => a.mape - b.mape).map((m, i) => {
                 const mc = modeloColor[m.modelo] ?? '#888'
@@ -215,7 +216,9 @@ export default function ProyeccionesPage() {
                   background: i === 0 ? `${mc}10` : 'var(--bg2)',
                   border: i === 0 ? `1px solid ${mc}30` : '0.5px solid var(--border)',
                 }}>
-                  <div className="text-base">{i === 0 ? '🏆' : i === 1 ? '🥈' : '🥉'}</div>
+                  <div className="flex items-center justify-center w-6 h-6 shrink-0">
+                    {i === 0 ? <Trophy className="w-4 h-4" style={{color: mc}} /> : <span className="text-sm font-bold text-t3">{i + 1}</span>}
+                  </div>
                   <div className="flex-1 text-sm" style={{ fontWeight: i === 0 ? 700 : 500, color: i === 0 ? mc : 'var(--t1)' }}>{m.modelo}</div>
                   {[['MAE', m.mae.toFixed(3)], ['RMSE', m.rmse.toFixed(3)], ['MAPE', m.mape.toFixed(1)+'%']].map(([lbl, val]) => (
                     <div key={lbl} className="text-center min-w-[64px]">
@@ -229,7 +232,7 @@ export default function ProyeccionesPage() {
           </FloatSection>)}
           {proyeccion.advertencias?.length > 0 && (<FloatCard color="#D97706" style={{ padding: '14px 18px' }}>
             {proyeccion.advertencias.map((a, i) => (
-              <div key={i} className="text-xs" style={{ color: '#92400E', marginBottom: i < proyeccion.advertencias.length - 1 ? 6 : 0 }}>⚠ {a}</div>
+              <div key={i} className="text-xs flex items-center gap-1.5" style={{ color: '#92400E', marginBottom: i < proyeccion.advertencias.length - 1 ? 6 : 0 }}><AlertTriangle className="w-3 h-3" /> {a}</div>
             ))}
           </FloatCard>)}
         </>)}
@@ -241,8 +244,8 @@ export default function ProyeccionesPage() {
             {productos.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
           </select>
           <button onClick={cargarHistorial}
-            className="text-xs px-3.5 py-[7px] rounded-lg cursor-pointer border-[0.5px] border-border bg-transparent text-t1">
-            🔄 Cargar
+            className="text-xs px-3.5 py-[7px] rounded-lg cursor-pointer border-[0.5px] border-border bg-transparent text-t1 flex items-center gap-1.5">
+            <RefreshCw className="w-4 h-4" /> Cargar
           </button>
         </div>
         {historial.length === 0
@@ -266,20 +269,20 @@ export default function ProyeccionesPage() {
             {productos.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
           </select>
           <button onClick={cargarComparacion}
-            className="text-xs px-3.5 py-[7px] rounded-lg cursor-pointer bg-primary text-white border-none">
-            🎯 Comparar
+            className="text-xs px-3.5 py-[7px] rounded-lg cursor-pointer bg-primary text-white border-none flex items-center gap-1.5">
+            <Crosshair className="w-4 h-4" /> Comparar
           </button>
         </div>
         {comparacion && (
           <div>
             <div className="grid-4 mb-4">
-              <KpiFloat label="Demanda proyectada" value={`${comparacion.demanda_proyectada} u.`} sub={comparacion.modelo_usado} color="#2563EB" icon="📈" />
-              <KpiFloat label="Demanda real" value={`${comparacion.demanda_real} u.`} sub="ventas reales" color="#1D9E75" icon="📊" />
-              <KpiFloat label="Diferencia" value={`${comparacion.diferencia > 0 ? '+' : ''}${comparacion.diferencia}`} sub={comparacion.diferencia > 0 ? 'sobreestimado' : 'subestimado'} color={comparacion.error_absoluto < 10 ? '#1D9E75' : '#D97706'} icon="📏" />
-              <KpiFloat label="Precisión" value={`${comparacion.precision}%`} sub={`error: ${comparacion.porcentaje_error}%`} color={comparacion.precision >= 80 ? '#1D9E75' : comparacion.precision >= 50 ? '#D97706' : '#DC2626'} icon="🎯" />
+              <KpiFloat label="Demanda proyectada" value={`${comparacion.demanda_proyectada} u.`} sub={comparacion.modelo_usado} color="#2563EB" icon={<TrendingUp className="w-5 h-5" />} />
+              <KpiFloat label="Demanda real" value={`${comparacion.demanda_real} u.`} sub="ventas reales" color="#1D9E75" icon={<BarChart3 className="w-5 h-5" />} />
+              <KpiFloat label="Diferencia" value={`${comparacion.diferencia > 0 ? '+' : ''}${comparacion.diferencia}`} sub={comparacion.diferencia > 0 ? 'sobreestimado' : 'subestimado'} color={comparacion.error_absoluto < 10 ? '#1D9E75' : '#D97706'} icon={<Ruler className="w-5 h-5" />} />
+              <KpiFloat label="Precisión" value={`${comparacion.precision}%`} sub={`error: ${comparacion.porcentaje_error}%`} color={comparacion.precision >= 80 ? '#1D9E75' : comparacion.precision >= 50 ? '#D97706' : '#DC2626'} icon={<Crosshair className="w-5 h-5" />} />
             </div>
             <FloatCard style={{ padding: 16 }}>
-              <div className="text-sm font-semibold mb-3">📋 Detalle de validación</div>
+              <div className="text-sm font-semibold mb-3 flex items-center gap-1.5"><ClipboardList className="w-4 h-4" /> Detalle de validación</div>
               <div className="text-xs flex flex-col gap-2">
                 {[['Proyección #', comparacion.proyeccion_id], ['Modelo', comparacion.modelo_usado], ['Producto', comparacion.producto_nombre], ['MAE', `${comparacion.error_absoluto} u.`], ['% Error', `${comparacion.porcentaje_error}%`], ['Precisión', `${comparacion.precision}%`]].map(([l, v]) => (
                   <div key={l} className="flex justify-between py-1 border-b-[0.5px] border-border">

@@ -5,6 +5,7 @@ import {
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { Brain, Scale, Search, TrendingUp, TrendingDown, BarChart3, Package, Timer, Lightbulb, FolderOpen, Trophy, Loader2, AlertTriangle, Ruler } from 'lucide-react'
 import { api } from '../services/api'
 import { FloatCard } from '../components/FloatCard'
 import type { Producto } from '../types'
@@ -95,10 +96,10 @@ export default function XAIPage() {
   })()
 
   const TABS = [
-    { id: 'resumen'      as const, label: '🧠 Explicación IA', },
-    { id: 'factores'     as const, label: '⚖️ Factores' },
-    { id: 'razonamiento' as const, label: '🔍 Razonamiento' },
-    { id: 'grafica'      as const, label: '📈 Gráfica' },
+    { id: 'resumen'      as const, label: <><Brain className="w-4 h-4" /> Explicación IA</> },
+    { id: 'factores'     as const, label: <><Scale className="w-4 h-4" /> Factores</> },
+    { id: 'razonamiento' as const, label: <><Search className="w-4 h-4" /> Razonamiento</> },
+    { id: 'grafica'      as const, label: <><TrendingUp className="w-4 h-4" /> Gráfica</> },
   ]
 
   return (
@@ -106,7 +107,9 @@ export default function XAIPage() {
       {/* Header */}
       <div className="mb-5">
         <div className="flex items-center gap-[10px] mb-1">
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: `linear-gradient(135deg, ${C.purple}, ${C.blue})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>🧠</div>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: `linear-gradient(135deg, ${C.purple}, ${C.blue})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Brain className="w-5 h-5" style={{color: 'white'}} />
+          </div>
           <div>
             <div className="text-xl font-bold">IA Explicable — XAI</div>
             <div className="text-xs text-t2">Explainable Artificial Intelligence · Proyecciones con razonamiento transparente</div>
@@ -126,10 +129,10 @@ export default function XAIPage() {
           <div>
             <label className="text-[11px] text-t2 block mb-1 uppercase tracking-[0.05em]">Modelo</label>
             <select style={{ ...INPUT, width: '100%' }} value={modelo} onChange={e => setModelo(e.target.value)}>
-              <option value="auto">🤖 Auto (mejor modelo)</option>
-              <option value="holt_winters">📈 Holt-Winters</option>
-              <option value="arima">🔁 ARIMA</option>
-              <option value="prophet">🔮 Prophet</option>
+              <option value="auto">Auto (mejor modelo)</option>
+              <option value="holt_winters">Holt-Winters</option>
+              <option value="arima">ARIMA</option>
+              <option value="prophet">Prophet</option>
             </select>
           </div>
           <div>
@@ -141,19 +144,20 @@ export default function XAIPage() {
             ...INPUT, background: `linear-gradient(135deg, ${C.purple}, ${C.blue})`,
             color: 'white', border: 'none', cursor: 'pointer', padding: '9px 20px',
             fontWeight: 600, opacity: loading ? 0.7 : 1, borderRadius: 9,
+            display: 'inline-flex', alignItems: 'center', gap: 6, justifyContent: 'center',
           }}>
-            {loading ? '⏳ Analizando…' : '🧠 Analizar con XAI'}
+            {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Analizando…</> : <><Brain className="w-4 h-4" /> Analizar con XAI</>}
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-50 text-red-900 p-[10px_14px] rounded-lg mb-4 text-[13px]">⚠ {error}</div>
+        <div className="bg-red-50 text-red-900 p-[10px_14px] rounded-lg mb-4 text-[13px] flex items-center gap-1.5"><AlertTriangle className="w-4 h-4" /> {error}</div>
       )}
 
       {!data && !loading && (
         <div className="text-center py-20 px-5 text-t2">
-          <div className="text-[56px] mb-4">🧠</div>
+          <div className="flex justify-center mb-4"><Brain className="w-[56px] h-[56px]" style={{color: 'var(--t3)'}} /></div>
           <div className="text-base font-semibold mb-2">IA Explicable lista para analizar</div>
           <div className="text-[13px] max-w-[440px] mx-auto leading-[1.6]">
             Selecciona un producto y presiona <b>Analizar con XAI</b>. El sistema explicará
@@ -203,10 +207,10 @@ export default function XAIPage() {
           {/* KPI rápidos */}
           <div className="grid-4" style={{ marginBottom: 16 }}>
             {[
-              { label: 'Consumo/día', value: `${data.consumo_promedio_diario} u.`, icon: '📦', color: C.teal },
-              { label: 'Tendencia 7d', value: `${data.tendencia_7d > 0 ? '+' : ''}${data.tendencia_7d}%`, icon: data.tendencia_7d >= 0 ? '📈' : '📉', color: data.tendencia_7d > 5 ? C.coral : data.tendencia_7d < -5 ? C.amber : C.teal },
-              { label: 'Días de stock', value: data.proyeccion.dias_hasta_agotamiento != null ? `${data.proyeccion.dias_hasta_agotamiento} días` : '∞', icon: '⏱️', color: (data.proyeccion.dias_hasta_agotamiento ?? 999) < 14 ? C.coral : C.teal },
-              { label: 'Variabilidad', value: data.variabilidad, icon: '📊', color: data.variabilidad === 'Alta' ? C.coral : data.variabilidad === 'Media' ? C.amber : C.teal },
+              { label: 'Consumo/día', value: `${data.consumo_promedio_diario} u.`, icon: <Package className="w-5 h-5" />, color: C.teal },
+              { label: 'Tendencia 7d', value: `${data.tendencia_7d > 0 ? '+' : ''}${data.tendencia_7d}%`, icon: data.tendencia_7d >= 0 ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />, color: data.tendencia_7d > 5 ? C.coral : data.tendencia_7d < -5 ? C.amber : C.teal },
+              { label: 'Días de stock', value: data.proyeccion.dias_hasta_agotamiento != null ? `${data.proyeccion.dias_hasta_agotamiento} días` : '∞', icon: <Timer className="w-5 h-5" />, color: (data.proyeccion.dias_hasta_agotamiento ?? 999) < 14 ? C.coral : C.teal },
+              { label: 'Variabilidad', value: data.variabilidad, icon: <BarChart3 className="w-5 h-5" />, color: data.variabilidad === 'Alta' ? C.coral : data.variabilidad === 'Media' ? C.amber : C.teal },
             ].map(k => (
               <div key={k.label} className="bg-bg1 border border-border rounded-[10px] p-[12px_14px]">
                 <div className="text-lg mb-1">{k.icon}</div>
@@ -218,7 +222,7 @@ export default function XAIPage() {
 
           {/* Recomendación */}
           <div className="bg-bg1 rounded-xl p-[14px_18px] mb-4 flex gap-3 items-start" style={{ border: `1.5px solid ${C.blue}30` }}>
-            <span className="text-[22px] shrink-0">💡</span>
+            <Lightbulb className="w-5 h-5 shrink-0" style={{color: C.blue}} />
             <div>
               <div className="text-[11px] font-bold uppercase tracking-[0.05em] mb-1" style={{ color: C.blue }}>Recomendación IA</div>
               <div className="text-[13px] text-t1 leading-[1.5]">{data.recomendacion}</div>
@@ -234,6 +238,7 @@ export default function XAIPage() {
                 background: tab === t.id ? 'var(--bg1)' : 'transparent',
                 color: tab === t.id ? 'var(--t1)' : 'var(--t2)',
                 boxShadow: tab === t.id ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
+                display: 'inline-flex', alignItems: 'center', gap: 5, justifyContent: 'center',
               }}>{t.label}</button>
             ))}
           </div>
@@ -242,7 +247,7 @@ export default function XAIPage() {
           {tab === 'resumen' && (
             <div className="grid gap-3">
               <div className="bg-bg1 border border-border rounded-xl p-4">
-                <div className="text-[13px] font-semibold mb-3">🔎 Patrones detectados en el historial</div>
+                <div className="text-[13px] font-semibold mb-3 flex items-center gap-1.5"><Search className="w-4 h-4" /> Patrones detectados en el historial</div>
                 <div className="flex flex-col gap-[10px]">
                   {data.patrones.map((p, i) => (
                     <div key={i} className="flex items-center gap-3 p-[10px_14px] bg-bg2 rounded-[9px]">
@@ -265,7 +270,7 @@ export default function XAIPage() {
 
               {/* Stats historial */}
               <div className="bg-bg1 border border-border rounded-xl p-4">
-                <div className="text-[13px] font-semibold mb-3">📁 Datos analizados</div>
+                <div className="text-[13px] font-semibold mb-3 flex items-center gap-1.5"><FolderOpen className="w-4 h-4" /> Datos analizados</div>
                 <div className="grid-3">
                   {[
                     { label: 'Días de historial', value: data.datos_historicos_dias, unit: 'días' },
@@ -288,7 +293,7 @@ export default function XAIPage() {
           {/* Tab: Factores */}
           {tab === 'factores' && (
             <div className="bg-bg1 border border-border rounded-xl p-4">
-              <div className="text-[13px] font-semibold mb-1">⚖️ Factores que influyen en la predicción</div>
+              <div className="text-[13px] font-semibold mb-1 flex items-center gap-1.5"><Scale className="w-4 h-4" /> Factores que influyen en la predicción</div>
               <div className="text-xs text-t2 mb-4">
                 La barra muestra el impacto relativo de cada factor. Verde = aumenta demanda · Rojo = reduce demanda o aumenta incertidumbre.
               </div>
@@ -330,7 +335,7 @@ export default function XAIPage() {
               {/* Comparación de modelos si existe */}
               {data.proyeccion.comparacion_modelos && (
                 <div style={{ marginTop: 16 }}>
-                  <div className="text-[13px] font-semibold mb-[10px]">🏆 Competencia de modelos (MAPE — menor es mejor)</div>
+                  <div className="text-[13px] font-semibold mb-[10px] flex items-center gap-1.5"><Trophy className="w-4 h-4" /> Competencia de modelos (MAPE — menor es mejor)</div>
                   <ResponsiveContainer width="100%" height={130}>
                     <BarChart data={data.proyeccion.comparacion_modelos} layout="vertical" margin={{ left: 8, right: 30 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
@@ -344,8 +349,8 @@ export default function XAIPage() {
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
-                  <div className="text-[11px] text-t2 mt-1.5">
-                    🟣 Barra púrpura = modelo seleccionado con menor MAPE.
+                  <div className="text-[11px] text-t2 mt-1.5 flex items-center gap-1.5">
+                    <span className="inline-block w-2.5 h-2.5 rounded-sm" style={{backgroundColor: C.purple}}></span> Barra púrpura = modelo seleccionado con menor MAPE.
                   </div>
                 </div>
               )}
@@ -355,7 +360,7 @@ export default function XAIPage() {
           {/* Tab: Razonamiento chain-of-thought */}
           {tab === 'razonamiento' && (
             <div className="bg-bg1 border border-border rounded-xl p-4">
-              <div className="text-[13px] font-semibold mb-1">🔍 Razonamiento paso a paso</div>
+              <div className="text-[13px] font-semibold mb-1 flex items-center gap-1.5"><Search className="w-4 h-4" /> Razonamiento paso a paso</div>
               <div className="text-xs text-t2 mb-4">
                 Así es como la IA llegó a esta predicción — transparencia total del proceso.
               </div>
@@ -379,7 +384,7 @@ export default function XAIPage() {
               {/* Métricas del modelo */}
               {data.proyeccion.metricas && (
                 <div className="mt-2 p-[14px] bg-bg2 rounded-[10px] border border-border">
-                  <div className="text-xs font-semibold mb-[10px]">📐 Métricas de validación — {data.proyeccion.modelo_usado}</div>
+                  <div className="text-xs font-semibold mb-[10px] flex items-center gap-1.5"><Ruler className="w-4 h-4" /> Métricas de validación — {data.proyeccion.modelo_usado}</div>
                   <div className="grid-4">
                     {[
                       { k: 'MAE',  v: data.proyeccion.metricas.mae.toFixed(3),  d: 'Error absoluto medio (unidades)' },
@@ -403,7 +408,7 @@ export default function XAIPage() {
           {tab === 'grafica' && (
             <div className="flex flex-col gap-3">
               <div className="bg-bg1 border border-border rounded-xl p-4">
-                <div className="text-[13px] font-semibold mb-1">📈 Consumo proyectado con intervalo de confianza 95%</div>
+                <div className="text-[13px] font-semibold mb-1 flex items-center gap-1.5"><TrendingUp className="w-4 h-4" /> Consumo proyectado con intervalo de confianza 95%</div>
                 <div className="text-[11px] text-t2 mb-[14px]">La banda sombreada muestra el rango de valores probables según la incertidumbre del modelo.</div>
                 <ResponsiveContainer width="100%" height={220}>
                   <ComposedChart data={chartData} margin={{ top: 4, right: 4, left: -15, bottom: 0 }}>
@@ -427,7 +432,7 @@ export default function XAIPage() {
                 </ResponsiveContainer>
               </div>
               <div className="bg-bg1 border border-border rounded-xl p-4">
-                <div className="text-[13px] font-semibold mb-[14px]">📦 Nivel de stock proyectado</div>
+                <div className="text-[13px] font-semibold mb-[14px] flex items-center gap-1.5"><Package className="w-4 h-4" /> Nivel de stock proyectado</div>
                 <ResponsiveContainer width="100%" height={180}>
                   <ComposedChart data={stockData} margin={{ top: 4, right: 4, left: -15, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />

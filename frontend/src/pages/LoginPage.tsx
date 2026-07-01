@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Eye, EyeOff, Mail, Lock, User, BarChart3, Wrench, Brain, Camera, Bell, Monitor, ShieldAlert } from 'lucide-react'
 
 const BASE = import.meta.env.VITE_API_URL || ''
 
@@ -62,7 +63,7 @@ export default function LoginPage({ onLogin, onGoRegister }: LoginProps) {
               type="email" value={email} placeholder="nombre@empresa.com"
               onChange={e => setEmail(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && submit()} autoFocus
-              icon={<MailIcon />}
+              icon={<Mail className="w-4 h-4" />}
             />
           </InputGroup>
 
@@ -73,12 +74,12 @@ export default function LoginPage({ onLogin, onGoRegister }: LoginProps) {
                 placeholder="••••••••••••"
                 onChange={e => setPassword(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && submit()}
-                icon={<LockIcon />}
+                icon={<Lock className="w-4 h-4" />}
                 paddingRight={44}
               />
               <button type="button" onClick={() => setShowPass(s => !s)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-[#9CA3AF] text-base">
-                {showPass ? '🙈' : '👁'}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-[#9CA3AF] flex items-center">
+                {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
           </InputGroup>
@@ -232,21 +233,21 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
           <div className="flex flex-col gap-3.5" style={{ animation: 'fadeSlide .3s ease' }}>
             <InputGroup label="Nombre completo">
               <InputField type="text" value={nombre} placeholder="Juan García"
-                onChange={e => setNombre(e.target.value)} autoFocus icon={<UserIcon />} />
+                onChange={e => setNombre(e.target.value)} autoFocus icon={<User className="w-4 h-4" />} />
             </InputGroup>
             <InputGroup label="Correo corporativo">
               <InputField type="email" value={email} placeholder="juan@empresa.com"
                 onChange={e => setEmail(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && nextStep()} icon={<MailIcon />} />
+                onKeyDown={e => e.key === 'Enter' && nextStep()} icon={<Mail className="w-4 h-4" />} />
             </InputGroup>
 
             {/* Rol */}
             <InputGroup label="Tipo de acceso">
               <div className="grid grid-cols-2 gap-2.5">
                 {([
-                  { v:'analista' as const, icon:'📊', label:'Analista',          desc:'Movimientos, proyecciones y reportes'       },
-                  { v:'operador' as const, icon:'🔧', label:'Operador',          desc:'Solo movimientos y escáner'                },
-                  { v:'consulta' as const, icon:'👁', label:'Consulta',          desc:'Solo visualización del inventario'         },
+                  { v:'analista' as const, icon:<BarChart3 className="w-4 h-4" />, label:'Analista',          desc:'Movimientos, proyecciones y reportes'       },
+                  { v:'operador' as const, icon:<Wrench className="w-4 h-4" />,     label:'Operador',          desc:'Solo movimientos y escáner'                },
+                  { v:'consulta' as const, icon:<Eye className="w-4 h-4" />,        label:'Consulta',          desc:'Solo visualización del inventario'         },
                 ]).map(opt => (
                   <button key={opt.v} type="button" onClick={() => setRol(opt.v)}
                     className="px-3 py-3.5 rounded-xl cursor-pointer text-left transition-all duration-200"
@@ -256,7 +257,7 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
                     }}>
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-[7px]">
-                        <span className="text-base">{opt.icon}</span>
+                        {opt.icon}
                         <span className="text-[13px] font-bold" style={{ color: rol===opt.v ? '#0D9488' : '#374151' }}>{opt.label}</span>
                       </div>
                       <div className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 transition-all duration-200"
@@ -284,11 +285,11 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
             <InputGroup label="Contraseña">
               <div className="relative">
                 <InputField type={showPass ? 'text' : 'password'} value={password}
-                  placeholder="Mínimo 8 caracteres" icon={<LockIcon />} paddingRight={44}
+                  placeholder="Mínimo 8 caracteres" icon={<Lock className="w-4 h-4" />} paddingRight={44}
                   onChange={e => setPassword(e.target.value)} autoFocus />
                 <button type="button" onClick={() => setShowPass(s => !s)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-[#9CA3AF]">
-                  {showPass ? '🙈' : '👁'}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-[#9CA3AF] flex items-center">
+                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
               {/* Strength */}
@@ -314,19 +315,21 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
 
             <InputGroup label="Confirmar contraseña">
               <InputField type="password" value={confirm} placeholder="Repite la contraseña"
-                icon={<LockIcon />}
+                icon={<Lock className="w-4 h-4" />}
                 onChange={e => setConfirm(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && submit()} />
               {confirm && password !== confirm && (
                 <p className="text-[11px] text-[#EF4444] mt-[5px] flex items-center gap-1">
-                  <span>⚠</span> Las contraseñas no coinciden
+                  <ShieldAlert className="w-4 h-4" /> Las contraseñas no coinciden
                 </p>
               )}
             </InputGroup>
 
             {/* Resumen del rol seleccionado */}
             <div className="flex items-center gap-2.5 px-3.5 py-3 bg-[#F9FAFB] rounded-xl border border-[#E5E7EB]">
-              <span className="text-xl">{rol === 'analista' ? '📊' : rol === 'operador' ? '🔧' : '👁'}</span>
+              <span className="flex items-center">
+                {rol === 'analista' ? <BarChart3 className="w-5 h-5" /> : rol === 'operador' ? <Wrench className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </span>
               <div>
                 <div className="text-xs font-semibold text-[#374151]">
                   {rol === 'analista' ? 'Analista' : rol === 'operador' ? 'Operador' : 'Solo consulta'}
@@ -424,11 +427,11 @@ function LeftPanel() {
         {/* Feature list */}
         <div className="flex flex-col gap-3 mb-12">
           {[
-            { icon:'🧠', text:'IA Predictiva con Holt-Winters, ARIMA y Prophet' },
-            { icon:'📊', text:'Reportes exportables en Excel y PDF' },
-            { icon:'📷', text:'Escáner QR para movimientos rápidos' },
-            { icon:'🔔', text:'Alertas de stock en tiempo real' },
-            { icon:'🖥',  text:'Modo kiosko para almacén' },
+            { icon:<Brain className="w-4 h-4" />,      text:'IA Predictiva con Holt-Winters, ARIMA y Prophet' },
+            { icon:<BarChart3 className="w-4 h-4" />,  text:'Reportes exportables en Excel y PDF' },
+            { icon:<Camera className="w-4 h-4" />,     text:'Escáner QR para movimientos rápidos' },
+            { icon:<Bell className="w-4 h-4" />,       text:'Alertas de stock en tiempo real' },
+            { icon:<Monitor className="w-4 h-4" />,    text:'Modo kiosko para almacén' },
           ].map((f, i) => (
             <div key={i} className="flex items-center gap-3.5 px-4 py-[13px] rounded-xl backdrop-blur"
               style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
@@ -569,25 +572,8 @@ function SecondaryBtn({ onClick, children }: { onClick: () => void; children: Re
 function ErrorAlert({ msg }: { msg: string }) {
   return (
     <div className="flex items-start gap-2.5 px-3.5 py-[11px] bg-[#FEF2F2] border border-[#FECACA] rounded-[10px] text-[13px] text-[#DC2626]">
-      <span className="text-[15px] shrink-0 mt-0.5">⚠</span>
+      <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
       <span className="leading-[1.5]">{msg}</span>
     </div>
   )
 }
-
-// ── Icons ─────────────────────────────────────────────────────────
-const MailIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-  </svg>
-)
-const LockIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-  </svg>
-)
-const UserIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-  </svg>
-)

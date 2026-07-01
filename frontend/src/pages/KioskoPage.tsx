@@ -6,6 +6,7 @@
  * Sin acceso a reportes, proyecciones ni configuración.
  */
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { Package, Camera, CheckCircle, XCircle, ArrowUp, ArrowDown, AlertTriangle } from 'lucide-react'
 import { api } from '../services/api'
 
 type Paso = 'inicio' | 'producto' | 'tipo' | 'cantidad' | 'confirmado' | 'error'
@@ -155,7 +156,7 @@ export default function KioskoPage({ onSalirKiosko }: Props) {
     <div className="font-sans flex flex-col" style={S.page}>
       {/* ── Topbar ─────────────────────────────────────────────── */}
       <div className="bg-[#1A1D27] border-b border-[#2A2D3A] px-6 py-3 flex items-center gap-4">
-        <div style={S.logo}>📦</div>
+        <div style={S.logo}><Package className="w-5 h-5" /></div>
         <div>
           <div className="text-[15px] font-bold text-[#F0F0F0]">
             InvSystem Pro — Modo Kiosko
@@ -199,7 +200,7 @@ export default function KioskoPage({ onSalirKiosko }: Props) {
           {paso === 'inicio' && (
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 64, marginBottom: 12 }}>📷</div>
+                <div style={{ marginBottom: 12 }}><Camera className="w-16 h-16" /></div>
                 <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>Escanea o ingresa el SKU</div>
                 <div style={{ fontSize: 16, color: '#6B7280' }}>Apunta el lector al código de barras o escribe el SKU del producto</div>
               </div>
@@ -240,7 +241,9 @@ export default function KioskoPage({ onSalirKiosko }: Props) {
               {/* Info producto */}
               <div style={{ ...S.card, padding: 24 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <div style={{ width: 56, height: 56, borderRadius: 14, background: '#0F1117', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>📦</div>
+                  <div style={{ width: 56, height: 56, borderRadius: 14, background: '#0F1117', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Package size={28} />
+                  </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 4 }}>{producto.nombre}</div>
                     <div style={{ fontFamily: 'monospace', fontSize: 14, color: '#6B7280', marginBottom: 8 }}>{producto.sku}</div>
@@ -262,7 +265,7 @@ export default function KioskoPage({ onSalirKiosko }: Props) {
                   onClick={() => { setTipo('salida'); setPaso('cantidad') }}
                   style={{ ...S.btn('#2A1A1A', '#FF6B6B', '2px solid #D85A30'), padding: '40px 20px', fontSize: 20, borderRadius: 16 }}
                 >
-                  <div style={{ fontSize: 48, marginBottom: 10 }}>↑</div>
+                  <div style={{ marginBottom: 10 }}><ArrowUp size={48} /></div>
                   <div>Salida</div>
                   <div style={{ fontSize: 13, fontWeight: 400, marginTop: 6, color: '#FF8B8B' }}>Despacho, venta, uso</div>
                 </button>
@@ -270,7 +273,7 @@ export default function KioskoPage({ onSalirKiosko }: Props) {
                   onClick={() => { setTipo('entrada'); setPaso('cantidad') }}
                   style={{ ...S.btn('#0F2A1A', '#4ADE80', '2px solid #1D9E75'), padding: '40px 20px', fontSize: 20, borderRadius: 16 }}
                 >
-                  <div style={{ fontSize: 48, marginBottom: 10 }}>↓</div>
+                  <div style={{ marginBottom: 10 }}><ArrowDown size={48} /></div>
                   <div>Entrada</div>
                   <div style={{ fontSize: 13, fontWeight: 400, marginTop: 6, color: '#6EEFAA' }}>Reposición, recepción</div>
                 </button>
@@ -282,11 +285,12 @@ export default function KioskoPage({ onSalirKiosko }: Props) {
           {paso === 'cantidad' && producto && (
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div style={{ ...S.card, padding: 20, display: 'flex', alignItems: 'center', gap: 16 }}>
-                <div style={{ fontSize: 20 }}>📦</div>
+                <Package size={20} />
                 <div>
                   <div style={{ fontSize: 18, fontWeight: 600 }}>{producto.nombre}</div>
-                  <div style={{ fontSize: 13, color: tipo === 'salida' ? '#FF6B6B' : '#4ADE80', fontWeight: 600 }}>
-                    {tipo === 'salida' ? '↑ SALIDA' : '↓ ENTRADA'}
+                  <div style={{ fontSize: 13, color: tipo === 'salida' ? '#FF6B6B' : '#4ADE80', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    {tipo === 'salida' ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+                    {tipo === 'salida' ? 'SALIDA' : 'ENTRADA'}
                   </div>
                 </div>
                 <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
@@ -339,8 +343,8 @@ export default function KioskoPage({ onSalirKiosko }: Props) {
               </div>
 
               {tipo === 'salida' && cantidad > producto.stock_actual && (
-                <div style={{ background: '#2A1A1A', border: '1px solid #D85A30', borderRadius: 10, padding: '12px 16px', fontSize: 14, color: '#FF6B6B', textAlign: 'center' }}>
-                  ⚠ Stock insuficiente — disponible: {producto.stock_actual} {producto.unidad_medida}(s)
+                <div style={{ background: '#2A1A1A', border: '1px solid #D85A30', borderRadius: 10, padding: '12px 16px', fontSize: 14, color: '#FF6B6B', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <AlertTriangle className="w-4 h-4" /> Stock insuficiente — disponible: {producto.stock_actual} {producto.unidad_medida}(s)
                 </div>
               )}
 
@@ -362,7 +366,7 @@ export default function KioskoPage({ onSalirKiosko }: Props) {
           {/* PASO: CONFIRMADO */}
           {paso === 'confirmado' && (
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20, textAlign: 'center' }}>
-              <div style={{ fontSize: 80, animation: 'bounce 0.5s ease' }}>✅</div>
+              <CheckCircle className="w-16 h-16" style={{ color: '#4ADE80', animation: 'bounce 0.5s ease' }} />
               <div style={{ fontSize: 28, fontWeight: 700, color: '#4ADE80' }}>¡Registrado!</div>
               <div style={{ fontSize: 18, color: '#A0A0A0' }}>{successMsg}</div>
               <div style={{ fontSize: 14, color: '#4B5563' }}>Volviendo al inicio en 3 segundos...</div>
@@ -373,7 +377,7 @@ export default function KioskoPage({ onSalirKiosko }: Props) {
           {/* PASO: ERROR */}
           {paso === 'error' && (
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20, textAlign: 'center' }}>
-              <div style={{ fontSize: 80 }}>❌</div>
+              <XCircle className="w-16 h-16" style={{ color: '#FF6B6B' }} />
               <div style={{ fontSize: 24, fontWeight: 700, color: '#FF6B6B' }}>Error</div>
               <div style={{ fontSize: 16, color: '#A0A0A0', maxWidth: 400 }}>{errorMsg}</div>
               <button onClick={reiniciar} style={{ ...S.btn('#1D9E75'), padding: '16px 40px', fontSize: 16, borderRadius: 12 }}>
@@ -398,9 +402,8 @@ export default function KioskoPage({ onSalirKiosko }: Props) {
                   width: 32, height: 32, borderRadius: 8, flexShrink: 0,
                   background: h.tipo === 'entrada' ? '#0F2A1A' : '#2A1A1A',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 14, color: h.tipo === 'entrada' ? '#4ADE80' : '#FF6B6B',
                 }}>
-                  {h.tipo === 'entrada' ? '↓' : '↑'}
+                  {h.tipo === 'entrada' ? <ArrowDown size={14} style={{ color: '#4ADE80' }} /> : <ArrowUp size={14} style={{ color: '#FF6B6B' }} />}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 12, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{h.producto}</div>

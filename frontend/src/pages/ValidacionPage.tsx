@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
+import { Crosshair, TrendingUp, BarChart3, Ruler, Loader2, AlertTriangle, ClipboardList } from 'lucide-react'
 import { api } from '../services/api'
 import type { Producto, ProyeccionComparacion, ProyeccionHistorialItem } from '../types'
 import { FloatCard, FloatSection, KpiFloat } from '../components/FloatCard'
@@ -38,7 +39,9 @@ export default function ValidacionPage() {
   return (
     <div>
       <div style={{ marginBottom: 24 }}>
-        <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: '-0.3px' }}>🎯 Validación de proyecciones</div>
+        <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: '-0.3px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Crosshair className="w-5 h-5" /> Validación de proyecciones
+        </div>
         <div style={{ fontSize: 13, color: 'var(--t2)', marginTop: 3 }}>Compara la demanda proyectada contra las ventas reales y evalúa la precisión del modelo</div>
       </div>
 
@@ -54,28 +57,29 @@ export default function ValidacionPage() {
             padding: '9px 20px', borderRadius: 8, border: 'none', cursor: 'pointer',
             background: loading ? 'var(--bg2)' : '#1D9E75',
             color: loading ? 'var(--t2)' : 'white', fontFamily: 'inherit', fontSize: 13, fontWeight: 600,
+            display: 'inline-flex', alignItems: 'center', gap: 6,
           }}>
-            {loading ? '⏳ Validando…' : '🎯 Validar'}
+            {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Validando…</> : <><Crosshair className="w-4 h-4" /> Validar</>}
           </button>
         </div>
       </FloatCard>
 
       {error && (
         <FloatCard color="#DC2626" style={{ padding: '12px 16px', marginBottom: 16 }}>
-          <div style={{ color: '#DC2626', fontSize: 13 }}>⚠ {error}</div>
+          <div style={{ color: '#DC2626', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle className="w-4 h-4" /> {error}</div>
         </FloatCard>
       )}
 
       {comparacion && (
         <>
           <div className="grid-4" style={{ marginBottom: 16 }}>
-            <KpiFloat label="Demanda proyectada" value={`${comparacion.demanda_proyectada} u.`} sub={comparacion.modelo_usado} color="#2563EB" icon="📈" />
-            <KpiFloat label="Demanda real" value={`${comparacion.demanda_real} u.`} sub="ventas reales en el período" color="#1D9E75" icon="📊" />
-            <KpiFloat label="Error absoluto (MAE)" value={`${comparacion.error_absoluto} u.`} sub={comparacion.diferencia > 0 ? 'sobreestimado' : 'subestimado'} color={comparacion.error_absoluto < 10 ? '#1D9E75' : '#D97706'} icon="📏" />
-            <KpiFloat label="Precisión" value={`${comparacion.precision}%`} sub={`error: ${comparacion.porcentaje_error}%`} color={comparacion.precision >= 80 ? '#1D9E75' : comparacion.precision >= 50 ? '#D97706' : '#DC2626'} icon="🎯" />
+            <KpiFloat label="Demanda proyectada" value={`${comparacion.demanda_proyectada} u.`} sub={comparacion.modelo_usado} color="#2563EB" icon={<TrendingUp className="w-5 h-5" />} />
+            <KpiFloat label="Demanda real" value={`${comparacion.demanda_real} u.`} sub="ventas reales en el período" color="#1D9E75" icon={<BarChart3 className="w-5 h-5" />} />
+            <KpiFloat label="Error absoluto (MAE)" value={`${comparacion.error_absoluto} u.`} sub={comparacion.diferencia > 0 ? 'sobreestimado' : 'subestimado'} color={comparacion.error_absoluto < 10 ? '#1D9E75' : '#D97706'} icon={<Ruler className="w-5 h-5" />} />
+            <KpiFloat label="Precisión" value={`${comparacion.precision}%`} sub={`error: ${comparacion.porcentaje_error}%`} color={comparacion.precision >= 80 ? '#1D9E75' : comparacion.precision >= 50 ? '#D97706' : '#DC2626'} icon={<Crosshair className="w-5 h-5" />} />
           </div>
 
-          <FloatSection title="📊 Demanda proyectada vs real" sub="Comparación visual entre la estimación del modelo y las ventas reales">
+          <FloatSection title="Demanda proyectada vs real" sub="Comparación visual entre la estimación del modelo y las ventas reales">
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={[
                 { name: 'Proyectada', valor: comparacion.demanda_proyectada },
@@ -90,7 +94,7 @@ export default function ValidacionPage() {
             </ResponsiveContainer>
           </FloatSection>
 
-          <FloatSection title="📋 Detalle de validación" sub="Métricas calculadas automáticamente">
+          <FloatSection title="Detalle de validación" sub="Métricas calculadas automáticamente">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {[
                 ['Proyección #', comparacion.proyeccion_id],
@@ -114,7 +118,7 @@ export default function ValidacionPage() {
       )}
 
       {historial.length > 0 && (
-        <FloatSection title="📜 Últimas proyecciones" sub="Historial de este producto">
+        <FloatSection title="Últimas proyecciones" sub="Historial de este producto">
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {historial.map(h => (
               <div key={h.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '0.5px solid var(--border)', fontSize: 13 }}>
@@ -128,7 +132,7 @@ export default function ValidacionPage() {
 
       {!comparacion && !loading && !error && (
         <FloatCard hover={false} style={{ padding: 60, textAlign: 'center' }}>
-          <div style={{ fontSize: 52, marginBottom: 12 }}>🎯</div>
+          <div style={{ marginBottom: 12 }}><Crosshair size={52} style={{color: 'var(--t3)'}} /></div>
           <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>Selecciona un producto y valida</div>
           <div style={{ fontSize: 13, color: 'var(--t2)', maxWidth: 380, margin: '0 auto', lineHeight: 1.6 }}>
             El sistema comparará la última proyección guardada contra las ventas reales del período y calculará la precisión.

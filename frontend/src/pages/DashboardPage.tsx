@@ -3,10 +3,11 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area,
 } from 'recharts'
+import { Package, Wallet, AlertTriangle, CircleX } from 'lucide-react'
 import { api, fmt } from '../services/api'
 import type { Producto, Alerta } from '../types'
 
-const COLORS = ['#1D9E75', '#2563EB', '#D97706', '#DC2626', '#7C3AED', '#0891B2']
+const COLORS = ['var(--primary)', 'var(--info)', 'var(--warning)', 'var(--danger)', '#7C3AED', '#0891B2']
 
 interface DashboardStats {
   total_productos: number
@@ -44,7 +45,7 @@ function FloatCard({
 
 // ── KPI flotante con acento de color ─────────────────────────────
 function KpiCard({ label, value, sub, color, icon }: {
-  label: string; value: string | number; sub: string; color: string; icon: string
+  label: string; value: string | number; sub: string; color: string; icon: React.ReactNode
 }) {
   const [hovered, setHovered] = useState(false)
   return (
@@ -53,26 +54,27 @@ function KpiCard({ label, value, sub, color, icon }: {
       onMouseLeave={() => setHovered(false)}
       className="bg-bg1 rounded-2xl relative overflow-hidden cursor-default px-5 pt-5 pb-4"
       style={{
-        border: `1px solid ${color}22`,
+        '--kc-color': color,
+        border: '1px solid color-mix(in srgb, var(--kc-color) 13%, transparent)',
         boxShadow: hovered
-          ? `0 16px 48px ${color}22, 0 4px 12px rgba(0,0,0,0.08)`
-          : `0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)`,
+          ? '0 16px 48px color-mix(in srgb, var(--kc-color) 13%, transparent), 0 4px 12px rgba(0,0,0,0.08)'
+          : '0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
         transform: hovered ? 'translateY(-4px) scale(1.01)' : 'translateY(0) scale(1)',
         transition: 'all 0.25s cubic-bezier(0.34,1.56,0.64,1)',
-      }}
+      } as React.CSSProperties}
     >
       {/* Acento de color arriba */}
       <div
         className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl"
         style={{
-          background: `linear-gradient(90deg, ${color}, ${color}88)`,
+          background: 'linear-gradient(90deg, var(--kc-color), color-mix(in srgb, var(--kc-color) 53%, transparent))',
         }}
       />
       {/* Círculo decorativo fondo */}
       <div
         className="absolute bottom-[-20px] right-[-20px] w-20 h-20 rounded-full"
         style={{
-          background: `${color}10`,
+          background: 'color-mix(in srgb, var(--kc-color) 6%, transparent)',
           transition: 'transform 0.3s ease',
           transform: hovered ? 'scale(1.4)' : 'scale(1)',
         }}
@@ -83,7 +85,7 @@ function KpiCard({ label, value, sub, color, icon }: {
         </div>
         <div
           className="w-8 h-8 rounded-[9px] flex items-center justify-center text-base"
-          style={{ background: `${color}18` }}
+          style={{ background: 'color-mix(in srgb, var(--kc-color) 9%, transparent)' }}
         >
           {icon}
         </div>
@@ -139,7 +141,7 @@ export default function DashboardPage() {
   if (loading) return <Skeleton expanded />
   if (error) return (
     <FloatCard style={{ padding: 20 }}>
-      <div className="text-[#993C1D] text-[13px]">
+      <div className="text-danger text-[13px]">
         <strong>Error al cargar el dashboard:</strong> {error}
       </div>
     </FloatCard>
@@ -147,10 +149,10 @@ export default function DashboardPage() {
   if (!stats) return null
 
   const kpis = [
-    { label: 'Total productos', value: stats.total_productos, sub: 'productos en inventario', color: '#1D9E75', icon: '📦' },
-    { label: 'Valor total',     value: fmt(stats.valor_total), sub: 'en existencias',          color: '#2563EB', icon: '💰' },
-    { label: 'Stock bajo',      value: stats.stock_bajo,       sub: 'requieren atención',       color: '#D97706', icon: '⚠️' },
-    { label: 'Sin stock',       value: stats.sin_stock,        sub: 'productos agotados',        color: '#DC2626', icon: '🔴' },
+    { label: 'Total productos', value: stats.total_productos, sub: 'productos en inventario', color: 'var(--primary)', icon: <Package className="w-5 h-5" /> },
+    { label: 'Valor total',     value: fmt(stats.valor_total), sub: 'en existencias',          color: 'var(--info)', icon: <Wallet className="w-5 h-5" /> },
+    { label: 'Stock bajo',      value: stats.stock_bajo,       sub: 'requieren atención',       color: 'var(--warning)', icon: <AlertTriangle className="w-5 h-5" /> },
+    { label: 'Sin stock',       value: stats.sin_stock,        sub: 'productos agotados',        color: 'var(--danger)', icon: <CircleX className="w-5 h-5" /> },
   ]
 
   // Datos de área simulados para sparkline
@@ -174,8 +176,8 @@ export default function DashboardPage() {
             <BarChart data={stats.por_categoria} margin={{ left: -10, bottom: 0 }}>
               <defs>
                 <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#1D9E75" />
-                  <stop offset="100%" stopColor="#1D9E7566" />
+                  <stop offset="0%" stopColor="var(--primary)" />
+                  <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.4} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -231,15 +233,15 @@ export default function DashboardPage() {
             <AreaChart data={sparkData} margin={{ left: -10 }}>
               <defs>
                 <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#2563EB" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#2563EB" stopOpacity={0.02} />
+                  <stop offset="5%" stopColor="var(--info)" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="var(--info)" stopOpacity={0.02} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
               <XAxis dataKey="name" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 10 }} tickFormatter={v => '$' + (v / 1000).toFixed(0) + 'k'} axisLine={false} tickLine={false} />
               <Tooltip formatter={(v: number) => [fmt(v), 'Valor']} contentStyle={{ fontSize: 12, borderRadius: 10, border: '0.5px solid var(--border)' }} />
-              <Area type="monotone" dataKey="valor" stroke="#2563EB" strokeWidth={2} fill="url(#areaGrad)" dot={{ r: 4, fill: '#2563EB' }} />
+              <Area type="monotone" dataKey="valor" stroke="var(--info)" strokeWidth={2} fill="url(#areaGrad)" dot={{ r: 4, fill: 'var(--info)' }} />
             </AreaChart>
           </ResponsiveContainer>
         </FloatCard>
@@ -247,19 +249,19 @@ export default function DashboardPage() {
 
       {/* Ventas históricas */}
       <FloatCard style={{ padding: 20, marginBottom: 16 }}>
-        <div className="text-[13px] font-semibold mb-1">📊 Ventas históricas (30 días)</div>
+        <div className="text-[13px] font-semibold mb-1">Ventas históricas (30 días)</div>
         <div className="text-[11px] text-t3 mb-[14px]">Salidas diarias totales</div>
         <ResponsiveContainer width="100%" height={160}>
           <AreaChart data={ventasHistoricas} margin={{ left: -10 }}>
             <defs><linearGradient id="ventasGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#1D9E75" stopOpacity={0.2} />
-              <stop offset="95%" stopColor="#1D9E75" stopOpacity={0.02} />
+              <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.2} />
+              <stop offset="95%" stopColor="var(--primary)" stopOpacity={0.02} />
             </linearGradient></defs>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
             <XAxis dataKey="fecha" tick={{ fontSize: 9 }} axisLine={false} tickLine={false} tickFormatter={v => v.slice(5)} />
             <YAxis tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={{ fontSize: 12, borderRadius: 10, border: '0.5px solid var(--border)' }} />
-            <Area type="monotone" dataKey="total" stroke="#1D9E75" strokeWidth={2} fill="url(#ventasGrad)" dot={false} />
+            <Area type="monotone" dataKey="total" stroke="var(--primary)" strokeWidth={2} fill="url(#ventasGrad)" dot={false} />
           </AreaChart>
         </ResponsiveContainer>
       </FloatCard>
@@ -267,7 +269,7 @@ export default function DashboardPage() {
       {/* Top demanda + Menor rotación */}
       <div className="grid-2 mb-4">
         <FloatCard style={{ padding: 20 }}>
-          <div className="text-[13px] font-semibold mb-3">🔥 Mayor demanda (30 días)</div>
+          <div className="text-[13px] font-semibold mb-3">Mayor demanda (30 días)</div>
           {topDemanda.length === 0
             ? <div className="text-[12px] text-t2">Sin datos</div>
             : <div className="flex flex-col gap-2">
@@ -275,22 +277,22 @@ export default function DashboardPage() {
                   <div key={t.id} className="flex items-center gap-[10px] py-1.5 border-b border-border">
                     <div className="w-[22px] h-[22px] rounded-[6px] text-white text-[10px] font-bold flex items-center justify-center" style={{ background: COLORS[i] }}>{i + 1}</div>
                     <div className="flex-1 text-[12px]">{t.nombre}</div>
-                    <div className="text-[12px] font-semibold text-[#1D9E75]">{t.total_vendido} u.</div>
+                    <div className="text-[12px] font-semibold text-primary">{t.total_vendido} u.</div>
                   </div>
                 ))}
               </div>
           }
         </FloatCard>
         <FloatCard style={{ padding: 20 }}>
-          <div className="text-[13px] font-semibold mb-3">🐌 Menor rotación (60 días)</div>
+          <div className="text-[13px] font-semibold mb-3">Menor rotación (60 días)</div>
           {menorRotacion.length === 0
             ? <div className="text-[12px] text-t2">Sin datos</div>
             : <div className="flex flex-col gap-2">
                 {menorRotacion.map((t, i) => (
                   <div key={t.id} className="flex items-center gap-[10px] py-1.5 border-b border-border">
-                    <div className="w-[22px] h-[22px] rounded-[6px] bg-[#D97706] text-white text-[10px] font-bold flex items-center justify-center">{i + 1}</div>
+                    <div className="w-[22px] h-[22px] rounded-[6px] bg-warning text-white text-[10px] font-bold flex items-center justify-center">{i + 1}</div>
                     <div className="flex-1 text-[12px]">{t.nombre}</div>
-                    <div className="text-[12px] font-semibold text-[#D97706]">{t.total_vendido_60d} u.</div>
+                    <div className="text-[12px] font-semibold text-warning">{t.total_vendido_60d} u.</div>
                   </div>
                 ))}
               </div>
@@ -302,22 +304,26 @@ export default function DashboardPage() {
       {(stats.sin_stock > 0 || stats.stock_bajo > 0) && (
         <div className="grid-2">
           {stats.sin_stock > 0 && (
-            <FloatCard style={{ padding: '16px 20px', border: '1px solid #DC262630' }}>
+            <FloatCard style={{ padding: '16px 20px' }}>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#FEF2F2] flex items-center justify-center text-[20px] shrink-0">🔴</div>
+                <div className="w-10 h-10 rounded-xl bg-danger-subtle flex items-center justify-center shrink-0">
+                  <CircleX className="w-5 h-5 text-danger" />
+                </div>
                 <div>
-                  <div className="text-[13px] font-bold text-[#DC2626]">{stats.sin_stock} sin stock</div>
+                  <div className="text-[13px] font-bold text-danger">{stats.sin_stock} sin stock</div>
                   <div className="text-[11px] text-t2">Productos agotados — acción inmediata</div>
                 </div>
               </div>
             </FloatCard>
           )}
           {stats.stock_bajo > 0 && (
-            <FloatCard style={{ padding: '16px 20px', border: '1px solid #D9770630' }}>
+            <FloatCard style={{ padding: '16px 20px' }}>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#FFFBEB] flex items-center justify-center text-[20px] shrink-0">⚠️</div>
+                <div className="w-10 h-10 rounded-xl bg-warning-subtle flex items-center justify-center shrink-0">
+                  <AlertTriangle className="w-5 h-5 text-warning" />
+                </div>
                 <div>
-                  <div className="text-[13px] font-bold text-[#D97706]">{stats.stock_bajo} stock bajo</div>
+                  <div className="text-[13px] font-bold text-warning">{stats.stock_bajo} stock bajo</div>
                   <div className="text-[11px] text-t2">Requieren reposición pronto</div>
                 </div>
               </div>
