@@ -1,6 +1,9 @@
 """Router: /api/v1/ventas"""
+import csv
+import io
 from datetime import datetime
-from fastapi import APIRouter, Depends, HTTPException, Query
+
+from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
 from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -10,6 +13,95 @@ from app.routers.auth import get_current_user
 from app.schemas import VentaCreate, VentaResponse
 
 router = APIRouter()
+
+
+@router.post("/importar", summary="Importar ventas desde CSV")
+async def importar_ventas_csv(
+    file: UploadFile = File(...),
+    db: AsyncSession = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user),
+):
+    if current_user.rol == "consulta":
+        raise HTTPException(403, detail="Los invitados no pueden importar datos.")
+
+    if not file.filename.endswith(".csv"):
+        raise HTTPException(400, detail="Solo se aceptan archivos CSV.")
+
+    content = await file.read()
+    text = content.decode("utf-8-sig")
+    reader = csv.DictReader(io.StringIO(text))
+
+    requeridos = {"sku", "fecha", "cantidad"}
+    columnas = set(reader.fieldnames or [])
+    if not requeridos.issubset(columnas):
+        raise HTTPException(400, detail=f"CSV debe tener columnas: {', '.join(requeridos)}. Encontradas: {', '.join(columnas)}")
+
+    results = {"ok": 0, "errores": [], "total_registros": 0, "detalles": []}
+    filas = list(reader)
+    results["total_registros"] = len(filas)
+
+    for i, row in enumerate(filas, 2):
+        linea = f"Linea {i}"
+        try:
+            sku = row.get("sku", "").strip().upper()
+            fecha_str = row.get("fecha", "").strip()
+            cantidad = int(row.get("cantidad", "0").strip())
+            precio = float(row.get("precio_unitario", "0").strip() or "0")
+            sede = row.get("sede", "").strip()
+
+            if not sku:
+                results["errores"].append({"linea": i, "error": "SKU vacio"})
+                continue
+            if cantidad <= 0:
+                results["errores"].append({"linea": i, "error": f"Cantidad invalida: {cantidad}", "sku": sku})
+                continue
+            try:
+                fecha = datetime.fromisoformat(fecha_str) if "T" in fecha_str else datetime.strptime(fecha_str, "%Y-%m-%d")
+            except ValueError:
+                results["errores"].append({"linea": i, "error": f"Fecha invalida: {fecha_str}", "sku": sku})
+                continue
+
+            prod = await db.execute(select(Producto).where(Producto.sku == sku))
+            prod = prod.scalar_one_or_none()
+            if not prod:
+                results["errores"].append({"linea": i, "error": f"SKU no encontrado: {sku}"})
+                continue
+            if not prod.activo:
+                results["errores"].append({"linea": i, "error": f"Producto inactivo: {sku} ({prod.nombre})"})
+                continue
+
+            subtotal = cantidad * precio
+            venta = Venta(
+                fecha_venta=fecha, usuario_id=current_user.id,
+                total=subtotal, sede=sede,
+            )
+            db.add(venta)
+            await db.flush()
+
+            detalle = VentaDetalle(
+                venta_id=venta.id, producto_id=prod.id,
+                cantidad=cantidad, precio_unitario=precio, subtotal=subtotal,
+            )
+            db.add(detalle)
+
+            prod.stock_actual = max(0, prod.stock_actual - cantidad)
+            movimiento = Movimiento(
+                producto_id=prod.id, tipo="salida", cantidad=cantidad,
+                stock_resultante=prod.stock_actual,
+                motivo=f"Importacion historica (Venta #{venta.id})",
+                fecha=fecha,
+            )
+            db.add(movimiento)
+            results["ok"] += 1
+            results["detalles"].append({
+                "venta_id": venta.id, "producto": prod.nombre,
+                "sku": sku, "cantidad": cantidad, "fecha": fecha_str,
+            })
+        except Exception as e:
+            results["errores"].append({"linea": linea, "error": str(e), "sku": row.get("sku", "")})
+
+    await db.flush()
+    return results
 
 
 @router.post("/", response_model=VentaResponse, status_code=201, summary="Registrar venta")

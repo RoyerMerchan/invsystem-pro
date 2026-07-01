@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import {
   LayoutDashboard, Package, Bell, TrendingUp, Sparkles, BarChart3,
   Receipt, ScanLine, Truck, ShieldCheck, Users, Monitor, LogOut,
-  Sun, Moon, Menu, ExternalLink, X,
+  Sun, Moon, Menu, ExternalLink, X, Upload,
 } from 'lucide-react'
 import DashboardPage from './pages/DashboardPage'
 import InventarioPage from './pages/InventarioPage'
@@ -16,11 +16,12 @@ import UsuariosPage from './pages/UsuariosPage'
 import VentasPage from './pages/VentasPage'
 import ValidacionPage from './pages/ValidacionPage'
 import XAIPage from './pages/XAIPage'
+import ImportarPage from './pages/ImportarPage'
 import LoginPage, { RegisterPage } from './pages/LoginPage'
 import { useRol } from './hooks/useRol'
 import type { Usuario } from './types'
 
-type Page = 'dashboard' | 'inventario' | 'alertas' | 'proyecciones' | 'xai' | 'reportes' | 'scanner' | 'proveedores' | 'ventas' | 'validacion' | 'usuarios'
+type Page = 'dashboard' | 'inventario' | 'alertas' | 'proyecciones' | 'xai' | 'reportes' | 'scanner' | 'proveedores' | 'ventas' | 'validacion' | 'usuarios' | 'importar'
 type AuthPage = 'login' | 'registro'
 
 function useIsMobile() {
@@ -37,7 +38,7 @@ const NAV_ICONS: Record<Page, React.ElementType> = {
   dashboard: LayoutDashboard, inventario: Package, alertas: Bell,
   proyecciones: TrendingUp, xai: Sparkles, reportes: BarChart3,
   ventas: Receipt, scanner: ScanLine, proveedores: Truck,
-  validacion: ShieldCheck, usuarios: Users,
+  validacion: ShieldCheck, usuarios: Users, importar: Upload,
 }
 
 export default function App() {
@@ -83,6 +84,7 @@ export default function App() {
     { id: 'scanner'      as Page, label: 'Escáner',      visible: !esConsulta },
     { id: 'proveedores'  as Page, label: 'Proveedores',  visible: true },
     { id: 'validacion'   as Page, label: 'Validación',   visible: !esConsulta },
+    { id: 'importar'     as Page, label: 'Importar',     visible: !esConsulta },
     { id: 'usuarios'     as Page, label: 'Usuarios',     visible: esAdmin },
   ].filter(n => n.visible)
 
@@ -105,7 +107,6 @@ export default function App() {
   if (kiosko) return <KioskoPage onSalirKiosko={() => setKiosko(false)} />
 
   const sidebarW = isMobile ? 240 : (collapsed ? 60 : 240)
-  const sidebarVisible = isMobile ? mobileOpen : true
 
   const SidebarContent = () => (
     <>
@@ -156,17 +157,15 @@ export default function App() {
         </div>
       )}
 
-      <div className={`border-t border-border flex flex-col gap-2 p-3 ${!isMobile && collapsed ? 'items-center' : ''}`}>
-        <div className={`flex items-center gap-3 px-3 py-2 rounded-lg bg-bg2 ${!isMobile && collapsed ? 'flex-col px-2 py-3' : ''}`}>
+      <div className="border-t border-border flex flex-col gap-2 p-3">
+        <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-bg2">
           <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0" style={{ background: rolConfig.color }}>
             {usuario?.nombre?.charAt(0).toUpperCase() || 'U'}
           </div>
-          {(isMobile || !collapsed) && (
-            <div className="min-w-0 flex-1">
-              <div className="text-xs font-semibold text-t1 truncate">{usuario?.nombre}</div>
-              <div className="text-[10px] font-medium" style={{ color: rolConfig.color }}>{rolConfig.badge} {rolConfig.label}</div>
-            </div>
-          )}
+          <div className="min-w-0 flex-1">
+            <div className="text-xs font-semibold text-t1 truncate">{usuario?.nombre}</div>
+            <div className="text-[10px] font-medium" style={{ color: rolConfig.color }}>{rolConfig.badge} {rolConfig.label}</div>
+          </div>
           <button onClick={handleLogout}
             className="text-muted hover:text-danger transition-colors duration-150 p-1 rounded-md hover:bg-danger/10"
             aria-label="Cerrar sesión">
@@ -242,6 +241,7 @@ export default function App() {
           {page === 'proveedores'  && <ProveedoresPage usuario={usuario} />}
           {page === 'ventas'       && <VentasPage usuario={usuario} />}
           {page === 'validacion'   && <ValidacionPage />}
+          {page === 'importar'     && <ImportarPage />}
           {page === 'usuarios'     && <UsuariosPage usuario={usuario} />}
         </main>
       </div>
