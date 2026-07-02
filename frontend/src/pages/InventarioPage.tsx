@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api, fmt } from '../services/api'
-import type { Producto, Usuario, OpcionCatalogo } from '../types'
+import type { Producto, Usuario, OpcionCatalogo, TipoControl } from '../types'
 import { FloatCard } from '../components/FloatCard'
 import { PageHeader } from './DashboardPage'
 import { useRol } from '../hooks/useRol'
@@ -9,19 +9,21 @@ interface ProductoForm {
   nombre: string; descripcion: string; categoria: string; sku: string
   stock_actual: number; stock_minimo: number; stock_maximo: number
   precio_unitario: number; costo_unitario: number; unidad_medida: string; activo: boolean
+  tipo_control_id: number | null; caracteristicas: Record<string, string>
 }
 
 const BLANK: ProductoForm = {
   nombre: '', descripcion: '', categoria: '', sku: '',
   stock_actual: 0, stock_minimo: 0, stock_maximo: 0,
   precio_unitario: 0, costo_unitario: 0, unidad_medida: 'unidad', activo: true,
+  tipo_control_id: null, caracteristicas: {},
 }
 
 function estadoBadge(p: Producto) {
-  if (!p.activo) return <Badge txt="Inactivo" color="#6B6B6B" bg="#EFEEEA" />
-  if (p.stock_actual === 0) return <Badge txt="Sin stock" color="#993C1D" bg="#FAECE7" />
-  if (p.stock_actual < p.stock_minimo) return <Badge txt="Stock bajo" color="#854F0B" bg="#FAEEDA" />
-  return <Badge txt="Normal" color="#0F6E56" bg="#E1F5EE" />
+  if (!p.activo) return <Badge txt="Inactivo" color="var(--t2)" bg="var(--bg2)" />
+  if (p.stock_actual === 0) return <Badge txt="Sin stock" color="var(--danger)" bg="var(--danger-subtle)" />
+  if (p.stock_actual < p.stock_minimo) return <Badge txt="Stock bajo" color="var(--warning)" bg="var(--warning-subtle)" />
+  return <Badge txt="Normal" color="var(--primary-hover)" bg="var(--success-subtle)" />
 }
 
 function Badge({ txt, color, bg }: { txt: string; color: string; bg: string }) {
@@ -54,6 +56,7 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
   const [editId, setEditId] = useState<number | null>(null)
   const [categorias, setCategorias] = useState<string[]>([])
   const [unidades, setUnidades] = useState<string[]>([])
+  const [tiposControl, setTiposControl] = useState<TipoControl[]>([])
 
   const cargar = useCallback(() => {
     setLoading(true)
@@ -71,6 +74,9 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
         setUnidades(ops.filter(o => o.tipo === 'unidad').map(o => o.valor))
       })
       .catch(() => { /* si falla el catálogo, los selects quedan vacíos */ })
+    api<TipoControl[]>('/api/v1/tipos-control/')
+      .then(setTiposControl)
+      .catch(() => { /* si falla, no se muestran tipos de control */ })
   }, [])
 
   const filtrados = productos.filter(p => {
@@ -81,7 +87,14 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
     return matchQ && matchC && matchA
   })
 
+  const tipoSel = tiposControl.find(t => t.id === form.tipo_control_id) || null
+
   async function guardar() {
+    // Validar campos obligatorios del tipo de control seleccionado
+    if (tipoSel) {
+      const faltante = tipoSel.campos.find(c => c.requerido && !(form.caracteristicas[String(c.id)] || '').trim())
+      if (faltante) { setError(`El campo "${faltante.etiqueta}" es obligatorio.`); return }
+    }
     setSaving(true); setError('')
     try {
       if (editId) {
@@ -125,6 +138,7 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
       stock_actual: p.stock_actual, stock_minimo: p.stock_minimo, stock_maximo: p.stock_maximo,
       precio_unitario: p.precio_unitario, costo_unitario: p.costo_unitario ?? 0,
       unidad_medida: p.unidad_medida ?? 'unidad', activo: p.activo,
+      tipo_control_id: p.tipo_control_id ?? null, caracteristicas: p.caracteristicas ?? {},
     })
     setEditId(p.id); setModalOpen(true)
   }
@@ -184,7 +198,7 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
                     <td style={{ padding: '9px 12px', color: 'var(--t3)', fontFamily: 'monospace', fontSize: 11 }}>{p.sku}</td>
                     <td style={{ padding: '9px 12px', fontWeight: 500 }}>{p.nombre}</td>
                     <td style={{ padding: '9px 12px', color: 'var(--t2)' }}>{p.categoria}</td>
-                    <td style={{ padding: '9px 12px', fontWeight: 500, color: p.stock_actual < p.stock_minimo ? '#D85A30' : 'var(--t1)' }}>{p.stock_actual}</td>
+                    <td style={{ padding: '9px 12px', fontWeight: 500, color: p.stock_actual < p.stock_minimo ? 'var(--danger)' : 'var(--t1)' }}>{p.stock_actual}</td>
                     <td style={{ padding: '9px 12px', color: 'var(--t2)' }}>{p.stock_minimo}</td>
                     <td style={{ padding: '9px 12px', color: 'var(--t2)' }}>{p.stock_maximo}</td>
                     <td style={{ padding: '9px 12px' }}>{fmt(p.precio_unitario)}</td>
@@ -240,6 +254,49 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
             <FormField label="Precio venta ($)"><input style={INPUT} type="number" min={0} step={0.01} value={form.precio_unitario} onChange={set('precio_unitario')} /></FormField>
             <FormField label="Costo unitario ($)"><input style={INPUT} type="number" min={0} step={0.01} value={form.costo_unitario} onChange={set('costo_unitario')} /></FormField>
           </FormGrid>
+
+          {/* Tipo de control + campos dinámicos */}
+          {tiposControl.length > 0 && (
+            <div style={{ marginTop: 4 }}>
+              <FormField label="Tipo de control">
+                <select
+                  style={INPUT}
+                  value={form.tipo_control_id ?? ''}
+                  onChange={e => {
+                    const id = e.target.value ? +e.target.value : null
+                    setForm(f => ({ ...f, tipo_control_id: id, caracteristicas: {} }))
+                  }}
+                >
+                  <option value="">Sin tipo de control</option>
+                  {tiposControl.map(t => <option key={t.id} value={t.id}>{t.nombre}</option>)}
+                </select>
+              </FormField>
+
+              {tipoSel && tipoSel.campos.length > 0 && (
+                <div style={{ marginTop: 12, padding: 12, border: '0.5px solid var(--border)', borderRadius: 10, background: 'var(--bg2)' }}>
+                  <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--t2)', marginBottom: 10 }}>
+                    Información de «{tipoSel.nombre}»
+                  </div>
+                  <FormGrid>
+                    {tipoSel.campos.map(c => (
+                      <FormField key={c.id} label={c.requerido ? `${c.etiqueta} *` : c.etiqueta}>
+                        <input
+                          style={INPUT}
+                          value={form.caracteristicas[String(c.id)] ?? ''}
+                          onChange={e => {
+                            const v = e.target.value
+                            setForm(f => ({ ...f, caracteristicas: { ...f.caracteristicas, [String(c.id)]: v } }))
+                          }}
+                          placeholder={c.etiqueta}
+                        />
+                      </FormField>
+                    ))}
+                  </FormGrid>
+                </div>
+              )}
+            </div>
+          )}
+
           {error && <ErrMsg msg={error} />}
           <ModalActions onCancel={() => setModalOpen(false)} onConfirm={guardar} loading={saving} confirmLabel={editId ? 'Guardar cambios' : 'Crear producto'} />
         </Modal>
@@ -282,7 +339,7 @@ function Btn({ label, onClick, primary }: { label: string; onClick: () => void; 
     <button onClick={onClick} style={{
       fontSize: 12, padding: '7px 14px', borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit',
       border: primary ? 'none' : '0.5px solid var(--border)',
-      background: primary ? '#1D9E75' : 'transparent',
+      background: primary ? 'var(--primary)' : 'transparent',
       color: primary ? 'white' : 'var(--t1)',
     }}>{label}</button>
   )
@@ -292,9 +349,9 @@ function BtnSm({ label, onClick, danger }: { label: string; onClick: () => void;
   return (
     <button onClick={onClick} style={{
       fontSize: 11, padding: '3px 9px', borderRadius: 6, cursor: 'pointer', fontFamily: 'inherit',
-      border: danger ? '0.5px solid #D85A30' : '0.5px solid var(--border)',
+      border: danger ? '0.5px solid var(--danger)' : '0.5px solid var(--border)',
       background: 'transparent',
-      color: danger ? '#993C1D' : 'var(--t2)',
+      color: danger ? 'var(--danger)' : 'var(--t2)',
     }}>{label}</button>
   )
 }
@@ -314,7 +371,7 @@ function ModalActions({ onCancel, onConfirm, loading, confirmLabel }: { onCancel
   return (
     <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 16 }}>
       <Btn label="Cancelar" onClick={onCancel} />
-      <button onClick={onConfirm} disabled={loading} style={{ fontSize: 12, padding: '7px 16px', borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit', background: '#1D9E75', color: 'white', border: 'none', opacity: loading ? 0.7 : 1 }}>
+      <button onClick={onConfirm} disabled={loading} style={{ fontSize: 12, padding: '7px 16px', borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit', background: 'var(--primary)', color: 'white', border: 'none', opacity: loading ? 0.7 : 1 }}>
         {loading ? 'Guardando…' : confirmLabel}
       </button>
     </div>
@@ -335,5 +392,5 @@ function FormField({ label, children }: { label: string; children: React.ReactNo
 }
 
 function ErrMsg({ msg }: { msg: string }) {
-  return <div style={{ fontSize: 12, color: '#993C1D', background: '#FAECE7', padding: '8px 12px', borderRadius: 8, marginTop: 8 }}>{msg}</div>
+  return <div style={{ fontSize: 12, color: 'var(--danger)', background: 'var(--danger-subtle)', padding: '8px 12px', borderRadius: 8, marginTop: 8 }}>{msg}</div>
 }

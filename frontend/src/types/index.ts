@@ -16,6 +16,22 @@ export interface OpcionCatalogo {
   creado_en: string
 }
 
+export interface CampoControl {
+  id: number
+  etiqueta: string
+  requerido: boolean
+  tipo_dato: string
+  orden: number
+}
+
+export interface TipoControl {
+  id: number
+  nombre: string
+  descripcion?: string
+  activo: boolean
+  campos: CampoControl[]
+}
+
 export interface Proveedor {
   id: number
   nombre: string
@@ -49,6 +65,8 @@ export interface Producto {
   activo: boolean
   proveedor_id?: number
   proveedor?: ProveedorResumen
+  tipo_control_id?: number | null
+  caracteristicas?: Record<string, string>
   creado_en?: string
   actualizado_en?: string
 }

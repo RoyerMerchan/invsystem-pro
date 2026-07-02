@@ -52,6 +52,7 @@ select {
   --t1: #0F172A;
   --t2: #64748B;
   --t3: #94A3B8;
+  --text-muted: var(--t3);
   --border: #E2E8F0;
   --primary: #059669;
   --primary-hover: #047857;

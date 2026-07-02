@@ -41,17 +41,17 @@ export default function LoginPage({ onLogin, onGoRegister }: LoginProps) {
         <div className="flex items-center gap-3 mb-10">
           <LogoMark size={40} />
           <div>
-            <div className="text-base font-bold text-[#111827] tracking-[-0.3px]">InvSystem Pro</div>
-            <div className="text-[11px] text-[#9CA3AF] tracking-[0.02em]">Enterprise Inventory</div>
+            <div className="text-base font-bold text-t1 tracking-[-0.3px]">InvSystem Pro</div>
+            <div className="text-[11px] text-t3 tracking-[0.02em]">Enterprise Inventory</div>
           </div>
         </div>
 
         {/* Heading */}
         <div className="mb-8">
-          <h1 className="text-[28px] font-extrabold text-[#111827] tracking-[-0.7px] leading-[1.2] mb-2">
+          <h1 className="text-[28px] font-extrabold text-t1 tracking-[-0.7px] leading-[1.2] mb-2">
             Bienvenido
           </h1>
-          <p className="text-sm text-[#6B7280] leading-[1.6]">
+          <p className="text-sm text-t2 leading-[1.6]">
             Accede a tu plataforma de gestión de inventario
           </p>
         </div>
@@ -78,7 +78,7 @@ export default function LoginPage({ onLogin, onGoRegister }: LoginProps) {
                 paddingRight={44}
               />
               <button type="button" onClick={() => setShowPass(s => !s)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-[#9CA3AF] flex items-center">
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-t3 flex items-center">
                 {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
@@ -93,9 +93,9 @@ export default function LoginPage({ onLogin, onGoRegister }: LoginProps) {
 
         {/* Divider */}
         <div className="flex items-center gap-3 my-6">
-          <div className="flex-1 h-px bg-[#F3F4F6]" />
-          <span className="text-xs text-[#D1D5DB] font-medium">¿Primera vez?</span>
-          <div className="flex-1 h-px bg-[#F3F4F6]" />
+          <div className="flex-1 h-px bg-bg2" />
+          <span className="text-xs text-t3 font-medium">¿Primera vez?</span>
+          <div className="flex-1 h-px bg-bg2" />
         </div>
 
         <SecondaryBtn onClick={onGoRegister}>
@@ -103,11 +103,11 @@ export default function LoginPage({ onLogin, onGoRegister }: LoginProps) {
         </SecondaryBtn>
 
         {/* Footer */}
-        <p className="mt-8 text-[11px] text-[#D1D5DB] text-center leading-[1.6]">
+        <p className="mt-8 text-[11px] text-t3 text-center leading-[1.6]">
           Al continuar aceptas los{' '}
-          <span className="text-[#14B8A6] cursor-pointer">Términos de uso</span>
+          <span className="text-primary cursor-pointer">Términos de uso</span>
           {' '}y la{' '}
-          <span className="text-[#14B8A6] cursor-pointer">Política de privacidad</span>
+          <span className="text-primary cursor-pointer">Política de privacidad</span>
         </p>
       </RightPanel>
     </Shell>
@@ -173,12 +173,12 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
             style={{ background: 'linear-gradient(135deg,#14B8A6,#0D9488)', boxShadow: '0 8px 24px rgba(20,184,166,0.35)' }}>
             ✓
           </div>
-          <h2 className="text-2xl font-extrabold text-[#111827] tracking-[-0.5px] mb-2">¡Cuenta creada!</h2>
-          <p className="text-sm text-[#6B7280] mb-7">Tu acceso ha sido configurado correctamente</p>
-          <div className="h-[3px] bg-[#F3F4F6] rounded overflow-hidden">
+          <h2 className="text-2xl font-extrabold text-t1 tracking-[-0.5px] mb-2">¡Cuenta creada!</h2>
+          <p className="text-sm text-t2 mb-7">Tu acceso ha sido configurado correctamente</p>
+          <div className="h-[3px] bg-bg2 rounded overflow-hidden">
             <div className="h-full rounded" style={{ background: 'linear-gradient(90deg,#14B8A6,#0D9488)', animation: 'progress 3s linear forwards' }} />
           </div>
-          <p className="text-xs text-[#D1D5DB] mt-2.5">Redirigiendo al inicio de sesión...</p>
+          <p className="text-xs text-t3 mt-2.5">Redirigiendo al inicio de sesión...</p>
         </div>
       </RightPanel>
     </Shell>
@@ -192,8 +192,8 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
         <div className="flex items-center gap-3 mb-9">
           <LogoMark size={40} />
           <div>
-            <div className="text-base font-bold text-[#111827] tracking-[-0.3px]">InvSystem Pro</div>
-            <div className="text-[11px] text-[#9CA3AF]">Enterprise Inventory</div>
+            <div className="text-base font-bold text-t1 tracking-[-0.3px]">InvSystem Pro</div>
+            <div className="text-[11px] text-t3">Enterprise Inventory</div>
           </div>
         </div>
 
@@ -204,26 +204,26 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
               <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200"
                 style={{
                   background: s <= step ? 'linear-gradient(135deg,#14B8A6,#0D9488)' : '#F3F4F6',
-                  color: s <= step ? 'white' : '#9CA3AF',
+                  color: s <= step ? 'white' : 'var(--text-muted)',
                   boxShadow: s === step ? '0 4px 12px rgba(20,184,166,0.35)' : 'none',
                 }}>
                 {s < step ? '✓' : s}
               </div>
-              <span className="text-xs font-semibold" style={{ color: s <= step ? '#111827' : '#9CA3AF' }}>
+              <span className="text-xs font-semibold" style={{ color: s <= step ? 'var(--t1)' : 'var(--text-muted)' }}>
                 {s === 1 ? 'Información' : 'Seguridad'}
               </span>
               {s < 2 && <div className="w-8 h-0.5 rounded mx-1 transition-[background] duration-300"
-                style={{ background: step > s ? '#14B8A6' : '#F3F4F6' }} />}
+                style={{ background: step > s ? 'var(--primary)' : '#F3F4F6' }} />}
             </div>
           ))}
         </div>
 
         {/* Heading */}
         <div className="mb-6">
-          <h1 className="text-2xl font-extrabold text-[#111827] tracking-[-0.5px] mb-1.5">
+          <h1 className="text-2xl font-extrabold text-t1 tracking-[-0.5px] mb-1.5">
             {step === 1 ? 'Datos de cuenta' : 'Acceso y permisos'}
           </h1>
-          <p className="text-[13px] text-[#6B7280]">
+          <p className="text-[13px] text-t2">
             {step === 1 ? 'Completa tu información básica' : 'Configura tu contraseña y rol'}
           </p>
         </div>
@@ -252,23 +252,23 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
                   <button key={opt.v} type="button" onClick={() => setRol(opt.v)}
                     className="px-3 py-3.5 rounded-xl cursor-pointer text-left transition-all duration-200"
                     style={{
-                      border: `2px solid ${rol===opt.v ? '#14B8A6' : '#E5E7EB'}`,
+                      border: `2px solid ${rol===opt.v ? 'var(--primary)' : 'var(--border)'}`,
                       background: rol===opt.v ? 'rgba(20,184,166,0.05)' : 'white',
                     }}>
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-[7px]">
                         {opt.icon}
-                        <span className="text-[13px] font-bold" style={{ color: rol===opt.v ? '#0D9488' : '#374151' }}>{opt.label}</span>
+                        <span className="text-[13px] font-bold" style={{ color: rol===opt.v ? 'var(--primary-hover)' : 'var(--t2)' }}>{opt.label}</span>
                       </div>
                       <div className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 transition-all duration-200"
                         style={{
-                          border: `2px solid ${rol===opt.v ? '#14B8A6' : '#D1D5DB'}`,
-                          background: rol===opt.v ? '#14B8A6' : 'transparent',
+                          border: `2px solid ${rol===opt.v ? 'var(--primary)' : 'var(--border)'}`,
+                          background: rol===opt.v ? 'var(--primary)' : 'transparent',
                         }}>
                         {rol===opt.v && <div className="w-[6px] h-[6px] rounded-full bg-white" />}
                       </div>
                     </div>
-                    <p className="text-[11px] text-[#9CA3AF] leading-[1.4] m-0">{opt.desc}</p>
+                    <p className="text-[11px] text-t3 leading-[1.4] m-0">{opt.desc}</p>
                   </button>
                 ))}
               </div>
@@ -288,7 +288,7 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
                   placeholder="Mínimo 8 caracteres" icon={<Lock className="w-4 h-4" />} paddingRight={44}
                   onChange={e => setPassword(e.target.value)} autoFocus />
                 <button type="button" onClick={() => setShowPass(s => !s)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-[#9CA3AF] flex items-center">
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-t3 flex items-center">
                   {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
@@ -297,14 +297,14 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
                 <div className="mt-2.5">
                   <div className="flex gap-1 mb-[7px]">
                     {[1,2,3].map(i => {
-                      const c = i <= score ? (score===1?'#EF4444':score===2?'#F59E0B':'#10B981') : '#E5E7EB'
+                      const c = i <= score ? (score===1?'#EF4444':score===2?'var(--warning)':'var(--success)') : 'var(--border)'
                       return <div key={i} className="flex-1 h-1 rounded transition-[background] duration-300" style={{ background: c }} />
                     })}
                   </div>
                   <div className="flex gap-3.5">
                     {checks.map(c => (
                       <span key={c.label} className="text-[11px] flex items-center gap-1 transition-[color] duration-200"
-                        style={{ color: c.ok ? '#10B981' : '#9CA3AF' }}>
+                        style={{ color: c.ok ? 'var(--success)' : 'var(--text-muted)' }}>
                         <span className="text-[9px]">{c.ok?'●':'○'}</span>{c.label}
                       </span>
                     ))}
@@ -319,27 +319,27 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
                 onChange={e => setConfirm(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && submit()} />
               {confirm && password !== confirm && (
-                <p className="text-[11px] text-[#EF4444] mt-[5px] flex items-center gap-1">
+                <p className="text-[11px] text-danger mt-[5px] flex items-center gap-1">
                   <ShieldAlert className="w-4 h-4" /> Las contraseñas no coinciden
                 </p>
               )}
             </InputGroup>
 
             {/* Resumen del rol seleccionado */}
-            <div className="flex items-center gap-2.5 px-3.5 py-3 bg-[#F9FAFB] rounded-xl border border-[#E5E7EB]">
+            <div className="flex items-center gap-2.5 px-3.5 py-3 bg-bg2 rounded-xl border border-border">
               <span className="flex items-center">
                 {rol === 'analista' ? <BarChart3 className="w-5 h-5" /> : rol === 'operador' ? <Wrench className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </span>
               <div>
-                <div className="text-xs font-semibold text-[#374151]">
+                <div className="text-xs font-semibold text-t2">
                   {rol === 'analista' ? 'Analista' : rol === 'operador' ? 'Operador' : 'Solo consulta'}
                 </div>
-                <div className="text-[11px] text-[#9CA3AF]">
+                <div className="text-[11px] text-t3">
                   {rol === 'analista' ? 'Movimientos, proyecciones y reportes' : rol === 'operador' ? 'Solo movimientos y escáner' : 'Solo visualización'}
                 </div>
               </div>
               <button onClick={() => setStep(1)}
-                className="ml-auto text-[11px] text-[#14B8A6] bg-transparent border-none cursor-pointer font-semibold">
+                className="ml-auto text-[11px] text-primary bg-transparent border-none cursor-pointer font-semibold">
                 Cambiar
               </button>
             </div>
@@ -348,7 +348,7 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
 
             <div className="grid grid-cols-[auto_1fr] gap-2.5">
               <button onClick={() => { setStep(1); setError('') }}
-                className="px-4 py-[11px] rounded-xl border-2 border-[#E5E7EB] bg-white text-[#374151] text-[13px] font-semibold cursor-pointer">
+                className="px-4 py-[11px] rounded-xl border-2 border-border bg-white text-t2 text-[13px] font-semibold cursor-pointer">
                 ← Volver
               </button>
               <PrimaryBtn onClick={submit} loading={loading}>
@@ -358,10 +358,10 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
           </div>
         )}
 
-        <div className="mt-6 text-center text-[13px] text-[#9CA3AF]">
+        <div className="mt-6 text-center text-[13px] text-t3">
           ¿Ya tienes cuenta?{' '}
           <button onClick={onGoLogin}
-            className="text-[#14B8A6] font-bold bg-transparent border-none cursor-pointer text-[13px]">
+            className="text-primary font-bold bg-transparent border-none cursor-pointer text-[13px]">
             Iniciar sesión
           </button>
         </div>
@@ -417,7 +417,7 @@ function LeftPanel() {
 
         <h2 className="text-[38px] font-extrabold text-white tracking-[-1px] leading-[1.15] mb-[18px]">
           Control total de tu{' '}
-          <span className="text-[#2DD4BF]">inventario</span>
+          <span className="text-primary">inventario</span>
         </h2>
 
         <p className="text-[15px] text-white/50 leading-[1.7] mb-12 max-w-[380px]">
@@ -449,7 +449,7 @@ function LeftPanel() {
           style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
           {[['8+','Módulos'],['3','Modelos IA'],['JWT','Seguridad']].map(([v,l]) => (
             <div key={l}>
-              <div className="text-[26px] font-extrabold text-[#2DD4BF] tracking-[-0.5px]">{v}</div>
+              <div className="text-[26px] font-extrabold text-primary tracking-[-0.5px]">{v}</div>
               <div className="text-[11px] text-white/35 mt-[3px] uppercase tracking-[0.06em]">{l}</div>
             </div>
           ))}
@@ -461,10 +461,10 @@ function LeftPanel() {
 
 function RightPanel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-full max-w-[520px] flex flex-col justify-center px-10 py-12 bg-[#FAFAFA] overflow-y-auto"
+    <div className="w-full max-w-[520px] flex flex-col justify-center px-10 py-12 bg-bg1 overflow-y-auto"
       style={{ animation: 'fadeSlide 0.4s cubic-bezier(.16,1,.3,1)' }}>
       <div className="max-w-[400px] w-full mx-auto">
-        <div className="bg-white rounded-[20px] px-9 py-10 border border-[#E5E7EB]"
+        <div className="bg-white rounded-[20px] px-9 py-10 border border-border"
           style={{ boxShadow: '0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05), 0 20px 60px -12px rgba(0,0,0,0.08)' }}>
           {children}
         </div>
@@ -495,7 +495,7 @@ function LogoMark({ size }: { size: number }) {
 function InputGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-xs font-semibold text-[#374151] tracking-[0.01em] mb-[7px]">
+      <label className="block text-xs font-semibold text-t2 tracking-[0.01em] mb-[7px]">
         {label}
       </label>
       {children}
@@ -511,7 +511,7 @@ function InputField({ icon, paddingRight, style: extStyle, ...props }: {
     <div className="relative">
       {icon && (
         <div className="absolute left-[13px] top-1/2 -translate-y-1/2 pointer-events-none transition-[color] duration-200"
-          style={{ color: focus ? '#14B8A6' : '#9CA3AF' }}>
+          style={{ color: focus ? 'var(--primary)' : 'var(--text-muted)' }}>
           {icon}
         </div>
       )}
@@ -522,9 +522,9 @@ function InputField({ icon, paddingRight, style: extStyle, ...props }: {
         className="w-full text-sm rounded-[10px] transition-all duration-200"
         style={{
           padding: '11px 14px', paddingLeft: icon ? 40 : 14, paddingRight: paddingRight ?? 14,
-          border: `1.5px solid ${focus ? '#14B8A6' : '#E5E7EB'}`,
+          border: `1.5px solid ${focus ? 'var(--primary)' : 'var(--border)'}`,
           background: focus ? '#FFFFFF' : '#FAFAFA',
-          color: '#111827',
+          color: 'var(--t1)',
           boxShadow: focus ? '0 0 0 3px rgba(20,184,166,0.12)' : 'none',
           ...extStyle,
         }}
@@ -541,7 +541,7 @@ function PrimaryBtn({ onClick, loading, children }: { onClick: () => void; loadi
       className="w-full rounded-[11px] border-none text-white text-sm font-bold flex items-center justify-center gap-2 transition-all duration-200"
       style={{
         padding: '12px 20px',
-        background: loading ? '#94A3B8' : hov ? '#0D9488' : '#14B8A6',
+        background: loading ? 'var(--t3)' : hov ? 'var(--primary-hover)' : 'var(--primary)',
         cursor: loading ? 'not-allowed' : 'pointer',
         boxShadow: loading ? 'none' : `0 4px 14px rgba(20,184,166,${hov ? .5 : .35})`,
         transform: hov && !loading ? 'translateY(-1px)' : 'none',
@@ -560,9 +560,9 @@ function SecondaryBtn({ onClick, children }: { onClick: () => void; children: Re
       className="w-full rounded-[11px] text-sm font-semibold cursor-pointer transition-all duration-200"
       style={{
         padding: '11px 20px',
-        border: `2px solid ${hov ? '#14B8A6' : '#E5E7EB'}`,
+        border: `2px solid ${hov ? 'var(--primary)' : 'var(--border)'}`,
         background: hov ? 'rgba(20,184,166,0.04)' : 'white',
-        color: hov ? '#0D9488' : '#374151',
+        color: hov ? 'var(--primary-hover)' : 'var(--t2)',
       }}>
       {children}
     </button>
@@ -571,7 +571,7 @@ function SecondaryBtn({ onClick, children }: { onClick: () => void; children: Re
 
 function ErrorAlert({ msg }: { msg: string }) {
   return (
-    <div className="flex items-start gap-2.5 px-3.5 py-[11px] bg-[#FEF2F2] border border-[#FECACA] rounded-[10px] text-[13px] text-[#DC2626]">
+    <div className="flex items-start gap-2.5 px-3.5 py-[11px] bg-danger-subtle border border-danger/30 rounded-[10px] text-[13px] text-danger">
       <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
       <span className="leading-[1.5]">{msg}</span>
     </div>

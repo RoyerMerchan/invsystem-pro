@@ -23,13 +23,13 @@ interface FormatoEntry {
 }
 
 const FORMATOS: FormatoEntry[] = [
-  { id: 'excel'          as Format, icon: FileSpreadsheet, nombre:'Excel completo',     desc:'Inventario + movimientos + resumen en 3 hojas.',  color:'#166534', ext:'.xlsx', tags:['Hoja: Inventario','Hoja: Movimientos','Hoja: Resumen'] },
-  { id: 'pdf_inventario' as Format, icon: ClipboardList,   nombre:'PDF Inventario',     desc:'Reporte completo con KPIs y tabla detallada.',    color:'#1D4ED8', ext:'.pdf',  tags:['KPIs','Tabla completa','Estado por producto'] },
-  { id: 'pdf_alertas'    as Format, icon: Bell,            nombre:'PDF Alertas',        desc:'Solo sin stock y stock bajo. Ideal para compras.', color:'#DC2626', ext:'.pdf',  tags:['Sin stock','Stock bajo','Diferencia vs mínimo'] },
+  { id: 'excel'          as Format, icon: FileSpreadsheet, nombre:'Excel completo',     desc:'Inventario + movimientos + resumen en 3 hojas.',  color:'var(--primary)', ext:'.xlsx', tags:['Hoja: Inventario','Hoja: Movimientos','Hoja: Resumen'] },
+  { id: 'pdf_inventario' as Format, icon: ClipboardList,   nombre:'PDF Inventario',     desc:'Reporte completo con KPIs y tabla detallada.',    color:'var(--info)', ext:'.pdf',  tags:['KPIs','Tabla completa','Estado por producto'] },
+  { id: 'pdf_alertas'    as Format, icon: Bell,            nombre:'PDF Alertas',        desc:'Solo sin stock y stock bajo. Ideal para compras.', color:'var(--danger)', ext:'.pdf',  tags:['Sin stock','Stock bajo','Diferencia vs mínimo'] },
   { id: 'pdf_completo'   as Format, icon: FileText,        nombre:'PDF Completo',       desc:'KPIs + inventario + alertas en un documento.',    color:'#7C3AED', ext:'.pdf',  tags:['KPIs','Inventario','Alertas'] },
-  { id: 'csv_inventario' as Format, icon: FileText,        nombre:'CSV Inventario',     desc:'Exportación en CSV del inventario completo.',     color:'#0891B2', ext:'.csv',  tags:['SKU','Stock','Precio'] },
-  { id: 'csv_movimientos'as Format, icon: FileText,        nombre:'CSV Movimientos',    desc:'Exportación en CSV de los movimientos.',          color:'#0891B2', ext:'.csv',  tags:['Fecha','Producto','Tipo'] },
-  { id: 'csv_ventas'     as Format, icon: FileText,        nombre:'CSV Ventas',         desc:'Exportación en CSV de las ventas registradas.',   color:'#0891B2', ext:'.csv',  tags:['Venta','Total','Sede'] },
+  { id: 'csv_inventario' as Format, icon: FileText,        nombre:'CSV Inventario',     desc:'Exportación en CSV del inventario completo.',     color:'var(--info)', ext:'.csv',  tags:['SKU','Stock','Precio'] },
+  { id: 'csv_movimientos'as Format, icon: FileText,        nombre:'CSV Movimientos',    desc:'Exportación en CSV de los movimientos.',          color:'var(--info)', ext:'.csv',  tags:['Fecha','Producto','Tipo'] },
+  { id: 'csv_ventas'     as Format, icon: FileText,        nombre:'CSV Ventas',         desc:'Exportación en CSV de las ventas registradas.',   color:'var(--info)', ext:'.csv',  tags:['Venta','Total','Sede'] },
 ]
 
 export default function ReportesPage() {

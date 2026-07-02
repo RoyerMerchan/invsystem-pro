@@ -108,6 +108,8 @@ class ProductoBase(BaseModel):
     unidad_medida: str = Field(default="unidad", max_length=20)
     activo: bool = True
     proveedor_id: int | None = None
+    tipo_control_id: int | None = None
+    caracteristicas: dict | None = None
 
     @field_validator("nombre", "categoria", "descripcion")
     @classmethod
@@ -128,6 +130,8 @@ class ProductoUpdate(BaseModel):
     unidad_medida: str | None = None
     activo: bool | None = None
     proveedor_id: int | None = None
+    tipo_control_id: int | None = None
+    caracteristicas: dict | None = None
 
 class ProductoResponse(ProductoBase):
     id: int
@@ -271,4 +275,43 @@ class OpcionCatalogoResponse(BaseModel):
     valor: str
     activo: bool
     creado_en: datetime
+    model_config = {"from_attributes": True}
+
+
+# ══════════════════════════════════════════════════════════════════
+# TIPOS DE CONTROL (form builder: tipos con campos personalizados)
+# ══════════════════════════════════════════════════════════════════
+
+class CampoControlCreate(BaseModel):
+    etiqueta: str = Field(..., min_length=1, max_length=100)
+    requerido: bool = False
+
+    @field_validator("etiqueta")
+    @classmethod
+    def limpiar_etiqueta(cls, v: str) -> str:
+        return sanitizar_texto(v, max_len=100)
+
+class CampoControlResponse(BaseModel):
+    id: int
+    etiqueta: str
+    requerido: bool
+    tipo_dato: str
+    orden: int
+    model_config = {"from_attributes": True}
+
+class TipoControlCreate(BaseModel):
+    nombre: str = Field(..., min_length=1, max_length=100)
+    descripcion: str = Field(default="", max_length=300)
+
+    @field_validator("nombre", "descripcion")
+    @classmethod
+    def limpiar(cls, v: str) -> str:
+        return sanitizar_texto(v, max_len=300)
+
+class TipoControlResponse(BaseModel):
+    id: int
+    nombre: str
+    descripcion: str
+    activo: bool
+    campos: list[CampoControlResponse] = []
     model_config = {"from_attributes": True}

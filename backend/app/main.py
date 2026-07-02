@@ -14,6 +14,7 @@ from app.core.security import limiter, security_headers_middleware
 from app.routers import (
     productos, movimientos, proyecciones,
     alertas, auth, reportes, scanner, proveedores, usuarios, ventas, catalogo,
+    tipos_control,
 )
 
 logging.basicConfig(
@@ -49,11 +50,33 @@ async def _seed_catalogo() -> None:
         logger.info("Catálogo sembrado con valores por defecto")
 
 
+async def _migrar_columnas_producto() -> None:
+    """Agrega columnas nuevas a `productos` sin Alembic.
+
+    `create_all` no altera tablas existentes, así que en Postgres añadimos
+    las columnas de forma idempotente (ADD COLUMN IF NOT EXISTS).
+    """
+    from sqlalchemy import text
+
+    sentencias = [
+        "ALTER TABLE productos ADD COLUMN IF NOT EXISTS tipo_control_id INTEGER",
+        "ALTER TABLE productos ADD COLUMN IF NOT EXISTS caracteristicas JSON DEFAULT '{}'::json",
+    ]
+    try:
+        async with engine.begin() as conn:
+            for sql in sentencias:
+                await conn.execute(text(sql))
+        logger.info("Migración de columnas de producto aplicada")
+    except Exception as e:  # p. ej. SQLite en local no soporta la sintaxis
+        logger.warning("No se pudo aplicar la migración de columnas: %s", e)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Iniciando InvSystem Pro [%s]", ENVIRONMENT)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    await _migrar_columnas_producto()
     await _seed_catalogo()
     yield
     await engine.dispose()
@@ -119,6 +142,7 @@ app.include_router(usuarios.router,     prefix="/api/v1/usuarios",     tags=["Us
 app.include_router(scanner.router,      prefix="/api/v1/scanner",      tags=["Scanner"])
 app.include_router(ventas.router,       prefix="/api/v1/ventas",       tags=["Ventas"])
 app.include_router(catalogo.router,     prefix="/api/v1/catalogo",     tags=["Catalogo"])
+app.include_router(tipos_control.router, prefix="/api/v1/tipos-control", tags=["TiposControl"])
 
 
 @app.get("/health")

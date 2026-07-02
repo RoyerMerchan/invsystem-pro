@@ -56,6 +56,10 @@ class Producto(Base):
     proveedor_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("proveedores.id", ondelete="SET NULL"), nullable=True, index=True
     )
+    tipo_control_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("tipos_control.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    caracteristicas: Mapped[dict] = mapped_column(JSON, default=dict)
     creado_en: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     actualizado_en: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
@@ -151,3 +155,38 @@ class OpcionCatalogo(Base):
     valor: Mapped[str] = mapped_column(String(100), nullable=False)
     activo: Mapped[bool] = mapped_column(Boolean, default=True)
     creado_en: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class TipoControl(Base):
+    """Tipo de control dinámico (ej. Serializado, Consumible) con campos propios."""
+    __tablename__ = "tipos_control"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    nombre: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    descripcion: Mapped[str] = mapped_column(String(300), default="")
+    activo: Mapped[bool] = mapped_column(Boolean, default=True)
+    creado_en: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    campos: Mapped[list["CampoControl"]] = relationship(
+        "CampoControl",
+        back_populates="tipo_control",
+        cascade="all, delete-orphan",
+        order_by="CampoControl.orden",
+    )
+
+
+class CampoControl(Base):
+    """Definición de un campo perteneciente a un TipoControl (form builder)."""
+    __tablename__ = "campos_control"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    tipo_control_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("tipos_control.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    etiqueta: Mapped[str] = mapped_column(String(100), nullable=False)
+    requerido: Mapped[bool] = mapped_column(Boolean, default=False)
+    tipo_dato: Mapped[str] = mapped_column(String(20), default="texto")  # reservado para el futuro
+    orden: Mapped[int] = mapped_column(Integer, default=0)
+    creado_en: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    tipo_control: Mapped["TipoControl"] = relationship("TipoControl", back_populates="campos")

@@ -20,10 +20,10 @@ function ProveedorCard({ p, esAdmin, onEditar, onDesactivar }: {
       onMouseLeave={() => setHov(false)}
       className={`bg-bg1 rounded-xl overflow-hidden transition-all duration-[220ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] ${hov ? 'shadow-xl -translate-y-[3px]' : 'shadow-sm'} ${p.activo ? 'opacity-100' : 'opacity-60'}`}
       style={{
-        border: `0.5px solid ${hov ? '#1D9E7540' : 'var(--border)'}`,
+        border: `0.5px solid ${hov ? 'color-mix(in srgb, var(--primary) 25%, transparent)' : 'var(--border)'}`,
       }}
     >
-      <div className="h-[3px]" style={{ background: p.activo ? 'linear-gradient(90deg,#1D9E75,#1D9E7555)' : 'var(--border)' }} />
+      <div className="h-[3px]" style={{ background: p.activo ? 'linear-gradient(90deg,var(--primary),color-mix(in srgb, var(--primary) 33%, transparent))' : 'var(--border)' }} />
       <div className="p-[14px_16px]">
         <div className="flex items-start justify-between mb-2.5">
           <div className="flex-1 min-w-0">
@@ -122,46 +122,46 @@ export default function ProveedoresPage({ usuario }: Props) {
       <div className="grid-3 mb-5">
         <FloatCard style={{ padding: '18px 20px' }}>
           <div className="flex items-center gap-2.5 mb-2.5">
-            <div className="w-[38px] h-[38px] rounded-xl flex items-center justify-center" style={{ background: '#1D9E7518' }}>
-              <Building2 className="w-5 h-5" style={{ color: '#1D9E75' }} />
+            <div className="w-[38px] h-[38px] rounded-xl flex items-center justify-center" style={{ background: 'var(--primary-subtle)' }}>
+              <Building2 className="w-5 h-5" style={{ color: 'var(--primary)' }} />
             </div>
             <div>
-              <div className="text-sm font-bold" style={{ color: '#1D9E75' }}>Total proveedores</div>
+              <div className="text-sm font-bold" style={{ color: 'var(--primary)' }}>Total proveedores</div>
               <div className="text-[10px] text-t3">registrados</div>
             </div>
           </div>
           <div className="flex items-baseline gap-1.5">
-            <div className="text-[32px] font-extrabold leading-none" style={{ color: '#1D9E75' }}>{proveedores.length}</div>
+            <div className="text-[32px] font-extrabold leading-none" style={{ color: 'var(--primary)' }}>{proveedores.length}</div>
             <div className="text-[11px] text-t2">registrados</div>
           </div>
         </FloatCard>
         <FloatCard style={{ padding: '18px 20px' }}>
           <div className="flex items-center gap-2.5 mb-2.5">
-            <div className="w-[38px] h-[38px] rounded-xl flex items-center justify-center" style={{ background: '#2563EB18' }}>
-              <CheckCircle className="w-5 h-5" style={{ color: '#2563EB' }} />
+            <div className="w-[38px] h-[38px] rounded-xl flex items-center justify-center" style={{ background: 'var(--info-subtle)' }}>
+              <CheckCircle className="w-5 h-5" style={{ color: 'var(--info)' }} />
             </div>
             <div>
-              <div className="text-sm font-bold" style={{ color: '#2563EB' }}>Activos</div>
+              <div className="text-sm font-bold" style={{ color: 'var(--info)' }}>Activos</div>
               <div className="text-[10px] text-t3">en operación</div>
             </div>
           </div>
           <div className="flex items-baseline gap-1.5">
-            <div className="text-[32px] font-extrabold leading-none" style={{ color: '#2563EB' }}>{activos}</div>
+            <div className="text-[32px] font-extrabold leading-none" style={{ color: 'var(--info)' }}>{activos}</div>
             <div className="text-[11px] text-t2">en operación</div>
           </div>
         </FloatCard>
         <FloatCard style={{ padding: '18px 20px' }}>
           <div className="flex items-center gap-2.5 mb-2.5">
-            <div className="w-[38px] h-[38px] rounded-xl flex items-center justify-center" style={{ background: '#D9770618' }}>
-              <PauseCircle className="w-5 h-5" style={{ color: '#D97706' }} />
+            <div className="w-[38px] h-[38px] rounded-xl flex items-center justify-center" style={{ background: 'var(--warning-subtle)' }}>
+              <PauseCircle className="w-5 h-5" style={{ color: 'var(--warning)' }} />
             </div>
             <div>
-              <div className="text-sm font-bold" style={{ color: '#D97706' }}>Inactivos</div>
+              <div className="text-sm font-bold" style={{ color: 'var(--warning)' }}>Inactivos</div>
               <div className="text-[10px] text-t3">desactivados</div>
             </div>
           </div>
           <div className="flex items-baseline gap-1.5">
-            <div className="text-[32px] font-extrabold leading-none" style={{ color: '#D97706' }}>{proveedores.length - activos}</div>
+            <div className="text-[32px] font-extrabold leading-none" style={{ color: 'var(--warning)' }}>{proveedores.length - activos}</div>
             <div className="text-[11px] text-t2">desactivados</div>
           </div>
         </FloatCard>
@@ -188,8 +188,8 @@ export default function ProveedoresPage({ usuario }: Props) {
       </FloatCard>
 
       {!esAdmin && (
-        <FloatCard color="#1D9E75" style={{ padding: '10px 16px', marginBottom: 14 }}>
-          <div className="text-sm flex items-center gap-1.5" style={{ color: '#0F6E56' }}><Eye className="w-4 h-4" /> Modo solo lectura — contacta a un administrador para modificar proveedores.</div>
+        <FloatCard color="var(--primary)" style={{ padding: '10px 16px', marginBottom: 14 }}>
+          <div className="text-sm flex items-center gap-1.5" style={{ color: 'var(--primary-hover)' }}><Eye className="w-4 h-4" /> Modo solo lectura — contacta a un administrador para modificar proveedores.</div>
         </FloatCard>
       )}
 

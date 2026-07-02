@@ -68,11 +68,11 @@ export default function ProyeccionesPage() {
   })) ?? []
 
   const modeloColor: Record<string, string> = {
-    'Promedio Móvil': '#D97706', 'Suavización Simple': '#0891B2',
-    'Tendencia Lineal': '#DC2626',
-    'Holt-Winters': '#1D9E75', 'ARIMA': '#2563EB', 'Prophet (Meta)': '#7C3AED',
+    'Promedio Móvil': 'var(--warning)', 'Suavización Simple': 'var(--info)',
+    'Tendencia Lineal': 'var(--danger)',
+    'Holt-Winters': 'var(--primary)', 'ARIMA': 'var(--info)', 'Prophet (Meta)': '#7C3AED',
   }
-  const color = proyeccion ? (modeloColor[proyeccion.modelo_usado] ?? '#1D9E75') : '#1D9E75'
+  const color = proyeccion ? (modeloColor[proyeccion.modelo_usado] ?? 'var(--primary)') : 'var(--primary)'
 
   return (
     <div>
@@ -135,12 +135,12 @@ export default function ProyeccionesPage() {
               <label className="text-[11px] font-bold text-t2 block mb-1.5 uppercase tracking-[0.05em]">Horizonte: {horizonte}d</label>
               <input type="range" min={7} max={90} step={7} value={horizonte}
                 onChange={e => setHorizonte(+e.target.value)}
-                className="w-full" style={{ accentColor: '#1D9E75' }} />
+                className="w-full" style={{ accentColor: 'var(--primary)' }} />
             </div>
             <button onClick={proyectar} disabled={loading || !prodId}
               className="py-2.5 rounded-xl border-none cursor-pointer text-sm font-bold font-sans transition-all duration-150 flex items-center justify-center gap-2"
               style={{
-                background: loading ? 'var(--bg2)' : 'linear-gradient(135deg, #1D9E75, #0d7a59)',
+                background: loading ? 'var(--bg2)' : 'linear-gradient(135deg, var(--primary), var(--primary-hover))',
                 color: loading ? 'var(--t2)' : 'white',
               }}>
               {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Calculando…</> : <><TrendingUp className="w-4 h-4" /> Proyectar</>}
@@ -149,8 +149,8 @@ export default function ProyeccionesPage() {
         </FloatCard>
 
         {error && (
-          <FloatCard color="#DC2626" style={{ padding: '12px 16px', marginBottom: 16 }}>
-            <div className="text-sm flex items-center gap-1.5" style={{ color: '#DC2626' }}><AlertTriangle className="w-4 h-4" /> {error}</div>
+          <FloatCard color="var(--danger)" style={{ padding: '12px 16px', marginBottom: 16 }}>
+            <div className="text-sm flex items-center gap-1.5" style={{ color: 'var(--danger)' }}><AlertTriangle className="w-4 h-4" /> {error}</div>
           </FloatCard>
         )}
 
@@ -167,9 +167,9 @@ export default function ProyeccionesPage() {
         {proyeccion && (<> {/* KPIs, chart, model comparison, warnings - same as before */}
           <div className="grid-4 mb-4">
             <KpiFloat label="Modelo usado" value={proyeccion.modelo_usado.split(' ')[0]} sub={proyeccion.modelo_usado} color={color} icon={<Brain className="w-5 h-5" />} />
-            <KpiFloat label="Stock actual" value={`${proyeccion.stock_actual} u.`} sub="unidades disponibles" color="#2563EB" icon={<Package className="w-5 h-5" />} />
-            <KpiFloat label="Días hasta agotarse" value={proyeccion.dias_hasta_agotamiento != null ? `${proyeccion.dias_hasta_agotamiento}d` : '∞'} sub="estimado" color={(proyeccion.dias_hasta_agotamiento ?? 999) < 14 ? '#DC2626' : '#1D9E75'} icon={<Timer className="w-5 h-5" />} />
-            <KpiFloat label="Reposición sugerida" value={`${proyeccion.reposicion_recomendada} u.`} sub="para cubrir horizonte" color="#D97706" icon={<ShoppingCart className="w-5 h-5" />} />
+            <KpiFloat label="Stock actual" value={`${proyeccion.stock_actual} u.`} sub="unidades disponibles" color="var(--info)" icon={<Package className="w-5 h-5" />} />
+            <KpiFloat label="Días hasta agotarse" value={proyeccion.dias_hasta_agotamiento != null ? `${proyeccion.dias_hasta_agotamiento}d` : '∞'} sub="estimado" color={(proyeccion.dias_hasta_agotamiento ?? 999) < 14 ? 'var(--danger)' : 'var(--primary)'} icon={<Timer className="w-5 h-5" />} />
+            <KpiFloat label="Reposición sugerida" value={`${proyeccion.reposicion_recomendada} u.`} sub="para cubrir horizonte" color="var(--warning)" icon={<ShoppingCart className="w-5 h-5" />} />
           </div>
           {proyeccion.guardado_id && (
             <div className="text-[11px] text-primary mb-3 text-right flex items-center justify-end gap-1"><CheckCircle className="w-3.5 h-3.5" /> Proyección guardada (ID: {proyeccion.guardado_id})</div>
@@ -178,7 +178,7 @@ export default function ProyeccionesPage() {
             {[
               { k: 'MAE', v: proyeccion.metricas.mae.toFixed(3), d: 'Error absoluto medio', c: '#7C3AED' },
               { k: 'RMSE', v: proyeccion.metricas.rmse.toFixed(3), d: 'Raíz error cuadrático', c: '#7C3AED' },
-              { k: 'MAPE', v: proyeccion.metricas.mape.toFixed(1)+'%', d: 'Error porcentual', c: proyeccion.metricas.mape < 15 ? '#1D9E75' : proyeccion.metricas.mape < 30 ? '#D97706' : '#DC2626' },
+              { k: 'MAPE', v: proyeccion.metricas.mape.toFixed(1)+'%', d: 'Error porcentual', c: proyeccion.metricas.mape < 15 ? 'var(--primary)' : proyeccion.metricas.mape < 30 ? 'var(--warning)' : 'var(--danger)' },
               { k: 'AIC', v: proyeccion.metricas.aic != null ? proyeccion.metricas.aic.toFixed(0) : 'N/A', d: 'Criterio Akaike', c: '#7C3AED' },
             ].map(m => (
               <FloatCard key={m.k} color={m.c} style={{ padding: '14px 16px' }}>
@@ -230,7 +230,7 @@ export default function ProyeccionesPage() {
               })}
             </div>
           </FloatSection>)}
-          {proyeccion.advertencias?.length > 0 && (<FloatCard color="#D97706" style={{ padding: '14px 18px' }}>
+          {proyeccion.advertencias?.length > 0 && (<FloatCard color="var(--warning)" style={{ padding: '14px 18px' }}>
             {proyeccion.advertencias.map((a, i) => (
               <div key={i} className="text-xs flex items-center gap-1.5" style={{ color: '#92400E', marginBottom: i < proyeccion.advertencias.length - 1 ? 6 : 0 }}><AlertTriangle className="w-3 h-3" /> {a}</div>
             ))}
@@ -276,10 +276,10 @@ export default function ProyeccionesPage() {
         {comparacion && (
           <div>
             <div className="grid-4 mb-4">
-              <KpiFloat label="Demanda proyectada" value={`${comparacion.demanda_proyectada} u.`} sub={comparacion.modelo_usado} color="#2563EB" icon={<TrendingUp className="w-5 h-5" />} />
-              <KpiFloat label="Demanda real" value={`${comparacion.demanda_real} u.`} sub="ventas reales" color="#1D9E75" icon={<BarChart3 className="w-5 h-5" />} />
-              <KpiFloat label="Diferencia" value={`${comparacion.diferencia > 0 ? '+' : ''}${comparacion.diferencia}`} sub={comparacion.diferencia > 0 ? 'sobreestimado' : 'subestimado'} color={comparacion.error_absoluto < 10 ? '#1D9E75' : '#D97706'} icon={<Ruler className="w-5 h-5" />} />
-              <KpiFloat label="Precisión" value={`${comparacion.precision}%`} sub={`error: ${comparacion.porcentaje_error}%`} color={comparacion.precision >= 80 ? '#1D9E75' : comparacion.precision >= 50 ? '#D97706' : '#DC2626'} icon={<Crosshair className="w-5 h-5" />} />
+              <KpiFloat label="Demanda proyectada" value={`${comparacion.demanda_proyectada} u.`} sub={comparacion.modelo_usado} color="var(--info)" icon={<TrendingUp className="w-5 h-5" />} />
+              <KpiFloat label="Demanda real" value={`${comparacion.demanda_real} u.`} sub="ventas reales" color="var(--primary)" icon={<BarChart3 className="w-5 h-5" />} />
+              <KpiFloat label="Diferencia" value={`${comparacion.diferencia > 0 ? '+' : ''}${comparacion.diferencia}`} sub={comparacion.diferencia > 0 ? 'sobreestimado' : 'subestimado'} color={comparacion.error_absoluto < 10 ? 'var(--primary)' : 'var(--warning)'} icon={<Ruler className="w-5 h-5" />} />
+              <KpiFloat label="Precisión" value={`${comparacion.precision}%`} sub={`error: ${comparacion.porcentaje_error}%`} color={comparacion.precision >= 80 ? 'var(--primary)' : comparacion.precision >= 50 ? 'var(--warning)' : 'var(--danger)'} icon={<Crosshair className="w-5 h-5" />} />
             </div>
             <FloatCard style={{ padding: 16 }}>
               <div className="text-sm font-semibold mb-3 flex items-center gap-1.5"><ClipboardList className="w-4 h-4" /> Detalle de validación</div>

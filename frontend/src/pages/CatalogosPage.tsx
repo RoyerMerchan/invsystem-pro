@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Tags, Ruler, Building2, Plus, X } from 'lucide-react'
+import { Tags, Ruler, Building2, Plus, X, SlidersHorizontal, Trash2 } from 'lucide-react'
 import { api } from '../services/api'
-import type { OpcionCatalogo, TipoCatalogo, Usuario } from '../types'
+import type { OpcionCatalogo, TipoCatalogo, TipoControl, Usuario } from '../types'
 import { FloatSection } from '../components/FloatCard'
 import { PageHeader } from './DashboardPage'
 import { useRol } from '../hooks/useRol'
@@ -55,6 +55,187 @@ export default function CatalogosPage({ usuario }: { usuario: Usuario | null }) 
           onError={setError}
         />
       ))}
+
+      <TiposControlManager onError={setError} />
+    </div>
+  )
+}
+
+// ── Constructor de tipos de control (form builder) ────────────────
+function TiposControlManager({ onError }: { onError: (msg: string) => void }) {
+  const [tipos, setTipos] = useState<TipoControl[]>([])
+  const [loading, setLoading] = useState(true)
+  const [nombre, setNombre] = useState('')
+  const [saving, setSaving] = useState(false)
+
+  const cargar = useCallback(() => {
+    setLoading(true)
+    api<TipoControl[]>('/api/v1/tipos-control/')
+      .then(setTipos)
+      .catch(e => onError(e.message))
+      .finally(() => setLoading(false))
+  }, [onError])
+
+  useEffect(() => { cargar() }, [cargar])
+
+  async function crearTipo() {
+    const n = nombre.trim()
+    if (!n) return
+    setSaving(true); onError('')
+    try {
+      await api('/api/v1/tipos-control/', { method: 'POST', body: JSON.stringify({ nombre: n }) })
+      setNombre('')
+      cargar()
+    } catch (e: any) {
+      onError(e.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function borrarTipo(id: number) {
+    if (!confirm('¿Eliminar este tipo de control y todos sus campos?')) return
+    onError('')
+    try {
+      await api(`/api/v1/tipos-control/${id}`, { method: 'DELETE' })
+      cargar()
+    } catch (e: any) {
+      onError(e.message)
+    }
+  }
+
+  return (
+    <FloatSection
+      title={<span className="inline-flex items-center gap-2"><SlidersHorizontal className="w-4 h-4" />Tipos de control</span>}
+      sub="Crea tipos de control y define qué campos lleva cada uno. Al asignar un tipo a un producto, esos campos aparecen en su formulario."
+    >
+      {/* Crear tipo */}
+      <div className="flex gap-2 mb-4 flex-wrap">
+        <input
+          value={nombre}
+          onChange={e => setNombre(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && crearTipo()}
+          placeholder="Nuevo tipo de control (ej. Serializado)"
+          className="flex-1 min-w-[200px] text-[13px] px-3 py-2 rounded-lg border-[0.5px] border-border bg-bg1 text-t1 font-sans"
+        />
+        <button
+          onClick={crearTipo}
+          disabled={saving || !nombre.trim()}
+          className="inline-flex items-center gap-1.5 text-[13px] font-medium px-4 py-2 rounded-lg text-white"
+          style={{ background: '#1D9E75', opacity: saving || !nombre.trim() ? 0.6 : 1, cursor: saving || !nombre.trim() ? 'not-allowed' : 'pointer' }}
+        >
+          <Plus className="w-4 h-4" /> Crear tipo
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="text-[13px] text-muted">Cargando…</div>
+      ) : tipos.length === 0 ? (
+        <div className="text-[13px] text-muted">Sin tipos de control. Crea el primero arriba.</div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {tipos.map(t => (
+            <TipoControlCard key={t.id} tipo={t} onChange={cargar} onDelete={() => borrarTipo(t.id)} onError={onError} />
+          ))}
+        </div>
+      )}
+    </FloatSection>
+  )
+}
+
+function TipoControlCard({
+  tipo, onChange, onDelete, onError,
+}: {
+  tipo: TipoControl
+  onChange: () => void
+  onDelete: () => void
+  onError: (msg: string) => void
+}) {
+  const [etiqueta, setEtiqueta] = useState('')
+  const [requerido, setRequerido] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  async function agregarCampo() {
+    const e = etiqueta.trim()
+    if (!e) return
+    setSaving(true); onError('')
+    try {
+      await api(`/api/v1/tipos-control/${tipo.id}/campos`, { method: 'POST', body: JSON.stringify({ etiqueta: e, requerido }) })
+      setEtiqueta(''); setRequerido(false)
+      onChange()
+    } catch (err: any) {
+      onError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function borrarCampo(id: number) {
+    onError('')
+    try {
+      await api(`/api/v1/tipos-control/campos/${id}`, { method: 'DELETE' })
+      onChange()
+    } catch (err: any) {
+      onError(err.message)
+    }
+  }
+
+  return (
+    <div className="rounded-xl border border-border bg-bg1 p-3.5">
+      <div className="flex items-center justify-between mb-2.5">
+        <div className="text-[13px] font-semibold text-t1">{tipo.nombre}</div>
+        <button
+          onClick={onDelete}
+          className="w-6 h-6 rounded-md flex items-center justify-center text-muted hover:text-danger hover:bg-danger/10 transition-colors"
+          aria-label={`Eliminar tipo ${tipo.nombre}`}
+          title="Eliminar tipo"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Campos existentes */}
+      {tipo.campos.length === 0 ? (
+        <div className="text-[12px] text-muted mb-2.5">Sin campos todavía.</div>
+      ) : (
+        <div className="flex flex-wrap gap-2 mb-2.5">
+          {tipo.campos.map(c => (
+            <span key={c.id} className="inline-flex items-center gap-1.5 text-[12px] pl-3 pr-1.5 py-1 rounded-full bg-bg2 border border-border text-t1">
+              {c.etiqueta}{c.requerido && <span className="text-danger" title="Obligatorio">*</span>}
+              <button
+                onClick={() => borrarCampo(c.id)}
+                className="w-5 h-5 rounded-full flex items-center justify-center text-muted hover:text-danger hover:bg-danger/10 transition-colors"
+                aria-label={`Eliminar campo ${c.etiqueta}`}
+                title="Eliminar campo"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Agregar campo */}
+      <div className="flex gap-2 flex-wrap items-center">
+        <input
+          value={etiqueta}
+          onChange={e => setEtiqueta(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && agregarCampo()}
+          placeholder="Nuevo campo (ej. Número de serie)"
+          className="flex-1 min-w-[180px] text-[12px] px-2.5 py-1.5 rounded-lg border-[0.5px] border-border bg-bg1 text-t1 font-sans"
+        />
+        <label className="flex items-center gap-1.5 text-[12px] text-t2 cursor-pointer select-none">
+          <input type="checkbox" checked={requerido} onChange={e => setRequerido(e.target.checked)} />
+          Obligatorio
+        </label>
+        <button
+          onClick={agregarCampo}
+          disabled={saving || !etiqueta.trim()}
+          className="inline-flex items-center gap-1 text-[12px] font-medium px-3 py-1.5 rounded-lg border border-border text-t1 bg-bg2 hover:bg-bg1 transition-colors disabled:opacity-60"
+        >
+          <Plus className="w-3.5 h-3.5" /> Campo
+        </button>
+      </div>
     </div>
   )
 }
