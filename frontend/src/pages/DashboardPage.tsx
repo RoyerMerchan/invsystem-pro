@@ -3,7 +3,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area,
 } from 'recharts'
-import { Package, Wallet, AlertTriangle, CircleX } from 'lucide-react'
+import { Package, Wallet, AlertTriangle, CircleX, CalendarDays, Clock3 } from 'lucide-react'
 import { api, fmt } from '../services/api'
 import type { Producto, Alerta } from '../types'
 
@@ -103,8 +103,14 @@ export default function DashboardPage() {
   const [topDemanda, setTopDemanda] = useState<TopItem[]>([])
   const [menorRotacion, setMenorRotacion] = useState<TopItem[]>([])
   const [ventasHistoricas, setVentasHistoricas] = useState<{ fecha: string; total: number }[]>([])
+  const [now, setNow] = useState(() => new Date())
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(new Date()), 1000)
+    return () => window.clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     Promise.all([
@@ -157,10 +163,36 @@ export default function DashboardPage() {
 
   // Datos de área simulados para sparkline
   const sparkData = stats.por_categoria.map((c, i) => ({ name: c.categoria, valor: c.valor, idx: i }))
+  // Hora local del dispositivo (sin zona horaria fija)
+  const fechaActual = new Intl.DateTimeFormat('es-CO', {
+    weekday: 'long',
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  }).format(now)
+  const horaActual = new Intl.DateTimeFormat('es-CO', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).format(now)
 
   return (
     <div>
-      <PageHeader title="Dashboard" sub="Resumen general del inventario" />
+      <PageHeader
+        title="Dashboard"
+        sub="Resumen general del inventario"
+        action={
+          <div className="flex flex-wrap items-center gap-2 text-xs text-t2">
+            <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 capitalize">
+              <CalendarDays className="w-4 h-4 text-primary" /> {fechaActual}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 font-semibold tabular-nums text-t1">
+              <Clock3 className="w-4 h-4 text-primary" /> {horaActual}
+            </span>
+          </div>
+        }
+      />
 
       {/* KPIs flotantes */}
       <div className="grid-4 mb-5">
@@ -360,11 +392,14 @@ function Skeleton({ expanded }: { expanded?: boolean }) {
   )
 }
 
-export function PageHeader({ title, sub }: { title: string; sub: string }) {
+export function PageHeader({ title, sub, action }: { title: string; sub: string; action?: React.ReactNode }) {
   return (
-    <div className="mb-6">
-      <div className="text-xl font-bold text-t1 tracking-[-0.3px]">{title}</div>
-      <div className="text-[13px] text-t2 mt-[3px]">{sub}</div>
+    <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <div className="text-xl font-bold text-t1 tracking-[-0.3px]">{title}</div>
+        <div className="text-[13px] text-t2 mt-[3px]">{sub}</div>
+      </div>
+      {action}
     </div>
   )
 }

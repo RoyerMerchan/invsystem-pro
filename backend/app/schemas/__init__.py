@@ -248,3 +248,27 @@ class MovimientoScannerResponse(BaseModel):
     cantidad: int
     stock_anterior: int
     stock_nuevo: int
+
+
+# ══════════════════════════════════════════════════════════════════
+# CATÁLOGO (datos maestros dinámicos: categorías, unidades, sedes)
+# ══════════════════════════════════════════════════════════════════
+
+TIPOS_CATALOGO = ("categoria", "unidad", "sede")
+
+class OpcionCatalogoCreate(BaseModel):
+    tipo: Literal["categoria", "unidad", "sede"]
+    valor: str = Field(..., min_length=1, max_length=100)
+
+    @field_validator("valor")
+    @classmethod
+    def limpiar_valor(cls, v: str) -> str:
+        return sanitizar_texto(v, max_len=100)
+
+class OpcionCatalogoResponse(BaseModel):
+    id: int
+    tipo: str
+    valor: str
+    activo: bool
+    creado_en: datetime
+    model_config = {"from_attributes": True}

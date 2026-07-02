@@ -140,7 +140,7 @@ async def actualizar_producto(
     p = await db.get(Producto, producto_id)
     if not p:
         raise HTTPException(404, detail="Producto no encontrado")
-    for campo, valor in data.model_dump(exclude_none=True).items():
+    for campo, valor in data.model_dump(exclude_unset=True).items():
         setattr(p, campo, valor)
     await db.flush()
     await db.refresh(p)

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api, fmt } from '../services/api'
-import type { Venta, Producto, VentaCreateDetalle, VentaHistorialItem, Usuario } from '../types'
+import type { Venta, Producto, VentaCreateDetalle, VentaHistorialItem, Usuario, OpcionCatalogo } from '../types'
 import { useRol } from '../hooks/useRol'
 import { FloatCard, FloatSection } from '../components/FloatCard'
 
@@ -17,8 +17,15 @@ export default function VentasPage({ usuario }: { usuario: Usuario | null }) {
   const [desde, setDesde] = useState('')
   const [hasta, setHasta] = useState('')
   const [form, setForm] = useState({ sede: '', items: [] as VentaCreateDetalle[] })
+  const [sedes, setSedes] = useState<string[]>([])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    api<OpcionCatalogo[]>('/api/v1/catalogo/?tipo=sede')
+      .then(ops => setSedes(ops.map(o => o.valor)))
+      .catch(() => { /* si falla, el select solo muestra el placeholder */ })
+  }, [])
 
   const cargar = useCallback(() => {
     setLoading(true)
@@ -221,8 +228,7 @@ export default function VentasPage({ usuario }: { usuario: Usuario | null }) {
               <label className="text-xs text-t2 block mb-1">Sede</label>
               <select className="text-xs px-2.5 py-[7px] rounded-lg border-[0.5px] border-border bg-bg1 text-t1 font-sans w-full" value={form.sede} onChange={e => setForm(f => ({ ...f, sede: e.target.value }))}>
                 <option value="">Seleccionar sede</option>
-                <option value="Sede Centro">Sede Centro</option>
-                <option value="Sede Norte">Sede Norte</option>
+                {sedes.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
 

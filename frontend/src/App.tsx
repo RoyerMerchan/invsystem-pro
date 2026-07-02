@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import {
   LayoutDashboard, Package, Bell, TrendingUp, Sparkles, BarChart3,
   Receipt, ScanLine, Truck, ShieldCheck, Users, Monitor, LogOut,
-  Sun, Moon, Menu, ExternalLink, X, Upload,
+  Sun, Moon, Menu, ExternalLink, X, Upload, Database,
 } from 'lucide-react'
 import DashboardPage from './pages/DashboardPage'
 import InventarioPage from './pages/InventarioPage'
@@ -13,6 +13,7 @@ import ScannerPage from './pages/ScannerPage'
 import KioskoPage from './pages/KioskoPage'
 import ProveedoresPage from './pages/ProveedoresPage'
 import UsuariosPage from './pages/UsuariosPage'
+import CatalogosPage from './pages/CatalogosPage'
 import VentasPage from './pages/VentasPage'
 import ValidacionPage from './pages/ValidacionPage'
 import XAIPage from './pages/XAIPage'
@@ -21,7 +22,7 @@ import LoginPage, { RegisterPage } from './pages/LoginPage'
 import { useRol } from './hooks/useRol'
 import type { Usuario } from './types'
 
-type Page = 'dashboard' | 'inventario' | 'alertas' | 'proyecciones' | 'xai' | 'reportes' | 'scanner' | 'proveedores' | 'ventas' | 'validacion' | 'usuarios' | 'importar'
+type Page = 'dashboard' | 'inventario' | 'alertas' | 'proyecciones' | 'xai' | 'reportes' | 'scanner' | 'proveedores' | 'ventas' | 'validacion' | 'usuarios' | 'importar' | 'catalogos'
 type AuthPage = 'login' | 'registro'
 
 function useIsMobile() {
@@ -39,6 +40,7 @@ const NAV_ICONS: Record<Page, React.ElementType> = {
   proyecciones: TrendingUp, xai: Sparkles, reportes: BarChart3,
   ventas: Receipt, scanner: ScanLine, proveedores: Truck,
   validacion: ShieldCheck, usuarios: Users, importar: Upload,
+  catalogos: Database,
 }
 
 export default function App() {
@@ -85,6 +87,7 @@ export default function App() {
     { id: 'proveedores'  as Page, label: 'Proveedores',  visible: true },
     { id: 'validacion'   as Page, label: 'Validación',   visible: !esConsulta },
     { id: 'importar'     as Page, label: 'Importar',     visible: !esConsulta },
+    { id: 'catalogos'    as Page, label: 'Datos maestros', visible: esAdmin },
     { id: 'usuarios'     as Page, label: 'Usuarios',     visible: esAdmin },
   ].filter(n => n.visible)
 
@@ -223,7 +226,7 @@ export default function App() {
                 <ShieldCheck className="w-3 h-3" /> Solo lectura
               </span>
             )}
-            <a href="http://localhost:8000/docs" target="_blank" rel="noreferrer"
+            <a href={`${import.meta.env.VITE_API_URL || ''}/docs`} target="_blank" rel="noreferrer"
               className="text-xs text-muted hover:text-primary no-underline flex items-center gap-1 transition-colors">
               API Docs <ExternalLink className="w-3 h-3" />
             </a>
@@ -242,6 +245,7 @@ export default function App() {
           {page === 'ventas'       && <VentasPage usuario={usuario} />}
           {page === 'validacion'   && <ValidacionPage />}
           {page === 'importar'     && <ImportarPage />}
+          {page === 'catalogos'    && <CatalogosPage usuario={usuario} />}
           {page === 'usuarios'     && <UsuariosPage usuario={usuario} />}
         </main>
       </div>

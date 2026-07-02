@@ -4,7 +4,7 @@ import {
   Download, Loader2, CheckCircle, FileSpreadsheet, ClipboardList, Bell, FileText,
   type LucideIcon,
 } from 'lucide-react'
-import { api, fmt } from '../services/api'
+import { api, apiUrl, fmt } from '../services/api'
 import { FloatCard, KpiFloat } from '../components/FloatCard'
 
 interface Preview {
@@ -51,7 +51,7 @@ export default function ReportesPage() {
       if (formato === 'excel') url = '/api/v1/reportes/excel'
       else if (formato.startsWith('pdf_')) url = `/api/v1/reportes/pdf?tipo=${formato.replace('pdf_','')}`
       else url = `/api/v1/reportes/${formato.replace('_','/')}`
-      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } })
+      const res = await fetch(apiUrl(url), { headers: { Authorization: `Bearer ${token}` } })
       if (!res.ok) {
         const text = await res.text()
         let msg = 'Error al generar el reporte'
@@ -186,4 +186,4 @@ function ReporteCard({ f, downloading, onDescargar }: { f: FormatoEntry; downloa
   )
 }
 
-type Format = 'excel' | 'pdf_inventario' | 'pdf_alertas' | 'pdf_completo'
+type Format = 'excel' | 'pdf_inventario' | 'pdf_alertas' | 'pdf_completo' | 'csv_inventario' | 'csv_movimientos' | 'csv_ventas'

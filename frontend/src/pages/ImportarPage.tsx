@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { Upload, FileSpreadsheet, CheckCircle, XCircle, AlertTriangle, Download, Loader2, Table } from 'lucide-react'
-import { api } from '../services/api'
+import { apiUrl } from '../services/api'
 import { FloatCard, FloatSection } from '../components/FloatCard'
 
 interface FilaPreview {
@@ -14,6 +14,73 @@ interface ImportResult {
   detalles: { venta_id: number; producto: string; sku: string; cantidad: number; fecha: string }[]
 }
 
+const REQUIRED_HEADERS = ['sku', 'fecha', 'cantidad']
+
+function detectDelimiter(line: string) {
+  const options = [',', ';', '\t']
+  let best = ','
+  let bestCount = -1
+  for (const delimiter of options) {
+    let count = 0
+    let quoted = false
+    for (const ch of line) {
+      if (ch === '"') quoted = !quoted
+      else if (!quoted && ch === delimiter) count++
+    }
+    if (count > bestCount) {
+      best = delimiter
+      bestCount = count
+    }
+  }
+  return best
+}
+
+function parseCsvLine(line: string, delimiter: string) {
+  const values: string[] = []
+  let value = ''
+  let quoted = false
+
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i]
+    const next = line[i + 1]
+
+    if (ch === '"' && quoted && next === '"') {
+      value += '"'
+      i++
+    } else if (ch === '"') {
+      quoted = !quoted
+    } else if (!quoted && ch === delimiter) {
+      values.push(value.trim())
+      value = ''
+    } else {
+      value += ch
+    }
+  }
+
+  values.push(value.trim())
+  return values
+}
+
+function parseCsv(text: string) {
+  const clean = text.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+  const lines = clean.split('\n').filter(l => l.trim())
+  if (lines.length < 2) throw new Error('CSV vacio o sin datos')
+
+  const delimiter = detectDelimiter(lines[0])
+  const headers = parseCsvLine(lines[0], delimiter).map(h => h.trim().toLowerCase())
+  const missing = REQUIRED_HEADERS.filter(h => !headers.includes(h))
+  if (missing.length) {
+    throw new Error(`CSV debe tener columnas: ${REQUIRED_HEADERS.join(', ')}. Faltan: ${missing.join(', ')}`)
+  }
+
+  return lines.slice(1).map(line => {
+    const vals = parseCsvLine(line, delimiter)
+    const row: Record<string, string> = {}
+    headers.forEach((h, idx) => { row[h] = vals[idx] || '' })
+    return row
+  })
+}
+
 export default function ImportarPage() {
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<FilaPreview[]>([])
@@ -25,35 +92,25 @@ export default function ImportarPage() {
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0]
     if (!f) return
-    if (!f.name.endsWith('.csv')) { setError('Solo archivos CSV'); return }
+    if (!f.name.toLowerCase().endsWith('.csv')) { setError('Solo archivos CSV'); return }
     setError(''); setResult(null); setFile(f)
 
     const reader = new FileReader()
     reader.onload = () => {
-      const text = reader.result as string
-      const lines = text.split('\n').filter(l => l.trim())
-      if (lines.length < 2) { setError('CSV vacio o sin datos'); return }
-
-      const headers = lines[0].split(',').map(h => h.trim().toLowerCase())
-      if (!headers.includes('sku') || !headers.includes('fecha') || !headers.includes('cantidad')) {
-        setError('CSV debe tener columnas: sku, fecha, cantidad');
-        return
-      }
-
-      const parsed: FilaPreview[] = []
-      for (let i = 1; i < Math.min(lines.length, 6); i++) {
-        const vals = lines[i].split(',').map(v => v.trim())
-        const row: Record<string, string> = {}
-        headers.forEach((h, idx) => { row[h] = vals[idx] || '' })
-        parsed.push({
+      try {
+        const rows = parseCsv(reader.result as string)
+        const parsed = rows.slice(0, 5).map(row => ({
           sku: row.sku?.toUpperCase() || '',
           fecha: row.fecha || '',
           cantidad: parseInt(row.cantidad) || 0,
           precio_unitario: parseFloat(row.precio_unitario) || 0,
           sede: row.sede || '',
-        })
+        }))
+        setPreview(parsed)
+      } catch (e: any) {
+        setPreview([])
+        setError(e.message)
       }
-      setPreview(parsed)
     }
     reader.readAsText(f)
   }
@@ -64,7 +121,7 @@ export default function ImportarPage() {
     try {
       const form = new FormData()
       form.append('file', file)
-      const res = await fetch('/api/v1/ventas/importar', {
+      const res = await fetch(apiUrl('/api/v1/ventas/importar'), {
         method: 'POST',
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         body: form,
@@ -81,11 +138,32 @@ export default function ImportarPage() {
 
   const descargarPlantilla = () => {
     const csv = 'sku,fecha,cantidad,precio_unitario,sede\nLAP-HP15-001,2025-01-15,3,850.00,Sede Centro\nMOU-INL-002,2025-01-16,10,29.00,Sede Norte'
-    const blob = new Blob([csv], { type: 'text/csv' })
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
     a.download = 'plantilla_importacion.csv'
     a.click()
+  }
+
+  const [exportando, setExportando] = useState(false)
+  const exportarVentas = async () => {
+    setExportando(true); setError('')
+    try {
+      const res = await fetch(apiUrl('/api/v1/ventas/exportar'), {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      })
+      if (!res.ok) throw new Error('No se pudieron exportar las ventas')
+      const blob = await res.blob()
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(blob)
+      a.download = `ventas_exportadas_${new Date().toISOString().slice(0, 10)}.csv`
+      a.click()
+      URL.revokeObjectURL(a.href)
+    } catch (e: any) {
+      setError(e.message)
+    } finally {
+      setExportando(false)
+    }
   }
 
   return (
@@ -103,16 +181,22 @@ export default function ImportarPage() {
         >
           <Upload className="w-10 h-10 text-muted mb-4" />
           <div className="text-sm font-semibold text-t1 mb-1">Haz clic para seleccionar archivo CSV</div>
-          <div className="text-xs text-muted">Columnas requeridas: sku, fecha, cantidad</div>
+          <div className="text-xs text-muted">Obligatorias: sku, fecha, cantidad · Opcionales: precio_unitario, sede</div>
+          <div className="text-[11px] text-muted/70 mt-1">Acepta delimitador , ; o tab · fechas AAAA-MM-DD o DD/MM/AAAA · mayúsculas indiferentes</div>
           <input ref={inputRef} type="file" accept=".csv" onChange={handleFile} className="hidden" />
         </div>
       </FloatCard>
 
-      {/* Plantilla */}
-      <div className="flex items-center gap-2 mb-5">
+      {/* Plantilla / Exportar */}
+      <div className="flex items-center gap-2 mb-5 flex-wrap">
         <button onClick={descargarPlantilla}
           className="flex items-center gap-2 text-xs font-medium text-primary hover:text-primary-hover bg-primary-subtle px-3 py-2 rounded-lg transition-colors border-none cursor-pointer">
           <Download className="w-4 h-4" /> Descargar plantilla CSV
+        </button>
+        <button onClick={exportarVentas} disabled={exportando}
+          className="flex items-center gap-2 text-xs font-medium text-t2 hover:text-t1 bg-bg2 px-3 py-2 rounded-lg transition-colors border-none cursor-pointer disabled:opacity-60">
+          {exportando ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileSpreadsheet className="w-4 h-4" />}
+          Exportar ventas (re-importable)
         </button>
       </div>
 

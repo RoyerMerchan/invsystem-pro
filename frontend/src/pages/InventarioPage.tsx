@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api, fmt } from '../services/api'
-import type { Producto, Usuario } from '../types'
+import type { Producto, Usuario, OpcionCatalogo } from '../types'
 import { FloatCard } from '../components/FloatCard'
 import { PageHeader } from './DashboardPage'
 import { useRol } from '../hooks/useRol'
@@ -12,12 +12,10 @@ interface ProductoForm {
 }
 
 const BLANK: ProductoForm = {
-  nombre: '', descripcion: '', categoria: 'Electrónica', sku: '',
+  nombre: '', descripcion: '', categoria: '', sku: '',
   stock_actual: 0, stock_minimo: 0, stock_maximo: 0,
   precio_unitario: 0, costo_unitario: 0, unidad_medida: 'unidad', activo: true,
 }
-
-const CATEGORIAS = ['Electrónica', 'Ropa', 'Alimentos', 'Herramientas', 'Otros']
 
 function estadoBadge(p: Producto) {
   if (!p.activo) return <Badge txt="Inactivo" color="#6B6B6B" bg="#EFEEEA" />
@@ -54,6 +52,8 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [editId, setEditId] = useState<number | null>(null)
+  const [categorias, setCategorias] = useState<string[]>([])
+  const [unidades, setUnidades] = useState<string[]>([])
 
   const cargar = useCallback(() => {
     setLoading(true)
@@ -63,6 +63,15 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
   }, [])
 
   useEffect(() => { cargar() }, [cargar])
+
+  useEffect(() => {
+    api<OpcionCatalogo[]>('/api/v1/catalogo/')
+      .then(ops => {
+        setCategorias(ops.filter(o => o.tipo === 'categoria').map(o => o.valor))
+        setUnidades(ops.filter(o => o.tipo === 'unidad').map(o => o.valor))
+      })
+      .catch(() => { /* si falla el catálogo, los selects quedan vacíos */ })
+  }, [])
 
   const filtrados = productos.filter(p => {
     const matchQ = p.nombre.toLowerCase().includes(query.toLowerCase()) ||
@@ -138,7 +147,7 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
           value={query} onChange={e => setQuery(e.target.value)} />
         <select style={{ ...INPUT, maxWidth: 180 }} value={catFilter} onChange={e => setCatFilter(e.target.value)}>
           <option value="">Todas las categorías</option>
-          {CATEGORIAS.map(c => <option key={c}>{c}</option>)}
+          {categorias.map(c => <option key={c}>{c}</option>)}
         </select>
         <label style={{ display:'flex', alignItems:'center', gap:4, fontSize:12, color:'var(--t2)', cursor:'pointer' }}>
           <input type="checkbox" checked={inactivos} onChange={e => setInactivos(e.target.checked)} />
@@ -146,7 +155,7 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
         </label>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
           <Btn label="+ Movimiento" onClick={() => { setMovForm({ producto_id: productos[0]?.id ?? 0, tipo: 'entrada', cantidad: 1, motivo: '' }); setMovModalOpen(true) }} />
-          {esAdmin && <Btn label="+ Producto" primary onClick={() => { setForm(BLANK); setEditId(null); setModalOpen(true) }} />}
+          {esAdmin && <Btn label="+ Producto" primary onClick={() => { setForm({ ...BLANK, categoria: categorias[0] ?? '', unidad_medida: unidades[0] ?? 'unidad' }); setEditId(null); setModalOpen(true) }} />}
         </div>
       </div>
 
@@ -214,10 +223,17 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
             <FormField label="SKU"><input style={INPUT} value={form.sku} onChange={set('sku')} placeholder="LAP-001" /></FormField>
             <FormField label="Categoría">
               <select style={INPUT} value={form.categoria} onChange={set('categoria')}>
-                {CATEGORIAS.map(c => <option key={c}>{c}</option>)}
+                <option value="" disabled>Selecciona…</option>
+                {form.categoria && !categorias.includes(form.categoria) && <option>{form.categoria}</option>}
+                {categorias.map(c => <option key={c}>{c}</option>)}
               </select>
             </FormField>
-            <FormField label="Unidad de medida"><input style={INPUT} value={form.unidad_medida} onChange={set('unidad_medida')} /></FormField>
+            <FormField label="Unidad de medida">
+              <select style={INPUT} value={form.unidad_medida} onChange={set('unidad_medida')}>
+                {form.unidad_medida && !unidades.includes(form.unidad_medida) && <option>{form.unidad_medida}</option>}
+                {unidades.map(u => <option key={u}>{u}</option>)}
+              </select>
+            </FormField>
             <FormField label="Stock actual"><input style={INPUT} type="number" min={0} value={form.stock_actual} onChange={set('stock_actual')} /></FormField>
             <FormField label="Stock mínimo"><input style={INPUT} type="number" min={0} value={form.stock_minimo} onChange={set('stock_minimo')} /></FormField>
             <FormField label="Stock máximo"><input style={INPUT} type="number" min={0} value={form.stock_maximo} onChange={set('stock_maximo')} /></FormField>

@@ -9,11 +9,11 @@ from fastapi.responses import JSONResponse
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from app.core.database import engine, Base
+from app.core.database import engine, Base, AsyncSessionLocal
 from app.core.security import limiter, security_headers_middleware
 from app.routers import (
     productos, movimientos, proyecciones,
-    alertas, auth, reportes, scanner, proveedores, usuarios, ventas,
+    alertas, auth, reportes, scanner, proveedores, usuarios, ventas, catalogo,
 )
 
 logging.basicConfig(
@@ -26,11 +26,35 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 IS_PROD = ENVIRONMENT == "production"
 
 
+DEFAULTS_CATALOGO = {
+    "categoria": ["Electrónica", "Ropa", "Alimentos", "Herramientas", "Otros"],
+    "unidad": ["unidad", "caja", "paquete", "kg", "litro"],
+    "sede": ["Sede Centro", "Sede Norte"],
+}
+
+
+async def _seed_catalogo() -> None:
+    """Siembra las opciones por defecto solo si la tabla está vacía."""
+    from sqlalchemy import select, func
+    from app.models.models import OpcionCatalogo
+
+    async with AsyncSessionLocal() as db:
+        total = await db.scalar(select(func.count()).select_from(OpcionCatalogo))
+        if total and total > 0:
+            return
+        for tipo, valores in DEFAULTS_CATALOGO.items():
+            for valor in valores:
+                db.add(OpcionCatalogo(tipo=tipo, valor=valor, activo=True))
+        await db.commit()
+        logger.info("Catálogo sembrado con valores por defecto")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Iniciando InvSystem Pro [%s]", ENVIRONMENT)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    await _seed_catalogo()
     yield
     await engine.dispose()
 
@@ -94,6 +118,7 @@ app.include_router(reportes.router,     prefix="/api/v1/reportes",     tags=["Re
 app.include_router(usuarios.router,     prefix="/api/v1/usuarios",     tags=["Usuarios"])
 app.include_router(scanner.router,      prefix="/api/v1/scanner",      tags=["Scanner"])
 app.include_router(ventas.router,       prefix="/api/v1/ventas",       tags=["Ventas"])
+app.include_router(catalogo.router,     prefix="/api/v1/catalogo",     tags=["Catalogo"])
 
 
 @app.get("/health")

@@ -6,6 +6,16 @@ export interface Usuario {
   permisos?: Record<string, boolean>
 }
 
+export type TipoCatalogo = 'categoria' | 'unidad' | 'sede'
+
+export interface OpcionCatalogo {
+  id: number
+  tipo: TipoCatalogo
+  valor: string
+  activo: boolean
+  creado_en: string
+}
+
 export interface Proveedor {
   id: number
   nombre: string

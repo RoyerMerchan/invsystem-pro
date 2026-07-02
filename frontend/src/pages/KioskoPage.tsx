@@ -168,10 +168,10 @@ export default function KioskoPage({ onSalirKiosko }: Props) {
           {/* Reloj */}
           <div className="text-right">
             <div className="text-lg font-bold tabular-nums text-[#1D9E75]">
-              {horaActual.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+              {horaActual.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
             </div>
             <div className="text-[11px] text-[#6B7280]">
-              {horaActual.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })}
+              {horaActual.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}
             </div>
           </div>
 

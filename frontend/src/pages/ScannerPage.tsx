@@ -176,7 +176,8 @@ const iniciarDecodificacion = async () => {
           .catch(() => {})
       }
     } catch {
-      setTimeout(() => { if (scanning) { detenerCamara(); buscarPorSku('LAP-HP15-001') } }, 3000)
+      detenerCamara()
+      setError('No se pudo iniciar el lector de códigos. Usa la pestaña "Manual" para ingresar el SKU.')
     }
   }
 

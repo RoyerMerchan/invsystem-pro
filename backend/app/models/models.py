@@ -1,6 +1,6 @@
 """Modelos de base de datos — InvSystem Pro"""
 from datetime import datetime
-from sqlalchemy import String, Integer, Float, DateTime, ForeignKey, Boolean, Text, JSON
+from sqlalchemy import String, Integer, Float, DateTime, ForeignKey, Boolean, Text, JSON, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -133,3 +133,21 @@ class VentaDetalle(Base):
 
     venta: Mapped["Venta"] = relationship("Venta", back_populates="detalles")
     producto: Mapped["Producto"] = relationship("Producto")
+
+
+class OpcionCatalogo(Base):
+    """Datos maestros dinámicos gestionables por el administrador.
+
+    En vez de listas fijas en el código (categorías, unidades, sedes),
+    cada opción se guarda como una fila con un `tipo` que la agrupa.
+    """
+    __tablename__ = "catalogo_opciones"
+    __table_args__ = (
+        UniqueConstraint("tipo", "valor", name="uq_catalogo_tipo_valor"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    tipo: Mapped[str] = mapped_column(String(40), nullable=False, index=True)  # categoria | unidad | sede
+    valor: Mapped[str] = mapped_column(String(100), nullable=False)
+    activo: Mapped[bool] = mapped_column(Boolean, default=True)
+    creado_en: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
