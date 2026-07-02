@@ -139,6 +139,10 @@ export default function ScannerPage() {
   // ── Cámara ────────────────────────────────────────────────────
   const iniciarCamara = async () => {
     try {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        setError('Cámara no disponible. Ejecuta la app en HTTPS o localhost.')
+        return
+      }
       setScanning(true); setError('')
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
@@ -149,31 +153,49 @@ export default function ScannerPage() {
         await videoRef.current.play()
         iniciarDecodificacion()
       }
-    } catch {
+    } catch (err: any) {
       setScanning(false)
-      setError('No se pudo acceder a la cámara. Verifica los permisos del navegador.')
+      const msg =
+        err.name === 'NotAllowedError' ? 'Permiso de cámara denegado. Habilítalo en la configuración del navegador.' :
+        err.name === 'NotFoundError' ? 'No se encontró una cámara en este dispositivo.' :
+        err.name === 'NotReadableError' ? 'La cámara está siendo usada por otra aplicación.' :
+        err.name === 'SecurityError' ? 'Cámara bloqueada por políticas de seguridad. Usa HTTPS o localhost.' :
+        'No se pudo acceder a la cámara. Verifica los permisos del navegador.'
+      setError(msg)
     }
   }
 
   const detenerCamara = () => {
+    scannerRef.current?.reset()
+    scannerRef.current = null
     streamRef.current?.getTracks().forEach(t => t.stop())
     streamRef.current = null
-    scannerRef.current = null
     setScanning(false)
   }
 
 
 const iniciarDecodificacion = async () => {
     try {
-      const { BrowserMultiFormatReader } = await import('@zxing/library')
-      const reader = new BrowserMultiFormatReader()
+      const { BrowserMultiFormatReader, DecodeHintType, BarcodeFormat } = await import('@zxing/library')
+      const hints = new Map()
+      hints.set(DecodeHintType.POSSIBLE_FORMATS, [
+        BarcodeFormat.QR_CODE,
+        BarcodeFormat.CODE_128,
+        BarcodeFormat.CODE_39,
+        BarcodeFormat.EAN_13,
+        BarcodeFormat.EAN_8,
+        BarcodeFormat.UPC_A,
+        BarcodeFormat.ITF,
+      ])
+      const reader = new BrowserMultiFormatReader(hints)
       scannerRef.current = reader
       if (videoRef.current) {
-        reader.decodeFromVideoElement(videoRef.current)
-          .then((result: any) => {
-            if (result) { detenerCamara(); buscarPorSku(result.getText()) }
-          })
-          .catch(() => {})
+        reader.decodeFromVideoElementContinuously(videoRef.current, (result: any, err: any) => {
+          if (result) {
+            detenerCamara()
+            buscarPorSku(result.getText())
+          }
+        })
       }
     } catch {
       detenerCamara()
@@ -269,8 +291,8 @@ const iniciarDecodificacion = async () => {
   }
 
   // ── Estilos ───────────────────────────────────────────────────
-  const estadoColor = (e: string) => e === 'sin_stock' ? '#993C1D' : e === 'stock_bajo' ? '#854F0B' : '#0F6E56'
-  const estadoBg    = (e: string) => e === 'sin_stock' ? '#FAECE7' : e === 'stock_bajo' ? '#FAEEDA' : '#E1F5EE'
+  const estadoColor = (e: string) => e === 'sin_stock' ? 'var(--danger)' : e === 'stock_bajo' ? 'var(--warning)' : 'var(--primary-hover)'
+  const estadoBg    = (e: string) => e === 'sin_stock' ? 'var(--danger-subtle)' : e === 'stock_bajo' ? 'var(--warning-subtle)' : 'var(--success-subtle)'
   const estadoLabel = (e: string) => e === 'sin_stock' ? 'Sin stock' : e === 'stock_bajo' ? 'Stock bajo' : 'Normal'
 
   const input: React.CSSProperties = {
@@ -331,27 +353,27 @@ const iniciarDecodificacion = async () => {
                 {!scanning && (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 280, gap: 12 }}>
                     <div style={{ fontSize: 52 }}>📷</div>
-                    <div style={{ fontSize: 13, color: '#aaa' }}>Cámara inactiva</div>
-                    <div style={{ fontSize: 11, color: '#666', textAlign: 'center', maxWidth: 220 }}>
+                    <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Cámara inactiva</div>
+                    <div style={{ fontSize: 11, color: 'var(--t3)', textAlign: 'center', maxWidth: 220 }}>
                       Lee cualquier código: QR, Code128, EAN-13, EAN-8, UPC, Code39, ITF-14
                     </div>
                   </div>
                 )}
                 {scanning && (
-                  <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 220, height: 140, border: '2px solid #1D9E75', borderRadius: 10, pointerEvents: 'none' }}>
+                  <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 220, height: 140, border: '2px solid var(--primary)', borderRadius: 10, pointerEvents: 'none' }}>
                     {[['top','-2px','left','-2px','borderTop','borderLeft'],['top','-2px','right','-2px','borderTop','borderRight'],
                       ['bottom','-2px','left','-2px','borderBottom','borderLeft'],['bottom','-2px','right','-2px','borderBottom','borderRight']
                     ].map(([td, tv, sd, sv, b1, b2], i) => (
-                      <div key={i} style={{ position:'absolute', [td]:tv, [sd]:sv, width:20, height:20, [b1]:'3px solid #1D9E75', [b2]:'3px solid #1D9E75', borderRadius: ['4px 0 0 0','0 4px 0 0','0 0 0 4px','0 0 4px 0'][i] } as any} />
+                      <div key={i} style={{ position:'absolute', [td]:tv, [sd]:sv, width:20, height:20, [b1]:'3px solid var(--primary)', [b2]:'3px solid var(--primary)', borderRadius: ['4px 0 0 0','0 4px 0 0','0 0 0 4px','0 0 4px 0'][i] } as any} />
                     ))}
-                    <div style={{ position: 'absolute', top: '50%', left: 8, right: 8, height: 2, background: '#1D9E75', opacity: 0.8, animation: 'scan 1.8s linear infinite' }} />
+                    <div style={{ position: 'absolute', top: '50%', left: 8, right: 8, height: 2, background: 'var(--primary)', opacity: 0.8, animation: 'scan 1.8s linear infinite' }} />
                   </div>
                 )}
               </div>
               <div style={{ padding: 16, display: 'flex', gap: 8 }}>
                 {!scanning
-                  ? <button onClick={iniciarCamara} style={{ ...btn, flex: 1, background: '#1D9E75', color: 'white' }}>📷 Iniciar cámara</button>
-                  : <button onClick={detenerCamara} style={{ ...btn, flex: 1, background: '#FAECE7', color: '#993C1D' }}>⏹ Detener</button>
+                  ? <button onClick={iniciarCamara} style={{ ...btn, flex: 1, background: 'var(--primary)', color: 'white' }}>📷 Iniciar cámara</button>
+                  : <button onClick={detenerCamara} style={{ ...btn, flex: 1, background: 'var(--danger-subtle)', color: 'var(--danger)' }}>⏹ Detener</button>
                 }
               </div>
               {scanning && <div style={{ padding: '0 16px 14px', fontSize: 12, color: 'var(--t2)', textAlign: 'center' }}>Apunta al código QR o código de barras del producto</div>}
@@ -368,7 +390,7 @@ const iniciarDecodificacion = async () => {
                   onKeyDown={e => e.key === 'Enter' && buscarPorSku(skuInput)}
                   placeholder="Ej: LAP-HP15-001" style={{ ...input, flex: 1 }} autoFocus />
                 <button onClick={() => buscarPorSku(skuInput)} disabled={loading}
-                  style={{ ...btn, background: '#1D9E75', color: 'white', whiteSpace: 'nowrap' }}>
+                  style={{ ...btn, background: 'var(--primary)', color: 'white', whiteSpace: 'nowrap' }}>
                   {loading ? '…' : 'Buscar →'}
                 </button>
               </div>
@@ -398,7 +420,7 @@ const iniciarDecodificacion = async () => {
               <div style={{ background: 'var(--bg1)', border: '0.5px solid var(--border)', borderRadius: 12, padding: 16 }}>
                 <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
                   <button onClick={() => setMostrarQR(false)}
-                    style={{ ...btn, flex: 1, padding: '8px', background: !mostrarQR ? '#1D9E75' : 'var(--bg2)', color: !mostrarQR ? 'white' : 'var(--t2)' }}>
+                    style={{ ...btn, flex: 1, padding: '8px', background: !mostrarQR ? 'var(--primary)' : 'var(--bg2)', color: !mostrarQR ? 'white' : 'var(--t2)' }}>
                     ▥ Código de barras
                   </button>
                   <button onClick={() => { setMostrarQR(true); generarQR() }}
@@ -415,9 +437,9 @@ const iniciarDecodificacion = async () => {
                       {FORMATOS.map(f => (
                         <button key={f.id} onClick={() => setFormato(f.id)}
                           style={{ ...btn, padding: '7px 10px', textAlign: 'left', fontSize: 12,
-                            background: formato === f.id ? '#EFF6FF' : 'var(--bg2)',
-                            color: formato === f.id ? '#2563EB' : 'var(--t2)',
-                            border: `1.5px solid ${formato === f.id ? '#2563EB' : 'var(--border)'}`,
+                            background: formato === f.id ? 'color-mix(in srgb, var(--info) 10%, white)' : 'var(--bg2)',
+                            color: formato === f.id ? 'var(--info)' : 'var(--t2)',
+                            border: `1.5px solid ${formato === f.id ? 'var(--info)' : 'var(--border)'}`,
                             fontWeight: formato === f.id ? 600 : 400,
                           }}>
                           <div style={{ fontWeight: 600 }}>{f.nombre}</div>
@@ -433,14 +455,14 @@ const iniciarDecodificacion = async () => {
                   {mostrarQR ? (
                     qrData?.qr_base64
                       ? <img src={`data:image/png;base64,${qrData.qr_base64}`} alt="QR" style={{ width: 150, height: 150 }} />
-                      : <div style={{ fontSize: 13, color: '#aaa' }}>Presiona "Código QR" para generar</div>
+                      : <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Presiona "Código QR" para generar</div>
                   ) : (
                     barcodeError
-                      ? <div style={{ color: '#DC2626', fontSize: 12, maxWidth: 260 }}>⚠ {barcodeError}</div>
+                      ? <div style={{ color: 'var(--danger)', fontSize: 12, maxWidth: 260 }}>⚠ {barcodeError}</div>
                       : <svg ref={barcodeSvgRef} style={{ maxWidth: '100%' }} />
                   )}
                   {prodSeleccionado && !barcodeError && (
-                    <div style={{ fontSize: 11, color: '#666', marginTop: 6 }}>
+                    <div style={{ fontSize: 11, color: 'var(--t3)', marginTop: 6 }}>
                       {prodSeleccionado.nombre} · {prodSeleccionado.sku}
                     </div>
                   )}
@@ -463,7 +485,7 @@ const iniciarDecodificacion = async () => {
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button onClick={imprimirEtiquetas} disabled={!prodSeleccionado || (!!barcodeError && !mostrarQR)}
-                    style={{ ...btn, flex: 1, background: '#1D9E75', color: 'white', opacity: (!prodSeleccionado || (!!barcodeError && !mostrarQR)) ? 0.5 : 1 }}>
+                    style={{ ...btn, flex: 1, background: 'var(--primary)', color: 'white', opacity: (!prodSeleccionado || (!!barcodeError && !mostrarQR)) ? 0.5 : 1 }}>
                     🖨️ Imprimir {etiquetasN} etiqueta{etiquetasN > 1 ? 's' : ''}
                   </button>
                   <button onClick={descargarCodigo} disabled={!prodSeleccionado || (!!barcodeError && !mostrarQR)}
@@ -489,7 +511,7 @@ const iniciarDecodificacion = async () => {
                 ? <div style={{ padding: 24, textAlign: 'center', color: 'var(--t2)', fontSize: 13 }}>No hay movimientos registrados aún</div>
                 : historial.map(h => (
                   <div key={h.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 16px', borderBottom: '0.5px solid var(--border)' }}>
-                    <div style={{ width: 32, height: 32, borderRadius: 8, background: h.tipo === 'entrada' ? '#E1F5EE' : '#FAECE7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, background: h.tipo === 'entrada' ? 'var(--success-subtle)' : 'var(--danger-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>
                       {h.tipo === 'entrada' ? '↓' : '↑'}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -497,7 +519,7 @@ const iniciarDecodificacion = async () => {
                       <div style={{ fontSize: 11, color: 'var(--t2)', fontFamily: 'monospace' }}>{h.sku}</div>
                     </div>
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: h.tipo === 'entrada' ? '#0F6E56' : '#993C1D' }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: h.tipo === 'entrada' ? 'var(--primary-hover)' : 'var(--danger)' }}>
                         {h.tipo === 'entrada' ? '+' : '-'}{h.cantidad}
                       </div>
                       <div style={{ fontSize: 11, color: 'var(--t2)' }}>{h.fecha.slice(11, 16)}</div>
@@ -541,9 +563,9 @@ const iniciarDecodificacion = async () => {
                 {(['salida', 'entrada'] as const).map(t => (
                   <button key={t} onClick={() => setTipo(t)} style={{
                     ...btn, padding: '9px 0', textAlign: 'center',
-                    background: tipo === t ? (t === 'entrada' ? '#E1F5EE' : '#FAECE7') : 'var(--bg2)',
-                    color: tipo === t ? (t === 'entrada' ? '#0F6E56' : '#993C1D') : 'var(--t2)',
-                    border: `1.5px solid ${tipo === t ? (t === 'entrada' ? '#1D9E75' : '#D85A30') : 'var(--border)'}`,
+                    background: tipo === t ? (t === 'entrada' ? 'var(--success-subtle)' : 'var(--danger-subtle)') : 'var(--bg2)',
+                    color: tipo === t ? (t === 'entrada' ? 'var(--primary-hover)' : 'var(--danger)') : 'var(--t2)',
+                    border: `1.5px solid ${tipo === t ? (t === 'entrada' ? 'var(--primary)' : 'var(--danger)') : 'var(--border)'}`,
                     fontWeight: tipo === t ? 600 : 400,
                   }}>
                     {t === 'entrada' ? '↓ Entrada' : '↑ Salida'}
@@ -570,15 +592,15 @@ const iniciarDecodificacion = async () => {
             </div>
 
             {tipo === 'salida' && cantidad > producto.stock_actual && (
-              <div style={{ background: '#FAECE7', color: '#993C1D', borderRadius: 8, padding: '8px 12px', fontSize: 12, marginBottom: 12 }}>
+              <div style={{ background: 'var(--danger-subtle)', color: 'var(--danger)', borderRadius: 8, padding: '8px 12px', fontSize: 12, marginBottom: 12 }}>
                 Stock insuficiente — disponible: {producto.stock_actual} {producto.unidad_medida}(s)
               </div>
             )}
-            {success && <div style={{ background: '#E1F5EE', color: '#0F6E56', borderRadius: 8, padding: '10px 12px', fontSize: 13, fontWeight: 500, marginBottom: 12 }}>✓ {success}</div>}
-            {error && <div style={{ background: '#FAECE7', color: '#993C1D', borderRadius: 8, padding: '10px 12px', fontSize: 13, marginBottom: 12 }}>{error}</div>}
+            {success && <div style={{ background: 'var(--success-subtle)', color: 'var(--primary-hover)', borderRadius: 8, padding: '10px 12px', fontSize: 13, fontWeight: 500, marginBottom: 12 }}>✓ {success}</div>}
+            {error && <div style={{ background: 'var(--danger-subtle)', color: 'var(--danger)', borderRadius: 8, padding: '10px 12px', fontSize: 13, marginBottom: 12 }}>{error}</div>}
 
             <button onClick={registrar} disabled={loading || (tipo === 'salida' && cantidad > producto.stock_actual)}
-              style={{ ...btn, width: '100%', background: tipo === 'entrada' ? '#1D9E75' : '#D85A30', color: 'white', fontSize: 14, opacity: loading ? 0.7 : 1 }}>
+              style={{ ...btn, width: '100%', background: tipo === 'entrada' ? 'var(--primary)' : 'var(--danger)', color: 'white', fontSize: 14, opacity: loading ? 0.7 : 1 }}>
               {loading ? 'Registrando…' : `Registrar ${tipo === 'entrada' ? 'entrada' : 'salida'} de ${cantidad} u.`}
             </button>
             <button onClick={() => { setProducto(null); setSkuInput('') }}
@@ -590,7 +612,7 @@ const iniciarDecodificacion = async () => {
       </div>
 
       {error && !producto && (
-        <div style={{ marginTop: 12, background: '#FAECE7', color: '#993C1D', borderRadius: 8, padding: '10px 14px', fontSize: 13 }}>
+        <div style={{ marginTop: 12, background: 'var(--danger-subtle)', color: 'var(--danger)', borderRadius: 8, padding: '10px 14px', fontSize: 13 }}>
           {error}
         </div>
       )}
