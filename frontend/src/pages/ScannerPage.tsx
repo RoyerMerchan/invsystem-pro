@@ -96,6 +96,7 @@ export default function ScannerPage() {
   const videoRef    = useRef<HTMLVideoElement>(null)
   const streamRef   = useRef<MediaStream | null>(null)
   const scannerRef  = useRef<any>(null)
+  const rafRef      = useRef<number>(0)
   const barcodeSvgRef = useRef<SVGSVGElement>(null)
   const printFrameRef = useRef<HTMLIFrameElement>(null)
 
@@ -166,6 +167,8 @@ export default function ScannerPage() {
   }
 
   const detenerCamara = () => {
+    cancelAnimationFrame(rafRef.current)
+    rafRef.current = 0
     scannerRef.current?.reset()
     scannerRef.current = null
     streamRef.current?.getTracks().forEach(t => t.stop())
@@ -175,32 +178,63 @@ export default function ScannerPage() {
 
 
 const iniciarDecodificacion = async () => {
-    try {
-      const { BrowserMultiFormatReader, DecodeHintType, BarcodeFormat } = await import('@zxing/library')
-      const hints = new Map()
-      hints.set(DecodeHintType.POSSIBLE_FORMATS, [
-        BarcodeFormat.QR_CODE,
-        BarcodeFormat.CODE_128,
-        BarcodeFormat.CODE_39,
-        BarcodeFormat.EAN_13,
-        BarcodeFormat.EAN_8,
-        BarcodeFormat.UPC_A,
-        BarcodeFormat.ITF,
-      ])
-      const reader = new BrowserMultiFormatReader(hints)
-      scannerRef.current = reader
-      if (videoRef.current) {
-        reader.decodeFromVideoElementContinuously(videoRef.current, (result: any, err: any) => {
-          if (result) {
-            detenerCamara()
-            buscarPorSku(result.getText())
-          }
-        })
-      }
-    } catch {
-      detenerCamara()
-      setError('No se pudo iniciar el lector de códigos. Usa la pestaña "Manual" para ingresar el SKU.')
+    const video = videoRef.current
+    if (!video) return
+
+    const detectarNative = async (): Promise<boolean> => {
+      if (!('BarcodeDetector' in window)) return false
+      try {
+        const detector = new (window as any).BarcodeDetector({ formats: ['qr_code', 'code_128', 'code_39', 'ean_13', 'ean_8', 'upc_a', 'itf'] })
+        const loop = async () => {
+          if (!video || !streamRef.current) return
+          try {
+            const barcodes = await detector.detect(video)
+            if (barcodes.length > 0) {
+              detenerCamara()
+              buscarPorSku(barcodes[0].rawValue)
+              return
+            }
+          } catch {}
+          rafRef.current = requestAnimationFrame(loop)
+        }
+        rafRef.current = requestAnimationFrame(loop)
+        return true
+      } catch { return false }
     }
+
+    const detectarZXing = async () => {
+      try {
+        const { BrowserMultiFormatReader, DecodeHintType, BarcodeFormat } = await import('@zxing/library')
+        const hints = new Map()
+        hints.set(DecodeHintType.POSSIBLE_FORMATS, [
+          BarcodeFormat.QR_CODE, BarcodeFormat.CODE_128, BarcodeFormat.CODE_39,
+          BarcodeFormat.EAN_13, BarcodeFormat.EAN_8, BarcodeFormat.UPC_A, BarcodeFormat.ITF,
+        ])
+        hints.set(DecodeHintType.TRY_HARDER, true)
+        const reader = new BrowserMultiFormatReader(hints, 100)
+        scannerRef.current = reader
+
+        const loop = async () => {
+          if (!video || !streamRef.current) return
+          try {
+            const result = await reader.decodeFromVideoElement(video)
+            if (result) {
+              detenerCamara()
+              buscarPorSku(result.getText())
+              return
+            }
+          } catch {}
+          setTimeout(loop, 200)
+        }
+        loop()
+      } catch (e: any) {
+        detenerCamara()
+        setError('No se pudo iniciar el lector de códigos. Usa la pestaña "Manual" para ingresar el SKU.')
+      }
+    }
+
+    const nativo = await detectarNative()
+    if (!nativo) detectarZXing()
   }
 
 
@@ -424,7 +458,7 @@ const iniciarDecodificacion = async () => {
                     ▥ Código de barras
                   </button>
                   <button onClick={() => { setMostrarQR(true); generarQR() }}
-                    style={{ ...btn, flex: 1, padding: '8px', background: mostrarQR ? '#534AB7' : 'var(--bg2)', color: mostrarQR ? 'white' : 'var(--t2)' }}>
+                    style={{ ...btn, flex: 1, padding: '8px', background: mostrarQR ? 'var(--primary)' : 'var(--bg2)', color: mostrarQR ? 'white' : 'var(--t2)' }}>
                     🔲 Código QR
                   </button>
                 </div>
