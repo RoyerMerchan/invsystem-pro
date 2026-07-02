@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Tags, Ruler, Building2, Plus, X, SlidersHorizontal, Trash2 } from 'lucide-react'
+import { Tags, Ruler, Building2, Plus, X, SlidersHorizontal, Trash2, Pencil, Check } from 'lucide-react'
 import { api } from '../services/api'
-import type { OpcionCatalogo, TipoCatalogo, TipoControl, Usuario } from '../types'
+import type { OpcionCatalogo, TipoCatalogo, TipoControl, CampoControl, Usuario } from '../types'
 import { FloatSection } from '../components/FloatCard'
 import { PageHeader } from './DashboardPage'
 import { useRol } from '../hooks/useRol'
@@ -154,6 +154,10 @@ function TipoControlCard({
   const [etiqueta, setEtiqueta] = useState('')
   const [requerido, setRequerido] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [editandoNombre, setEditandoNombre] = useState(false)
+  const [nombreVal, setNombreVal] = useState(tipo.nombre)
+
+  useEffect(() => { setNombreVal(tipo.nombre) }, [tipo.nombre])
 
   async function agregarCampo() {
     const e = etiqueta.trim()
@@ -180,10 +184,56 @@ function TipoControlCard({
     }
   }
 
+  async function guardarNombre() {
+    const n = nombreVal.trim()
+    setEditandoNombre(false)
+    if (!n || n === tipo.nombre) { setNombreVal(tipo.nombre); return }
+    onError('')
+    try {
+      await api(`/api/v1/tipos-control/${tipo.id}`, { method: 'PATCH', body: JSON.stringify({ nombre: n }) })
+      onChange()
+    } catch (err: any) {
+      onError(err.message); setNombreVal(tipo.nombre)
+    }
+  }
+
+  async function editarCampo(id: number, data: { etiqueta?: string; requerido?: boolean }) {
+    onError('')
+    try {
+      await api(`/api/v1/tipos-control/campos/${id}`, { method: 'PATCH', body: JSON.stringify(data) })
+      onChange()
+    } catch (err: any) {
+      onError(err.message)
+    }
+  }
+
   return (
     <div className="rounded-xl border border-border bg-bg1 p-3.5">
       <div className="flex items-center justify-between mb-2.5">
-        <div className="text-[13px] font-semibold text-t1">{tipo.nombre}</div>
+        {editandoNombre ? (
+          <div className="flex items-center gap-1">
+            <input
+              value={nombreVal}
+              autoFocus
+              onChange={e => setNombreVal(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') guardarNombre(); if (e.key === 'Escape') { setNombreVal(tipo.nombre); setEditandoNombre(false) } }}
+              className="text-[13px] font-semibold px-2 py-1 rounded-md border border-primary bg-bg1 text-t1 outline-none font-sans"
+            />
+            <button onClick={guardarNombre} className="w-6 h-6 rounded-md flex items-center justify-center text-primary hover:bg-primary/10" title="Guardar">
+              <Check className="w-4 h-4" />
+            </button>
+            <button onClick={() => { setNombreVal(tipo.nombre); setEditandoNombre(false) }} className="w-6 h-6 rounded-md flex items-center justify-center text-muted hover:bg-bg2" title="Cancelar">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5">
+            <div className="text-[13px] font-semibold text-t1">{tipo.nombre}</div>
+            <button onClick={() => setEditandoNombre(true)} className="w-6 h-6 rounded-md flex items-center justify-center text-muted hover:text-primary hover:bg-primary/10 transition-colors" aria-label={`Editar tipo ${tipo.nombre}`} title="Editar nombre">
+              <Pencil className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
         <button
           onClick={onDelete}
           className="w-6 h-6 rounded-md flex items-center justify-center text-muted hover:text-danger hover:bg-danger/10 transition-colors"
@@ -200,17 +250,12 @@ function TipoControlCard({
       ) : (
         <div className="flex flex-wrap gap-2 mb-2.5">
           {tipo.campos.map(c => (
-            <span key={c.id} className="inline-flex items-center gap-1.5 text-[12px] pl-3 pr-1.5 py-1 rounded-full bg-bg2 border border-border text-t1">
-              {c.etiqueta}{c.requerido && <span className="text-danger" title="Obligatorio">*</span>}
-              <button
-                onClick={() => borrarCampo(c.id)}
-                className="w-5 h-5 rounded-full flex items-center justify-center text-muted hover:text-danger hover:bg-danger/10 transition-colors"
-                aria-label={`Eliminar campo ${c.etiqueta}`}
-                title="Eliminar campo"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </span>
+            <EditableCampo
+              key={c.id}
+              campo={c}
+              onSave={data => editarCampo(c.id, data)}
+              onDelete={() => borrarCampo(c.id)}
+            />
           ))}
         </div>
       )}
@@ -237,6 +282,62 @@ function TipoControlCard({
         </button>
       </div>
     </div>
+  )
+}
+
+// ── Campo editable en línea (etiqueta + obligatorio) ──────────────
+function EditableCampo({ campo, onSave, onDelete }: {
+  campo: CampoControl
+  onSave: (data: { etiqueta?: string; requerido?: boolean }) => void
+  onDelete: () => void
+}) {
+  const [editing, setEditing] = useState(false)
+  const [et, setEt] = useState(campo.etiqueta)
+  const [req, setReq] = useState(campo.requerido)
+
+  useEffect(() => { setEt(campo.etiqueta); setReq(campo.requerido) }, [campo.etiqueta, campo.requerido])
+
+  function guardar() {
+    const e = et.trim()
+    setEditing(false)
+    if (!e) { setEt(campo.etiqueta); return }
+    if (e !== campo.etiqueta || req !== campo.requerido) onSave({ etiqueta: e, requerido: req })
+  }
+  function cancelar() { setEt(campo.etiqueta); setReq(campo.requerido); setEditing(false) }
+
+  if (editing) {
+    return (
+      <span className="inline-flex items-center gap-1.5 text-[12px] pl-2 pr-1 py-1 rounded-full bg-bg1 border border-primary">
+        <input
+          value={et}
+          autoFocus
+          onChange={e => setEt(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') guardar(); if (e.key === 'Escape') cancelar() }}
+          className="w-[120px] text-[12px] px-1 bg-transparent text-t1 outline-none font-sans"
+        />
+        <label className="flex items-center gap-1 text-[11px] text-t2 cursor-pointer select-none" title="Obligatorio">
+          <input type="checkbox" checked={req} onChange={e => setReq(e.target.checked)} />*
+        </label>
+        <button onClick={guardar} className="w-5 h-5 rounded-full flex items-center justify-center text-primary hover:bg-primary/10" title="Guardar">
+          <Check className="w-3 h-3" />
+        </button>
+        <button onClick={cancelar} className="w-5 h-5 rounded-full flex items-center justify-center text-muted hover:bg-bg2" title="Cancelar">
+          <X className="w-3 h-3" />
+        </button>
+      </span>
+    )
+  }
+
+  return (
+    <span className="inline-flex items-center gap-1 text-[12px] pl-3 pr-1 py-1 rounded-full bg-bg2 border border-border text-t1">
+      {campo.etiqueta}{campo.requerido && <span className="text-danger" title="Obligatorio">*</span>}
+      <button onClick={() => setEditing(true)} className="w-5 h-5 rounded-full flex items-center justify-center text-muted hover:text-primary hover:bg-primary/10 transition-colors" aria-label={`Editar campo ${campo.etiqueta}`} title="Editar campo">
+        <Pencil className="w-3 h-3" />
+      </button>
+      <button onClick={onDelete} className="w-5 h-5 rounded-full flex items-center justify-center text-muted hover:text-danger hover:bg-danger/10 transition-colors" aria-label={`Eliminar campo ${campo.etiqueta}`} title="Eliminar campo">
+        <X className="w-3 h-3" />
+      </button>
+    </span>
   )
 }
 
@@ -277,6 +378,16 @@ function GrupoCatalogo({
     }
   }
 
+  async function editar(id: number, nuevoValor: string) {
+    onError('')
+    try {
+      await api(`/api/v1/catalogo/${id}`, { method: 'PATCH', body: JSON.stringify({ valor: nuevoValor }) })
+      onChange()
+    } catch (e: any) {
+      onError(e.message)
+    }
+  }
+
   return (
     <FloatSection title={<span className="inline-flex items-center gap-2">{grupo.icon}{grupo.titulo}</span>} sub={grupo.sub}>
       {/* Formulario de alta */}
@@ -306,20 +417,66 @@ function GrupoCatalogo({
       ) : (
         <div className="flex flex-wrap gap-2">
           {items.map(o => (
-            <span key={o.id} className="inline-flex items-center gap-1.5 text-[13px] pl-3 pr-1.5 py-1.5 rounded-full bg-bg2 border border-border text-t1">
-              {o.valor}
-              <button
-                onClick={() => eliminar(o.id)}
-                className="w-5 h-5 rounded-full flex items-center justify-center text-muted hover:text-danger hover:bg-danger/10 transition-colors"
-                aria-label={`Eliminar ${o.valor}`}
-                title="Eliminar"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </span>
+            <EditableChip
+              key={o.id}
+              valor={o.valor}
+              onSave={v => editar(o.id, v)}
+              onDelete={() => eliminar(o.id)}
+            />
           ))}
         </div>
       )}
     </FloatSection>
+  )
+}
+
+// ── Chip editable en línea (renombrar / eliminar) ─────────────────
+function EditableChip({ valor, onSave, onDelete }: {
+  valor: string
+  onSave: (v: string) => void
+  onDelete: () => void
+}) {
+  const [editing, setEditing] = useState(false)
+  const [val, setVal] = useState(valor)
+
+  useEffect(() => { setVal(valor) }, [valor])
+
+  function guardar() {
+    const v = val.trim()
+    if (v && v !== valor) onSave(v)
+    setEditing(false)
+  }
+  function cancelar() { setVal(valor); setEditing(false) }
+
+  if (editing) {
+    return (
+      <span className="inline-flex items-center gap-1 text-[13px] pl-2 pr-1 py-1 rounded-full bg-bg1 border border-primary">
+        <input
+          value={val}
+          autoFocus
+          onChange={e => setVal(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') guardar(); if (e.key === 'Escape') cancelar() }}
+          className="w-[130px] text-[13px] px-1 bg-transparent text-t1 outline-none font-sans"
+        />
+        <button onClick={guardar} className="w-5 h-5 rounded-full flex items-center justify-center text-primary hover:bg-primary/10" title="Guardar">
+          <Check className="w-3.5 h-3.5" />
+        </button>
+        <button onClick={cancelar} className="w-5 h-5 rounded-full flex items-center justify-center text-muted hover:bg-bg2" title="Cancelar">
+          <X className="w-3.5 h-3.5" />
+        </button>
+      </span>
+    )
+  }
+
+  return (
+    <span className="inline-flex items-center gap-1 text-[13px] pl-3 pr-1 py-1.5 rounded-full bg-bg2 border border-border text-t1">
+      {valor}
+      <button onClick={() => setEditing(true)} className="w-5 h-5 rounded-full flex items-center justify-center text-muted hover:text-primary hover:bg-primary/10 transition-colors" aria-label={`Editar ${valor}`} title="Editar">
+        <Pencil className="w-3 h-3" />
+      </button>
+      <button onClick={onDelete} className="w-5 h-5 rounded-full flex items-center justify-center text-muted hover:text-danger hover:bg-danger/10 transition-colors" aria-label={`Eliminar ${valor}`} title="Eliminar">
+        <X className="w-3.5 h-3.5" />
+      </button>
+    </span>
   )
 }

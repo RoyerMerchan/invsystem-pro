@@ -15,8 +15,8 @@ from app.core.database import get_db
 from app.models.models import TipoControl, CampoControl, Usuario
 from app.routers.auth import get_current_user
 from app.schemas import (
-    TipoControlCreate, TipoControlResponse,
-    CampoControlCreate, CampoControlResponse,
+    TipoControlCreate, TipoControlUpdate, TipoControlResponse,
+    CampoControlCreate, CampoControlUpdate, CampoControlResponse,
 )
 
 router = APIRouter()
@@ -61,6 +61,29 @@ async def crear_tipo(
     return tipo
 
 
+@router.patch("/{tipo_id}", response_model=TipoControlResponse, summary="Editar tipo de control")
+async def actualizar_tipo(
+    tipo_id: int,
+    data: TipoControlUpdate,
+    db: AsyncSession = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user),
+):
+    _require_admin(current_user)
+    tipo = await db.get(TipoControl, tipo_id)
+    if not tipo:
+        raise HTTPException(404, detail="Tipo de control no encontrado.")
+    cambios = data.model_dump(exclude_unset=True)
+    for campo, valor in cambios.items():
+        setattr(tipo, campo, valor)
+    try:
+        await db.flush()
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(409, detail=f"Ya existe un tipo de control llamado '{data.nombre}'.")
+    await db.refresh(tipo, attribute_names=["campos"])
+    return tipo
+
+
 @router.delete("/{tipo_id}", status_code=204, summary="Eliminar tipo de control")
 async def eliminar_tipo(
     tipo_id: int,
@@ -97,6 +120,24 @@ async def agregar_campo(
         orden=n or 0,
     )
     db.add(campo)
+    await db.flush()
+    await db.refresh(campo)
+    return campo
+
+
+@router.patch("/campos/{campo_id}", response_model=CampoControlResponse, summary="Editar campo")
+async def actualizar_campo(
+    campo_id: int,
+    data: CampoControlUpdate,
+    db: AsyncSession = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user),
+):
+    _require_admin(current_user)
+    campo = await db.get(CampoControl, campo_id)
+    if not campo:
+        raise HTTPException(404, detail="Campo no encontrado.")
+    for attr, valor in data.model_dump(exclude_unset=True).items():
+        setattr(campo, attr, valor)
     await db.flush()
     await db.refresh(campo)
     return campo

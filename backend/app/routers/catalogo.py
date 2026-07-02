@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.models.models import OpcionCatalogo, Usuario
 from app.routers.auth import get_current_user
-from app.schemas import OpcionCatalogoCreate, OpcionCatalogoResponse, TIPOS_CATALOGO
+from app.schemas import OpcionCatalogoCreate, OpcionCatalogoUpdate, OpcionCatalogoResponse, TIPOS_CATALOGO
 
 router = APIRouter()
 
@@ -56,6 +56,27 @@ async def crear_opcion(
     except IntegrityError:
         await db.rollback()
         raise HTTPException(409, detail=f"Ya existe '{data.valor}' en {data.tipo}.")
+    await db.refresh(opcion)
+    return opcion
+
+
+@router.patch("/{opcion_id}", response_model=OpcionCatalogoResponse, summary="Editar opción")
+async def actualizar_opcion(
+    opcion_id: int,
+    data: OpcionCatalogoUpdate,
+    db: AsyncSession = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user),
+):
+    _require_admin(current_user)
+    opcion = await db.get(OpcionCatalogo, opcion_id)
+    if not opcion:
+        raise HTTPException(404, detail="Opción no encontrada.")
+    opcion.valor = data.valor
+    try:
+        await db.flush()
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(409, detail=f"Ya existe '{data.valor}' en {opcion.tipo}.")
     await db.refresh(opcion)
     return opcion
 

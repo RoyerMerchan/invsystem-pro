@@ -269,6 +269,14 @@ class OpcionCatalogoCreate(BaseModel):
     def limpiar_valor(cls, v: str) -> str:
         return sanitizar_texto(v, max_len=100)
 
+class OpcionCatalogoUpdate(BaseModel):
+    valor: str = Field(..., min_length=1, max_length=100)
+
+    @field_validator("valor")
+    @classmethod
+    def limpiar_valor(cls, v: str) -> str:
+        return sanitizar_texto(v, max_len=100)
+
 class OpcionCatalogoResponse(BaseModel):
     id: int
     tipo: str
@@ -291,6 +299,15 @@ class CampoControlCreate(BaseModel):
     def limpiar_etiqueta(cls, v: str) -> str:
         return sanitizar_texto(v, max_len=100)
 
+class CampoControlUpdate(BaseModel):
+    etiqueta: str | None = Field(default=None, min_length=1, max_length=100)
+    requerido: bool | None = None
+
+    @field_validator("etiqueta")
+    @classmethod
+    def limpiar_etiqueta(cls, v: str | None) -> str | None:
+        return v if v is None else sanitizar_texto(v, max_len=100)
+
 class CampoControlResponse(BaseModel):
     id: int
     etiqueta: str
@@ -307,6 +324,15 @@ class TipoControlCreate(BaseModel):
     @classmethod
     def limpiar(cls, v: str) -> str:
         return sanitizar_texto(v, max_len=300)
+
+class TipoControlUpdate(BaseModel):
+    nombre: str | None = Field(default=None, min_length=1, max_length=100)
+    descripcion: str | None = Field(default=None, max_length=300)
+
+    @field_validator("nombre", "descripcion")
+    @classmethod
+    def limpiar(cls, v: str | None) -> str | None:
+        return v if v is None else sanitizar_texto(v, max_len=300)
 
 class TipoControlResponse(BaseModel):
     id: int
