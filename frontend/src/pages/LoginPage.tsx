@@ -511,7 +511,7 @@ function InputField({ icon, paddingRight, style: extStyle, ...props }: {
     <div className="relative">
       {icon && (
         <div className="absolute left-[13px] top-1/2 -translate-y-1/2 pointer-events-none transition-[color] duration-200"
-          style={{ color: focus ? 'var(--primary)' : 'var(--text-muted)' }}>
+          style={{ color: focus ? 'var(--primary)' : '#64748B' }}>
           {icon}
         </div>
       )}
@@ -524,7 +524,7 @@ function InputField({ icon, paddingRight, style: extStyle, ...props }: {
           padding: '11px 14px', paddingLeft: icon ? 40 : 14, paddingRight: paddingRight ?? 14,
           border: `1.5px solid ${focus ? 'var(--primary)' : 'var(--border)'}`,
           background: focus ? '#FFFFFF' : '#FAFAFA',
-          color: 'var(--t1)',
+          color: '#1E293B',
           boxShadow: focus ? '0 0 0 3px rgba(20,184,166,0.12)' : 'none',
           ...extStyle,
         }}
