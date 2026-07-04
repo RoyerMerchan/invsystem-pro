@@ -204,7 +204,7 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
               <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200"
                 style={{
                   background: s <= step ? 'linear-gradient(135deg,#14B8A6,#0D9488)' : '#F3F4F6',
-                  color: s <= step ? 'white' : 'var(--text-muted)',
+                  color: s <= step ? 'white' : 'var(--t2)',
                   boxShadow: s === step ? '0 4px 12px rgba(20,184,166,0.35)' : 'none',
                 }}>
                 {s < step ? '✓' : s}
@@ -304,7 +304,7 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
                   <div className="flex gap-3.5">
                     {checks.map(c => (
                       <span key={c.label} className="text-[11px] flex items-center gap-1 transition-[color] duration-200"
-                        style={{ color: c.ok ? 'var(--success)' : 'var(--text-muted)' }}>
+                        style={{ color: c.ok ? 'var(--success)' : 'var(--t2)' }}>
                         <span className="text-[9px]">{c.ok?'●':'○'}</span>{c.label}
                       </span>
                     ))}
