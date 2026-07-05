@@ -170,13 +170,13 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
       <RightPanel>
         <div className="text-center py-10" style={{ animation: 'fadeSlide .5s ease' }}>
           <div className="w-[72px] h-[72px] rounded-full flex items-center justify-center text-[32px] mx-auto mb-5"
-            style={{ background: 'linear-gradient(135deg,#14B8A6,#0D9488)', boxShadow: '0 8px 24px rgba(20,184,166,0.35)' }}>
+            style={{ background: 'linear-gradient(135deg,var(--primary),var(--primary-hover))', boxShadow: '0 8px 24px rgba(5,150,105,0.35)' }}>
             ✓
           </div>
           <h2 className="text-2xl font-extrabold text-t1 tracking-[-0.5px] mb-2">¡Cuenta creada!</h2>
           <p className="text-sm text-t2 mb-7">Tu acceso ha sido configurado correctamente</p>
           <div className="h-[3px] bg-bg2 rounded overflow-hidden">
-            <div className="h-full rounded" style={{ background: 'linear-gradient(90deg,#14B8A6,#0D9488)', animation: 'progress 3s linear forwards' }} />
+            <div className="h-full rounded" style={{ background: 'linear-gradient(90deg,var(--primary),var(--primary-hover))', animation: 'progress 3s linear forwards' }} />
           </div>
           <p className="text-xs text-t3 mt-2.5">Redirigiendo al inicio de sesión...</p>
         </div>
@@ -203,9 +203,9 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
             <div key={s} className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200"
                 style={{
-                  background: s <= step ? 'linear-gradient(135deg,#14B8A6,#0D9488)' : '#F3F4F6',
+                  background: s <= step ? 'linear-gradient(135deg,var(--primary),var(--primary-hover))' : 'var(--bg3)',
                   color: s <= step ? 'white' : 'var(--t2)',
-                  boxShadow: s === step ? '0 4px 12px rgba(20,184,166,0.35)' : 'none',
+                  boxShadow: s === step ? '0 4px 12px rgba(5,150,105,0.35)' : 'none',
                 }}>
                 {s < step ? '✓' : s}
               </div>
@@ -213,7 +213,7 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
                 {s === 1 ? 'Información' : 'Seguridad'}
               </span>
               {s < 2 && <div className="w-8 h-0.5 rounded mx-1 transition-[background] duration-300"
-                style={{ background: step > s ? 'var(--primary)' : '#F3F4F6' }} />}
+                style={{ background: step > s ? 'var(--primary)' : 'var(--bg3)' }} />}
             </div>
           ))}
         </div>
@@ -253,7 +253,7 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
                     className="px-3 py-3.5 rounded-xl cursor-pointer text-left transition-all duration-200"
                     style={{
                       border: `2px solid ${rol===opt.v ? 'var(--primary)' : 'var(--border)'}`,
-                      background: rol===opt.v ? 'rgba(20,184,166,0.05)' : 'white',
+                      background: rol===opt.v ? 'var(--primary-subtle)' : 'var(--surface)',
                     }}>
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-[7px]">
@@ -348,7 +348,7 @@ export function RegisterPage({ onRegistered, onGoLogin }: RegProps) {
 
             <div className="grid grid-cols-[auto_1fr] gap-2.5">
               <button onClick={() => { setStep(1); setError('') }}
-                className="px-4 py-[11px] rounded-xl border-2 border-border bg-white text-t2 text-[13px] font-semibold cursor-pointer">
+                className="px-4 py-[11px] rounded-xl border-2 border-border bg-surface text-t2 text-[13px] font-semibold cursor-pointer">
                 ← Volver
               </button>
               <PrimaryBtn onClick={submit} loading={loading}>
@@ -401,9 +401,9 @@ function LeftPanel() {
 
       {/* Accent blobs */}
       <div className="absolute -top-[15%] -right-[10%] w-[500px] h-[500px] rounded-full"
-        style={{ background: 'radial-gradient(circle,rgba(20,184,166,0.18) 0%,transparent 70%)' }} />
+        style={{ background: 'radial-gradient(circle,rgba(16,185,129,0.18) 0%,transparent 70%)' }} />
       <div className="absolute -bottom-[10%] -left-[5%] w-[400px] h-[400px] rounded-full"
-        style={{ background: 'radial-gradient(circle,rgba(14,148,136,0.12) 0%,transparent 70%)' }} />
+        style={{ background: 'radial-gradient(circle,rgba(5,150,105,0.12) 0%,transparent 70%)' }} />
 
       <div className="relative z-10">
         {/* Logo area */}
@@ -435,8 +435,8 @@ function LeftPanel() {
           ].map((f, i) => (
             <div key={i} className="flex items-center gap-3.5 px-4 py-[13px] rounded-xl backdrop-blur"
               style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <div className="w-9 h-9 rounded-[9px] flex items-center justify-center text-base shrink-0"
-                style={{ background: 'rgba(45,212,191,0.15)' }}>
+              <div className="w-9 h-9 rounded-[9px] flex items-center justify-center text-base shrink-0 text-primary"
+                style={{ background: 'rgba(16,185,129,0.15)' }}>
                 {f.icon}
               </div>
               <span className="text-[13px] text-white/75 font-medium">{f.text}</span>
@@ -461,11 +461,11 @@ function LeftPanel() {
 
 function RightPanel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-full max-w-[520px] flex flex-col justify-center px-10 py-12 bg-bg1 overflow-y-auto"
+    <div className="w-full max-w-[520px] flex flex-col justify-center px-10 py-12 bg-bg2 overflow-y-auto"
       style={{ animation: 'fadeSlide 0.4s cubic-bezier(.16,1,.3,1)' }}>
       <div className="max-w-[400px] w-full mx-auto">
-        <div className="bg-white rounded-[20px] px-9 py-10 border border-border"
-          style={{ boxShadow: '0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05), 0 20px 60px -12px rgba(0,0,0,0.08)' }}>
+        <div className="bg-surface rounded-[20px] px-9 py-10 border border-border"
+          style={{ boxShadow: '0 4px 6px -1px rgba(0,0,0,0.18), 0 2px 4px -2px rgba(0,0,0,0.12), 0 20px 60px -12px rgba(0,0,0,0.25)' }}>
           {children}
         </div>
       </div>
@@ -479,8 +479,8 @@ function LogoMark({ size }: { size: number }) {
     <div className="flex items-center justify-center shrink-0"
       style={{
         width: size, height: size, borderRadius: size/4,
-        background: 'linear-gradient(135deg,#14B8A6 0%,#0D9488 100%)',
-        boxShadow: '0 4px 14px rgba(20,184,166,0.4)',
+        background: 'linear-gradient(135deg,var(--primary) 0%,var(--primary-hover) 100%)',
+        boxShadow: '0 4px 14px rgba(5,150,105,0.4)',
       }}>
       <svg width={size*.52} height={size*.52} viewBox="0 0 24 24" fill="none">
         <path d="M3 6h18M3 12h18M3 18h18" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
@@ -511,7 +511,7 @@ function InputField({ icon, paddingRight, style: extStyle, ...props }: {
     <div className="relative">
       {icon && (
         <div className="absolute left-[13px] top-1/2 -translate-y-1/2 pointer-events-none transition-[color] duration-200"
-          style={{ color: focus ? 'var(--primary)' : '#64748B' }}>
+          style={{ color: focus ? 'var(--primary)' : 'var(--t3)' }}>
           {icon}
         </div>
       )}
@@ -523,9 +523,9 @@ function InputField({ icon, paddingRight, style: extStyle, ...props }: {
         style={{
           padding: '11px 14px', paddingLeft: icon ? 40 : 14, paddingRight: paddingRight ?? 14,
           border: `1.5px solid ${focus ? 'var(--primary)' : 'var(--border)'}`,
-          background: focus ? '#FFFFFF' : '#FAFAFA',
-          color: '#1E293B',
-          boxShadow: focus ? '0 0 0 3px rgba(20,184,166,0.12)' : 'none',
+          background: focus ? 'var(--bg1)' : 'var(--bg2)',
+          color: 'var(--t1)',
+          boxShadow: focus ? '0 0 0 3px var(--primary-subtle)' : 'none',
           ...extStyle,
         }}
       />
@@ -543,7 +543,7 @@ function PrimaryBtn({ onClick, loading, children }: { onClick: () => void; loadi
         padding: '12px 20px',
         background: loading ? 'var(--t3)' : hov ? 'var(--primary-hover)' : 'var(--primary)',
         cursor: loading ? 'not-allowed' : 'pointer',
-        boxShadow: loading ? 'none' : `0 4px 14px rgba(20,184,166,${hov ? .5 : .35})`,
+        boxShadow: loading ? 'none' : `0 4px 14px rgba(5,150,105,${hov ? .5 : .35})`,
         transform: hov && !loading ? 'translateY(-1px)' : 'none',
       }}>
       {loading && <span className="w-4 h-4 rounded-full inline-block" style={{ border: '2px solid rgba(255,255,255,.35)', borderTopColor: 'white', animation: 'spin .7s linear infinite' }} />}
@@ -561,7 +561,7 @@ function SecondaryBtn({ onClick, children }: { onClick: () => void; children: Re
       style={{
         padding: '11px 20px',
         border: `2px solid ${hov ? 'var(--primary)' : 'var(--border)'}`,
-        background: hov ? 'rgba(20,184,166,0.04)' : 'white',
+        background: hov ? 'var(--primary-subtle)' : 'var(--surface)',
         color: hov ? 'var(--primary-hover)' : 'var(--t2)',
       }}>
       {children}
