@@ -15,7 +15,7 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
-from sqlalchemy import select, or_, desc
+from sqlalchemy import select, or_, desc, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
@@ -80,10 +80,12 @@ async def buscar_producto(
     """
     q = q.strip().upper()
 
-    # 1. Buscar por SKU exacto
-    stmt_sku = select(Producto).where(Producto.sku == q)
+    # 1. Buscar por SKU exacto (insensible a mayúsculas/espacios para tolerar
+    #    SKU antiguos que se guardaron sin normalizar). .first() evita fallar
+    #    si existieran duplicados legados que normalizan al mismo valor.
+    stmt_sku = select(Producto).where(func.upper(func.trim(Producto.sku)) == q)
     res_sku = await db.execute(stmt_sku)
-    exacto = res_sku.scalar_one_or_none()
+    exacto = res_sku.scalars().first()
     if exacto:
         return [_producto_dict(exacto)]
 
@@ -117,11 +119,11 @@ async def registrar_movimiento_scanner(
     """Registra un movimiento de inventario usando el SKU del producto."""
     if current_user.rol == "consulta":
         raise HTTPException(403, detail="Los invitados no pueden registrar movimientos.")
-    # Buscar producto por SKU
+    # Buscar producto por SKU (insensible a mayúsculas/espacios)
     res = await db.execute(
-        select(Producto).where(Producto.sku == data.sku.strip().upper())
+        select(Producto).where(func.upper(func.trim(Producto.sku)) == data.sku.strip().upper())
     )
-    producto = res.scalar_one_or_none()
+    producto = res.scalars().first()
     if not producto:
         raise HTTPException(
             status_code=404,

@@ -71,12 +71,44 @@ async def _migrar_columnas_producto() -> None:
         logger.warning("No se pudo aplicar la migración de columnas: %s", e)
 
 
+async def _normalizar_skus() -> None:
+    """Normaliza los SKU existentes a MAYÚSCULAS sin espacios, para que el
+    escáner y el kiosko (que buscan en mayúsculas) encuentren los productos.
+
+    Idempotente: solo toca filas que aún no están normalizadas y que no
+    generarían un choque con el índice único `sku`. Las que colisionarían se
+    dejan intactas y se reportan para resolución manual.
+    """
+    from sqlalchemy import text
+
+    sql = text(
+        """
+        UPDATE productos AS p
+        SET sku = UPPER(TRIM(p.sku))
+        WHERE p.sku <> UPPER(TRIM(p.sku))
+          AND NOT EXISTS (
+              SELECT 1 FROM productos AS o
+              WHERE o.id <> p.id
+                AND UPPER(TRIM(o.sku)) = UPPER(TRIM(p.sku))
+          )
+        """
+    )
+    try:
+        async with engine.begin() as conn:
+            result = await conn.execute(sql)
+        if result.rowcount:
+            logger.info("SKU normalizados: %s producto(s) actualizados", result.rowcount)
+    except Exception as e:  # p. ej. sintaxis no soportada en SQLite local
+        logger.warning("No se pudo normalizar los SKU existentes: %s", e)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Iniciando InvSystem Pro [%s]", ENVIRONMENT)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     await _migrar_columnas_producto()
+    await _normalizar_skus()
     await _seed_catalogo()
     yield
     await engine.dispose()

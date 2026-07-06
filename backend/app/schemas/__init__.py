@@ -116,6 +116,13 @@ class ProductoBase(BaseModel):
     def limpiar(cls, v: str) -> str:
         return sanitizar_texto(v)
 
+    @field_validator("sku")
+    @classmethod
+    def normalizar_sku(cls, v: str) -> str:
+        # El SKU se guarda siempre normalizado (sin espacios, en mayúsculas)
+        # para que coincida con la búsqueda del escáner/kiosko.
+        return v.strip().upper()
+
 class ProductoCreate(ProductoBase):
     pass
 

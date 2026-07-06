@@ -106,8 +106,12 @@ async def crear_producto(
 ):
     if current_user.rol != "administrador":
         raise HTTPException(403, detail="Solo administradores pueden crear productos.")
-    existing = await db.execute(select(Producto).where(Producto.sku == data.sku))
-    if existing.scalar_one_or_none():
+    # data.sku ya llega normalizado (mayúsculas, sin espacios) por el validador del schema.
+    # La comparación es insensible a mayúsculas/espacios para detectar duplicados legados.
+    existing = await db.execute(
+        select(Producto).where(func.upper(func.trim(Producto.sku)) == data.sku)
+    )
+    if existing.scalars().first():
         raise HTTPException(400, detail=f"SKU '{data.sku}' ya existe.")
     producto = Producto(**data.model_dump())
     db.add(producto)
