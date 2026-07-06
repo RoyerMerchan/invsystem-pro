@@ -97,6 +97,16 @@ export default function App() {
     setToken(null); setUsuario(null); setAuthPage('login'); setKiosko(false)
   }
 
+  // Abre la documentación interactiva de la API (Swagger UI) en una pestaña nueva.
+  // Usa VITE_API_URL si está configurada; si no, asume el backend en el mismo host, puerto 8000.
+  const openApiDocs = () => {
+    const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+    const url = base
+      ? `${base}/docs`
+      : `${window.location.protocol}//${window.location.hostname}:8000/docs`
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
   if (!token) {
     return (
       <div>
@@ -226,10 +236,11 @@ export default function App() {
                 <ShieldCheck className="w-3 h-3" /> Solo lectura
               </span>
             )}
-            <a href={`${import.meta.env.VITE_API_URL || ''}/docs`} target="_blank" rel="noreferrer"
-              className="text-xs text-muted hover:text-primary no-underline flex items-center gap-1 transition-colors">
+            <button onClick={openApiDocs} type="button"
+              title="Abrir la documentación interactiva de la API (Swagger UI)"
+              className="text-xs text-muted hover:text-primary bg-transparent border-none cursor-pointer flex items-center gap-1 transition-colors">
               API Docs <ExternalLink className="w-3 h-3" />
-            </a>
+            </button>
           </div>
         </header>
 

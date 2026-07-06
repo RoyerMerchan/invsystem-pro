@@ -68,8 +68,6 @@ export default function ProyeccionesPage() {
   })) ?? []
 
   const modeloColor: Record<string, string> = {
-    'Promedio Móvil': 'var(--warning)', 'Suavización Simple': 'var(--info)',
-    'Tendencia Lineal': 'var(--danger)',
     'Holt-Winters': 'var(--primary)', 'ARIMA': 'var(--info)', 'Prophet (Meta)': '#7C3AED',
   }
   const color = proyeccion ? (modeloColor[proyeccion.modelo_usado] ?? 'var(--primary)') : 'var(--primary)'
@@ -78,7 +76,7 @@ export default function ProyeccionesPage() {
     <div>
       <div className="mb-6">
         <div className="text-xl font-bold tracking-tight">Proyecciones de demanda</div>
-        <div className="text-sm text-t2 mt-[3px]">Modelos de series de tiempo — Promedio Móvil · Suavización Simple · Tendencia Lineal · Holt-Winters · ARIMA · Prophet</div>
+        <div className="text-sm text-t2 mt-[3px]">Modelos de series de tiempo — Holt-Winters · ARIMA · Prophet</div>
       </div>
 
       {/* Tabs */}
@@ -107,9 +105,6 @@ export default function ProyeccionesPage() {
               <label className="text-[11px] font-bold text-t2 block mb-1.5 uppercase tracking-[0.05em]">Modelo</label>
               <select className="text-sm px-2.5 py-2 rounded-lg border-[0.5px] border-border bg-bg1 text-t1 w-full" value={modelo} onChange={e => setModelo(e.target.value)}>
                 <option value="auto">Auto (mejor modelo)</option>
-                <option value="promedio_movil">Promedio Móvil</option>
-                <option value="suavizacion_simple">Suavización Simple</option>
-                <option value="tendencia_lineal">Tendencia Lineal</option>
                 <option value="holt_winters">Holt-Winters</option>
                 <option value="arima">ARIMA</option>
                 <option value="prophet">Prophet</option>

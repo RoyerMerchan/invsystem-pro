@@ -21,9 +21,6 @@ from app.services.time_series import (
     proyectar_holt_winters,
     proyectar_arima,
     proyectar_prophet,
-    proyectar_promedio_movil,
-    proyectar_suavizacion_simple,
-    proyectar_tendencia_lineal,
     seleccionar_mejor_modelo,
     ProyeccionResultado,
 )
@@ -36,7 +33,7 @@ logger = logging.getLogger(__name__)
 class SolicitudProyeccion(BaseModel):
     producto_id: int
     horizonte_dias: int = Field(default=30, ge=7, le=180)
-    modelo: Literal["promedio_movil", "suavizacion_simple", "tendencia_lineal", "holt_winters", "arima", "prophet", "auto"] = "auto"
+    modelo: Literal["holt_winters", "arima", "prophet", "auto"] = "auto"
     rango_desde: str | None = None
     rango_hasta: str | None = None
     agrupacion: Literal["diaria", "semanal", "mensual"] = "diaria"
@@ -240,13 +237,7 @@ def _ejecutar_modelo(
 ) -> ProyeccionResultado:
     """Ejecuta un modelo individual con manejo de errores."""
     try:
-        if modelo == "promedio_movil":
-            return proyectar_promedio_movil(serie, stock, minimo, horizonte)
-        elif modelo == "suavizacion_simple":
-            return proyectar_suavizacion_simple(serie, stock, minimo, horizonte)
-        elif modelo == "tendencia_lineal":
-            return proyectar_tendencia_lineal(serie, fechas, stock, minimo, horizonte)
-        elif modelo == "holt_winters":
+        if modelo == "holt_winters":
             return proyectar_holt_winters(serie, stock, minimo, horizonte)
         elif modelo == "arima":
             return proyectar_arima(serie, stock, minimo, horizonte)
@@ -316,9 +307,6 @@ async def generar_proyeccion(
     try:
         if req.modelo == "auto":
             resultados = [
-                _ejecutar_modelo("promedio_movil",     serie, fechas, stock, minimo, horizonte),
-                _ejecutar_modelo("suavizacion_simple", serie, fechas, stock, minimo, horizonte),
-                _ejecutar_modelo("tendencia_lineal",   serie, fechas, stock, minimo, horizonte),
                 _ejecutar_modelo("holt_winters",       serie, fechas, stock, minimo, horizonte),
                 _ejecutar_modelo("arima",              serie, fechas, stock, minimo, horizonte),
                 _ejecutar_modelo("prophet",            serie, fechas, stock, minimo, horizonte),
@@ -493,9 +481,6 @@ async def proyeccion_con_xai(
     try:
         if req.modelo == "auto":
             resultados = [
-                _ejecutar_modelo("promedio_movil",     serie, fechas, stock, minimo, horizonte),
-                _ejecutar_modelo("suavizacion_simple", serie, fechas, stock, minimo, horizonte),
-                _ejecutar_modelo("tendencia_lineal",   serie, fechas, stock, minimo, horizonte),
                 _ejecutar_modelo("holt_winters",       serie, fechas, stock, minimo, horizonte),
                 _ejecutar_modelo("arima",              serie, fechas, stock, minimo, horizonte),
                 _ejecutar_modelo("prophet",            serie, fechas, stock, minimo, horizonte),
