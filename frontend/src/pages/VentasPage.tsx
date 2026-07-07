@@ -150,7 +150,11 @@ export default function VentasPage({ usuario }: { usuario: Usuario | null }) {
                     <td className="px-3 py-[9px]">{new Date(v.fecha_venta).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' })}</td>
                     <td className="px-3 py-[9px] text-t2">{v.usuario_nombre}</td>
                     <td className="px-3 py-[9px] text-t2">{v.sede}</td>
-                    <td className="px-3 py-[9px] text-t2">{v.detalles?.length || 0} ítems</td>
+                    <td className="px-3 py-[9px] text-t2 max-w-[260px]">
+                      <span className="block truncate" title={v.detalles?.map(d => d.producto_nombre).join(', ')}>
+                        {v.detalles?.length ? v.detalles.map(d => d.producto_nombre).join(', ') : '—'}
+                      </span>
+                    </td>
                     <td className="px-3 py-[9px] font-semibold">{fmt(v.total)}</td>
                     <td className="px-3 py-[9px]">
                       <button onClick={() => setDetalleOpen(detalleOpen === v.id ? null : v.id)}

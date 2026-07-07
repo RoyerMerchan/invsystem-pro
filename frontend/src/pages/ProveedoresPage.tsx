@@ -217,9 +217,9 @@ export default function ProveedoresPage({ usuario }: Props) {
 
       {/* Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.4)' }}>
-          <div className="bg-bg1 rounded-2xl p-6 w-full max-w-[440px] border-[0.5px] border-border"
-            style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-[fadeIn_0.15s_ease]" style={{ background: 'rgba(0,0,0,0.5)' }}>
+          <div className="bg-bg1 rounded-2xl p-6 w-full max-w-[440px] border border-border"
+            style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
             <div className="text-base font-bold mb-[18px]">{editId ? 'Editar proveedor' : 'Nuevo proveedor'}</div>
             {[
               { label: 'Nombre *', key: 'nombre', type: 'text' },
