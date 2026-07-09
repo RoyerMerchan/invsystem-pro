@@ -4,20 +4,47 @@ import { apiUrl } from '../services/api'
 import { FloatCard, FloatSection } from '../components/FloatCard'
 
 interface FilaPreview {
-  sku: string; fecha: string; cantidad: number; precio_unitario: number; sede: string
+  sku: string; nombre: string; fecha: string; cantidad: number; tipo: string; precio_unitario: number; sede: string
 }
 
 interface ImportResult {
   ok: number
   total_registros: number
   errores: { linea: number; error: string; sku?: string }[]
-  detalles: { venta_id: number; producto: string; sku: string; cantidad: number; fecha: string }[]
+  detalles: { venta_id: number | null; producto: string; sku: string; cantidad: number; fecha: string; tipo?: string }[]
 }
 
-const REQUIRED_HEADERS = ['sku', 'fecha', 'cantidad']
+// Alias de columnas: mismo criterio que el backend. El formato PRINCIPAL es
+// sku,nombre,fecha,cantidad,tipo,precio,sede — pero se aceptan muchos más.
+const CAMPOS_ALIAS: Record<string, string[]> = {
+  sku: ['sku', 'codigo', 'cod', 'code', 'referencia', 'ref', 'id_producto', 'producto_id', 'cod_producto', 'codigo_producto', 'item', 'articulo', 'clave'],
+  nombre: ['nombre', 'producto', 'descripcion', 'detalle', 'product', 'name', 'nombre_producto', 'articulo_nombre', 'item_name', 'descripcion_producto'],
+  fecha: ['fecha', 'date', 'dia', 'periodo', 'fecha_venta', 'fecha_movimiento', 'fecha_salida', 'fecha_operacion', 'timestamp'],
+  cantidad: ['cantidad', 'cant', 'qty', 'quantity', 'unidades', 'und', 'uds', 'ventas', 'demanda', 'vendidos', 'salidas', 'volumen', 'cantidad_vendida'],
+  precio: ['precio_unitario', 'precio', 'price', 'unit_price', 'valor', 'valor_unitario', 'costo', 'precio_venta', 'importe', 'pu'],
+  sede: ['sede', 'tienda', 'sucursal', 'store', 'location', 'ubicacion', 'ciudad', 'bodega', 'almacen', 'punto_venta', 'local', 'region'],
+  tipo: ['tipo', 'type', 'movimiento', 'operacion', 'clase', 'tipo_movimiento'],
+}
+
+// Normaliza una cabecera: sin acentos, minúsculas, separadores -> '_'.
+function normHeader(s: string) {
+  return (s || '')
+    .normalize('NFKD').replace(/[^\x00-\x7f]/g, '')
+    .trim().toLowerCase()
+    .replace(/[\s\-./\\]+/g, '_')
+    .replace(/_+/g, '_').replace(/^_|_$/g, '')
+}
+
+// Devuelve el campo canónico para una cabecera normalizada, o la propia cabecera.
+function canonicalOf(normalized: string): string {
+  for (const [canon, aliases] of Object.entries(CAMPOS_ALIAS)) {
+    if (aliases.includes(normalized)) return canon
+  }
+  return normalized
+}
 
 function detectDelimiter(line: string) {
-  const options = [',', ';', '\t']
+  const options = [',', ';', '\t', '|']
   let best = ','
   let bestCount = -1
   for (const delimiter of options) {
@@ -67,16 +94,21 @@ function parseCsv(text: string) {
   if (lines.length < 2) throw new Error('CSV vacio o sin datos')
 
   const delimiter = detectDelimiter(lines[0])
-  const headers = parseCsvLine(lines[0], delimiter).map(h => h.trim().toLowerCase())
-  const missing = REQUIRED_HEADERS.filter(h => !headers.includes(h))
+  // Cada cabecera se resuelve a su campo can\u00F3nico (sku, nombre, fecha, ...).
+  const keys = parseCsvLine(lines[0], delimiter).map(h => canonicalOf(normHeader(h)))
+  const present = new Set(keys)
+  const missing: string[] = []
+  if (!present.has('fecha')) missing.push('fecha')
+  if (!present.has('cantidad')) missing.push('cantidad')
+  if (!present.has('sku') && !present.has('nombre')) missing.push('sku o nombre')
   if (missing.length) {
-    throw new Error(`CSV debe tener columnas: ${REQUIRED_HEADERS.join(', ')}. Faltan: ${missing.join(', ')}`)
+    throw new Error(`El CSV debe incluir: fecha, cantidad y (sku o nombre). Faltan: ${missing.join(', ')}`)
   }
 
   return lines.slice(1).map(line => {
     const vals = parseCsvLine(line, delimiter)
     const row: Record<string, string> = {}
-    headers.forEach((h, idx) => { row[h] = vals[idx] || '' })
+    keys.forEach((k, idx) => { if (!(k in row)) row[k] = vals[idx] || '' })
     return row
   })
 }
@@ -101,9 +133,11 @@ export default function ImportarPage() {
         const rows = parseCsv(reader.result as string)
         const parsed = rows.slice(0, 5).map(row => ({
           sku: row.sku?.toUpperCase() || '',
+          nombre: row.nombre || '',
           fecha: row.fecha || '',
           cantidad: parseInt(row.cantidad) || 0,
-          precio_unitario: parseFloat(row.precio_unitario) || 0,
+          tipo: (row.tipo || 'salida').toLowerCase(),
+          precio_unitario: parseFloat((row.precio || '').replace(',', '.')) || 0,
           sede: row.sede || '',
         }))
         setPreview(parsed)
@@ -137,11 +171,16 @@ export default function ImportarPage() {
   }
 
   const descargarPlantilla = () => {
-    const csv = 'sku,fecha,cantidad,precio_unitario,sede\nLAP-HP15-001,2025-01-15,3,850.00,Sede Centro\nMOU-INL-002,2025-01-16,10,29.00,Sede Norte'
+    const csv = [
+      'sku,nombre,fecha,cantidad,tipo,precio,sede',
+      'LAP-HP15-001,Laptop HP 15,2025-01-15,3,salida,850.00,Bogotá',
+      'MOU-LOG-001,Mouse Logitech MX,2025-01-16,10,salida,29.00,Medellín',
+      'LAP-HP15-001,Laptop HP 15,2025-01-17,20,entrada,0,Bogotá',
+    ].join('\n')
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
-    a.download = 'plantilla_importacion.csv'
+    a.download = 'plantilla_historial_demanda.csv'
     a.click()
   }
 
@@ -181,8 +220,8 @@ export default function ImportarPage() {
         >
           <Upload className="w-10 h-10 text-muted mb-4" />
           <div className="text-sm font-semibold text-t1 mb-1">Haz clic para seleccionar archivo CSV</div>
-          <div className="text-xs text-muted">Obligatorias: sku, fecha, cantidad · Opcionales: precio_unitario, sede</div>
-          <div className="text-[11px] text-muted/70 mt-1">Acepta delimitador , ; o tab · fechas AAAA-MM-DD o DD/MM/AAAA · mayúsculas indiferentes</div>
+          <div className="text-xs text-muted">Formato principal: <b>sku, nombre, fecha, cantidad, tipo, precio, sede</b></div>
+          <div className="text-[11px] text-muted/70 mt-1">Obligatorias: fecha, cantidad y (sku o nombre) · se adapta a otros formatos y nombres de columna · delimitador , ; tab o | · fechas AAAA-MM-DD o DD/MM/AAAA</div>
           <input ref={inputRef} type="file" accept=".csv" onChange={handleFile} className="hidden" />
         </div>
       </FloatCard>
@@ -208,8 +247,10 @@ export default function ImportarPage() {
               <thead>
                 <tr className="border-b border-border">
                   <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">SKU</th>
+                  <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Nombre</th>
                   <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Fecha</th>
                   <th className="text-right font-medium text-muted px-3 py-2 uppercase tracking-wider">Cantidad</th>
+                  <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Tipo</th>
                   <th className="text-right font-medium text-muted px-3 py-2 uppercase tracking-wider">Precio</th>
                   <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Sede</th>
                 </tr>
@@ -217,9 +258,15 @@ export default function ImportarPage() {
               <tbody>
                 {preview.map((r, i) => (
                   <tr key={i} className="border-b border-border hover:bg-bg2 transition-colors">
-                    <td className="px-3 py-2.5 font-mono text-t1">{r.sku}</td>
+                    <td className="px-3 py-2.5 font-mono text-t1">{r.sku || '—'}</td>
+                    <td className="px-3 py-2.5 text-t1">{r.nombre || '—'}</td>
                     <td className="px-3 py-2.5 text-t1">{r.fecha}</td>
                     <td className="px-3 py-2.5 text-right font-semibold text-t1">{r.cantidad}</td>
+                    <td className="px-3 py-2.5">
+                      <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${r.tipo === 'entrada' ? 'bg-info-subtle text-info' : 'bg-success-subtle text-success'}`}>
+                        {r.tipo === 'entrada' ? 'entrada' : 'salida'}
+                      </span>
+                    </td>
                     <td className="px-3 py-2.5 text-right text-muted">${r.precio_unitario.toFixed(2)}</td>
                     <td className="px-3 py-2.5 text-muted">{r.sede || '—'}</td>
                   </tr>
@@ -257,7 +304,7 @@ export default function ImportarPage() {
                 <span className="text-[11px] font-semibold text-muted uppercase tracking-wider">Importadas</span>
               </div>
               <div className="text-[28px] font-bold text-success">{result.ok}</div>
-              <div className="text-xs text-muted mt-1">ventas registradas</div>
+              <div className="text-xs text-muted mt-1">registros importados</div>
             </FloatCard>
             <FloatCard color="#F59E0B" style={{ padding: '16px 20px' }}>
               <div className="flex items-center gap-3 mb-2">
@@ -308,6 +355,7 @@ export default function ImportarPage() {
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="border-b border-border">
+                      <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Tipo</th>
                       <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Venta #</th>
                       <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Producto</th>
                       <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">SKU</th>
@@ -318,7 +366,12 @@ export default function ImportarPage() {
                   <tbody>
                     {result.detalles.slice(0, 50).map((d, i) => (
                       <tr key={i} className="border-b border-border hover:bg-bg2">
-                        <td className="px-3 py-2 font-mono text-t1">#{d.venta_id}</td>
+                        <td className="px-3 py-2">
+                          <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${d.tipo === 'entrada' ? 'bg-info-subtle text-info' : 'bg-success-subtle text-success'}`}>
+                            {d.tipo === 'entrada' ? 'entrada' : 'salida'}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2 font-mono text-t1">{d.venta_id ? `#${d.venta_id}` : '—'}</td>
                         <td className="px-3 py-2 text-t1">{d.producto}</td>
                         <td className="px-3 py-2 font-mono text-muted">{d.sku}</td>
                         <td className="px-3 py-2 text-right font-semibold text-t1">{d.cantidad}</td>
@@ -338,8 +391,9 @@ export default function ImportarPage() {
           <FileSpreadsheet className="w-12 h-12 text-muted mx-auto mb-4" />
           <div className="text-sm font-semibold text-t1 mb-2">Sube un archivo CSV</div>
           <div className="text-xs text-muted max-w-md mx-auto leading-relaxed">
-            El sistema creara automaticamente las ventas y los movimientos de inventario.
-            Las columnas <b>sku</b>, <b>fecha</b> y <b>cantidad</b> son obligatorias.
+            Formato principal: <b>sku, nombre, fecha, cantidad, tipo, precio, sede</b>.
+            El sistema crea automáticamente las ventas (tipo <b>salida</b>) y los movimientos de inventario;
+            las filas <b>entrada</b> suman stock. Obligatorias: <b>fecha</b>, <b>cantidad</b> y (<b>sku</b> o <b>nombre</b>).
           </div>
         </FloatCard>
       )}

@@ -1,0 +1,633 @@
+sku,nombre,fecha,cantidad,tipo,precio,sede
+AUR-BOQ-002,Auriculares Bose QC,2024-01-01,6,salida,388.11,Cali
+AUR-SON-001,Auriculares Sony,2024-01-01,15,salida,222.24,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-01-01,52,salida,430.01,Bucaramanga
+CAM-WOR-001,Camiseta Work,2024-01-01,30,salida,350.2,Barranquilla
+CAR-65W-001,Cargador 65W,2024-01-01,35,salida,51.62,Cali
+IMP-HP-001,Impresora HP LaserJet,2024-01-01,3,salida,487.93,Bogotá
+LAP-DEL-002,Laptop Dell XPS,2024-01-01,3,salida,381.76,Medellín
+LAP-HP15-001,Laptop HP 15,2024-01-01,6,salida,394.1,Bogotá
+MON-LG-002,Monitor LG 27,2024-01-01,2,salida,68.42,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-01-01,4,salida,227.94,Cali
+MOU-APP-002,Mouse Apple Magic,2024-01-01,14,salida,188.55,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-01-01,22,salida,463.75,Bucaramanga
+RAM-16G-001,RAM 16GB DDR4,2024-01-01,22,salida,323.71,Bogotá
+SSD-500-001,SSD 500GB,2024-01-01,20,salida,412.27,Medellín
+TEC-MEC-001,Teclado Mecánico,2024-01-01,14,salida,224.49,Medellín
+WEB-4K-001,Webcam 4K,2024-01-01,10,salida,117.48,Bogotá
+ACE-COC-001,Aceite de Coco 500ml,2024-01-02,58,salida,279.52,Bogotá
+CAF-GRA-001,Café Grano 1kg,2024-01-02,47,salida,36.59,Medellín
+ZAP-DEP-001,Zapatos Deportivos,2024-01-02,14,salida,414.68,Bogotá
+LAP-DEL-002,Laptop Dell XPS,2024-01-03,4,salida,381.76,Cali
+LAP-HP15-001,Laptop HP 15,2024-01-03,7,salida,394.1,Medellín
+MON-SAM-001,Monitor Samsung 24,2024-01-03,5,salida,227.94,Barranquilla
+MOU-APP-002,Mouse Apple Magic,2024-01-03,11,salida,188.55,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-01-03,17,salida,463.75,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-01-03,18,salida,224.49,Barranquilla
+AUR-BOQ-002,Auriculares Bose QC,2024-01-04,7,salida,388.11,Barranquilla
+AUR-SON-001,Auriculares Sony,2024-01-04,16,salida,222.24,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-01-04,41,salida,430.01,Bogotá
+CAR-65W-001,Cargador 65W,2024-01-04,41,salida,51.62,Cali
+IMP-HP-001,Impresora HP LaserJet,2024-01-04,2,salida,487.93,Bogotá
+RAM-16G-001,RAM 16GB DDR4,2024-01-04,23,salida,323.71,Bogotá
+SSD-500-001,SSD 500GB,2024-01-04,25,salida,412.27,Bogotá
+WEB-4K-001,Webcam 4K,2024-01-04,11,salida,117.48,Cali
+ACE-COC-001,Aceite de Coco 500ml,2024-01-05,66,salida,279.52,Cali
+CAF-GRA-001,Café Grano 1kg,2024-01-05,39,salida,36.59,Cali
+PAN-CAR-001,Pantalón Cargo,2024-01-05,25,salida,317.67,Cali
+ZAP-DEP-001,Zapatos Deportivos,2024-01-05,18,salida,414.68,Medellín
+LAP-HP15-001,Laptop HP 15,2024-01-06,4,salida,394.1,Medellín
+MOU-LOG-001,Mouse Logitech MX,2024-01-07,13,salida,463.75,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-01-08,8,salida,224.49,Bogotá
+AUR-SON-001,Auriculares Sony,2024-01-10,7,salida,222.24,Cali
+CAM-WOR-001,Camiseta Work,2024-01-17,22,salida,350.2,Medellín
+PAN-CAR-001,Pantalón Cargo,2024-01-17,13,salida,317.67,Medellín
+CAF-GRA-001,Café Grano 1kg,2024-01-19,30,salida,36.59,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-01-22,11,salida,463.75,Cali
+MON-SAM-001,Monitor Samsung 24,2024-01-24,3,salida,227.94,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-01-27,36,salida,430.01,Medellín
+RAM-16G-001,RAM 16GB DDR4,2024-01-29,12,salida,323.71,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-01-30,1,salida,487.93,Bogotá
+ZAP-DEP-001,Zapatos Deportivos,2024-02-01,9,salida,414.68,Medellín
+CAF-GRA-001,Café Grano 1kg,2024-02-02,24,salida,36.59,Bogotá
+MOU-LOG-001,Mouse Logitech MX,2024-02-05,17,salida,463.75,Medellín
+TEC-MEC-001,Teclado Mecánico,2024-02-06,9,salida,224.49,Barranquilla
+AUR-SON-001,Auriculares Sony,2024-02-08,12,salida,222.24,Bogotá
+RAM-16G-001,RAM 16GB DDR4,2024-02-11,12,salida,323.71,Bogotá
+SSD-500-001,SSD 500GB,2024-02-11,19,salida,412.27,Bogotá
+WEB-4K-001,Webcam 4K,2024-02-11,10,salida,117.48,Bogotá
+CAM-WOR-001,Camiseta Work,2024-02-12,19,salida,350.2,Cali
+ACE-COC-001,Aceite de Coco 500ml,2024-02-14,36,salida,279.52,Medellín
+LAP-DEL-002,Laptop Dell XPS,2024-02-17,6,salida,381.76,Cali
+MOU-APP-002,Mouse Apple Magic,2024-02-17,14,salida,188.55,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-02-17,24,salida,463.75,Medellín
+MON-LG-002,Monitor LG 27,2024-02-18,4,salida,68.42,Barranquilla
+MON-SAM-001,Monitor Samsung 24,2024-02-18,5,salida,227.94,Bogotá
+AUR-BOQ-002,Auriculares Bose QC,2024-02-19,10,salida,388.11,Bogotá
+CAB-USB-001,Cable USB-C 2m,2024-02-19,45,salida,430.01,Bogotá
+CAR-65W-001,Cargador 65W,2024-02-19,44,salida,51.62,Cali
+RAM-16G-001,RAM 16GB DDR4,2024-02-19,17,salida,323.71,Medellín
+SSD-500-001,SSD 500GB,2024-02-19,27,salida,412.27,Bogotá
+ACE-COC-001,Aceite de Coco 500ml,2024-02-21,72,salida,279.52,Medellín
+CAF-GRA-001,Café Grano 1kg,2024-02-21,50,salida,36.59,Bogotá
+CAM-WOR-001,Camiseta Work,2024-02-21,27,salida,350.2,Cali
+PAN-CAR-001,Pantalón Cargo,2024-02-21,25,salida,317.67,Medellín
+ZAP-DEP-001,Zapatos Deportivos,2024-02-21,17,salida,414.68,Medellín
+LAP-HP15-001,Laptop HP 15,2024-02-22,6,salida,394.1,Bogotá
+MON-LG-002,Monitor LG 27,2024-02-23,3,salida,68.42,Cali
+MON-SAM-001,Monitor Samsung 24,2024-02-23,4,salida,227.94,Medellín
+MOU-APP-002,Mouse Apple Magic,2024-02-23,10,salida,188.55,Bogotá
+MOU-LOG-001,Mouse Logitech MX,2024-02-23,17,salida,463.75,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-02-23,16,salida,224.49,Bucaramanga
+AUR-BOQ-002,Auriculares Bose QC,2024-02-24,6,salida,388.11,Bucaramanga
+RAM-16G-001,RAM 16GB DDR4,2024-02-26,21,salida,323.71,Cali
+SSD-500-001,SSD 500GB,2024-02-26,21,salida,412.27,Bogotá
+CAM-WOR-001,Camiseta Work,2024-02-27,32,salida,350.2,Bucaramanga
+IMP-HP-001,Impresora HP LaserJet,2024-02-27,3,salida,487.93,Cali
+ACE-COC-001,Aceite de Coco 500ml,2024-02-28,40,salida,279.52,Cali
+CAF-GRA-001,Café Grano 1kg,2024-02-28,35,salida,36.59,Medellín
+ZAP-DEP-001,Zapatos Deportivos,2024-02-28,13,salida,414.68,Bogotá
+LAP-DEL-002,Laptop Dell XPS,2024-02-29,4,salida,381.76,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-02-29,7,salida,394.1,Bucaramanga
+AUR-BOQ-002,Auriculares Bose QC,2024-03-01,8,salida,388.11,Medellín
+AUR-SON-001,Auriculares Sony,2024-03-01,16,salida,222.24,Bogotá
+MON-LG-002,Monitor LG 27,2024-03-01,3,salida,68.42,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-03-01,4,salida,227.94,Medellín
+MOU-APP-002,Mouse Apple Magic,2024-03-01,14,salida,188.55,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-03-01,14,salida,224.49,Barranquilla
+CAR-65W-001,Cargador 65W,2024-03-02,36,salida,51.62,Cali
+RAM-16G-001,RAM 16GB DDR4,2024-03-02,15,salida,323.71,Cali
+SSD-500-001,SSD 500GB,2024-03-02,26,salida,412.27,Medellín
+CAM-WOR-001,Camiseta Work,2024-03-04,34,salida,350.2,Cali
+PAN-CAR-001,Pantalón Cargo,2024-03-04,17,salida,317.67,Medellín
+ACE-COC-001,Aceite de Coco 500ml,2024-03-05,48,salida,279.52,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-03-09,15,salida,463.75,Bogotá
+MON-LG-002,Monitor LG 27,2024-03-11,4,salida,68.42,Medellín
+MON-SAM-001,Monitor Samsung 24,2024-03-11,6,salida,227.94,Bogotá
+AUR-BOQ-002,Auriculares Bose QC,2024-03-12,8,salida,388.11,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-03-12,44,salida,430.01,Bogotá
+CAR-65W-001,Cargador 65W,2024-03-12,34,salida,51.62,Bogotá
+SSD-500-001,SSD 500GB,2024-03-12,17,salida,412.27,Bogotá
+ACE-COC-001,Aceite de Coco 500ml,2024-03-13,62,salida,279.52,Medellín
+CAF-GRA-001,Café Grano 1kg,2024-03-13,32,salida,36.59,Bogotá
+CAM-WOR-001,Camiseta Work,2024-03-13,39,salida,350.2,Bucaramanga
+IMP-HP-001,Impresora HP LaserJet,2024-03-13,3,salida,487.93,Medellín
+PAN-CAR-001,Pantalón Cargo,2024-03-13,27,salida,317.67,Bogotá
+WEB-4K-001,Webcam 4K,2024-03-13,15,salida,117.48,Medellín
+ZAP-DEP-001,Zapatos Deportivos,2024-03-13,22,salida,414.68,Bogotá
+LAP-DEL-002,Laptop Dell XPS,2024-03-14,5,salida,381.76,Bucaramanga
+LAP-HP15-001,Laptop HP 15,2024-03-14,8,salida,394.1,Medellín
+MOU-APP-002,Mouse Apple Magic,2024-03-14,11,salida,188.55,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-03-14,19,salida,463.75,Bogotá
+ACE-COC-001,Aceite de Coco 500ml,2024-03-15,48,salida,279.52,Medellín
+AUR-BOQ-002,Auriculares Bose QC,2024-03-15,10,salida,388.11,Medellín
+AUR-SON-001,Auriculares Sony,2024-03-15,15,salida,222.24,Bucaramanga
+CAB-USB-001,Cable USB-C 2m,2024-03-15,41,salida,430.01,Medellín
+CAF-GRA-001,Café Grano 1kg,2024-03-15,43,salida,36.59,Medellín
+CAM-WOR-001,Camiseta Work,2024-03-15,38,salida,350.2,Bogotá
+CAR-65W-001,Cargador 65W,2024-03-15,33,salida,51.62,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-03-15,3,salida,487.93,Medellín
+MON-LG-002,Monitor LG 27,2024-03-15,4,salida,68.42,Medellín
+MON-SAM-001,Monitor Samsung 24,2024-03-15,6,salida,227.94,Bogotá
+PAN-CAR-001,Pantalón Cargo,2024-03-15,20,salida,317.67,Barranquilla
+RAM-16G-001,RAM 16GB DDR4,2024-03-15,17,salida,323.71,Barranquilla
+SSD-500-001,SSD 500GB,2024-03-15,20,salida,412.27,Bogotá
+WEB-4K-001,Webcam 4K,2024-03-15,10,salida,117.48,Medellín
+ZAP-DEP-001,Zapatos Deportivos,2024-03-15,14,salida,414.68,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-03-16,5,salida,394.1,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-03-17,16,salida,463.75,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-03-18,11,salida,224.49,Cali
+AUR-SON-001,Auriculares Sony,2024-03-19,10,salida,222.24,Cali
+MON-LG-002,Monitor LG 27,2024-03-19,3,salida,68.42,Cali
+CAB-USB-001,Cable USB-C 2m,2024-03-20,37,salida,430.01,Bogotá
+RAM-16G-001,RAM 16GB DDR4,2024-03-22,13,salida,323.71,Bucaramanga
+WEB-4K-001,Webcam 4K,2024-03-22,9,salida,117.48,Bogotá
+ZAP-DEP-001,Zapatos Deportivos,2024-03-25,13,salida,414.68,Bogotá
+AUR-BOQ-002,Auriculares Bose QC,2024-03-30,10,salida,388.11,Medellín
+AUR-SON-001,Auriculares Sony,2024-03-30,14,salida,222.24,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-03-30,48,salida,430.01,Barranquilla
+CAM-WOR-001,Camiseta Work,2024-03-30,30,salida,350.2,Barranquilla
+CAR-65W-001,Cargador 65W,2024-03-30,24,salida,51.62,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-03-30,3,salida,487.93,Bucaramanga
+MON-LG-002,Monitor LG 27,2024-03-30,4,salida,68.42,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-03-30,6,salida,227.94,Medellín
+MOU-APP-002,Mouse Apple Magic,2024-03-30,13,salida,188.55,Bogotá
+MOU-LOG-001,Mouse Logitech MX,2024-03-30,24,salida,463.75,Bucaramanga
+PAN-CAR-001,Pantalón Cargo,2024-03-30,22,salida,317.67,Bogotá
+RAM-16G-001,RAM 16GB DDR4,2024-03-30,18,salida,323.71,Bogotá
+SSD-500-001,SSD 500GB,2024-03-30,19,salida,412.27,Medellín
+TEC-MEC-001,Teclado Mecánico,2024-03-30,17,salida,224.49,Bucaramanga
+WEB-4K-001,Webcam 4K,2024-03-30,10,salida,117.48,Barranquilla
+ACE-COC-001,Aceite de Coco 500ml,2024-03-31,52,salida,279.52,Cali
+CAF-GRA-001,Café Grano 1kg,2024-03-31,47,salida,36.59,Barranquilla
+LAP-DEL-002,Laptop Dell XPS,2024-04-01,4,salida,381.76,Barranquilla
+LAP-HP15-001,Laptop HP 15,2024-04-01,7,salida,394.1,Medellín
+ACE-COC-001,Aceite de Coco 500ml,2024-04-02,44,salida,279.52,Bogotá
+AUR-BOQ-002,Auriculares Bose QC,2024-04-02,9,salida,388.11,Cali
+AUR-SON-001,Auriculares Sony,2024-04-02,16,salida,222.24,Cali
+CAB-USB-001,Cable USB-C 2m,2024-04-02,44,salida,430.01,Medellín
+CAF-GRA-001,Café Grano 1kg,2024-04-02,30,salida,36.59,Bogotá
+CAM-WOR-001,Camiseta Work,2024-04-02,28,salida,350.2,Cali
+CAR-65W-001,Cargador 65W,2024-04-02,32,salida,51.62,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-04-02,2,salida,487.93,Bucaramanga
+MON-LG-002,Monitor LG 27,2024-04-02,4,salida,68.42,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-04-02,5,salida,227.94,Bogotá
+MOU-APP-002,Mouse Apple Magic,2024-04-02,12,salida,188.55,Barranquilla
+PAN-CAR-001,Pantalón Cargo,2024-04-02,27,salida,317.67,Bogotá
+RAM-16G-001,RAM 16GB DDR4,2024-04-02,14,salida,323.71,Bogotá
+SSD-500-001,SSD 500GB,2024-04-02,21,salida,412.27,Medellín
+TEC-MEC-001,Teclado Mecánico,2024-04-02,15,salida,224.49,Barranquilla
+WEB-4K-001,Webcam 4K,2024-04-02,10,salida,117.48,Bogotá
+ZAP-DEP-001,Zapatos Deportivos,2024-04-02,21,salida,414.68,Bogotá
+AUR-BOQ-002,Auriculares Bose QC,2024-04-03,9,salida,388.11,Cali
+AUR-SON-001,Auriculares Sony,2024-04-03,21,salida,222.24,Bucaramanga
+CAB-USB-001,Cable USB-C 2m,2024-04-03,56,salida,430.01,Medellín
+LAP-DEL-002,Laptop Dell XPS,2024-04-03,6,salida,381.76,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-04-03,10,salida,394.1,Bogotá
+MON-LG-002,Monitor LG 27,2024-04-03,4,salida,68.42,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-04-03,5,salida,227.94,Bogotá
+MOU-APP-002,Mouse Apple Magic,2024-04-03,16,salida,188.55,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-04-03,24,salida,463.75,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-04-03,13,salida,224.49,Medellín
+CAM-WOR-001,Camiseta Work,2024-04-04,40,salida,350.2,Cali
+IMP-HP-001,Impresora HP LaserJet,2024-04-04,3,salida,487.93,Medellín
+PAN-CAR-001,Pantalón Cargo,2024-04-04,21,salida,317.67,Bogotá
+RAM-16G-001,RAM 16GB DDR4,2024-04-04,18,salida,323.71,Barranquilla
+SSD-500-001,SSD 500GB,2024-04-04,19,salida,412.27,Cali
+WEB-4K-001,Webcam 4K,2024-04-04,16,salida,117.48,Cali
+ZAP-DEP-001,Zapatos Deportivos,2024-04-04,25,salida,414.68,Bogotá
+CAF-GRA-001,Café Grano 1kg,2024-04-05,50,salida,36.59,Bogotá
+LAP-DEL-002,Laptop Dell XPS,2024-04-06,3,salida,381.76,Bucaramanga
+LAP-HP15-001,Laptop HP 15,2024-04-06,5,salida,394.1,Medellín
+RAM-16G-001,RAM 16GB DDR4,2024-04-15,15,salida,323.71,Bogotá
+SSD-500-001,SSD 500GB,2024-04-15,18,salida,412.27,Medellín
+CAM-WOR-001,Camiseta Work,2024-04-16,27,salida,350.2,Cali
+IMP-HP-001,Impresora HP LaserJet,2024-04-16,2,salida,487.93,Bucaramanga
+ACE-COC-001,Aceite de Coco 500ml,2024-04-18,39,salida,279.52,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-04-24,4,salida,227.94,Bucaramanga
+TEC-MEC-001,Teclado Mecánico,2024-04-24,8,salida,224.49,Bogotá
+AUR-BOQ-002,Auriculares Bose QC,2024-04-26,7,salida,388.11,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-04-26,35,salida,430.01,Cali
+CAR-65W-001,Cargador 65W,2024-04-26,18,salida,51.62,Bogotá
+SSD-500-001,SSD 500GB,2024-04-26,13,salida,412.27,Bogotá
+WEB-4K-001,Webcam 4K,2024-04-27,7,salida,117.48,Medellín
+ACE-COC-001,Aceite de Coco 500ml,2024-04-29,29,salida,279.52,Bucaramanga
+CAF-GRA-001,Café Grano 1kg,2024-04-29,28,salida,36.59,Medellín
+PAN-CAR-001,Pantalón Cargo,2024-04-29,15,salida,317.67,Bucaramanga
+ZAP-DEP-001,Zapatos Deportivos,2024-04-29,11,salida,414.68,Barranquilla
+AUR-BOQ-002,Auriculares Bose QC,2024-04-30,8,salida,388.11,Medellín
+AUR-SON-001,Auriculares Sony,2024-04-30,22,salida,222.24,Cali
+CAB-USB-001,Cable USB-C 2m,2024-04-30,38,salida,430.01,Bogotá
+CAR-65W-001,Cargador 65W,2024-04-30,34,salida,51.62,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-04-30,3,salida,487.93,Barranquilla
+LAP-DEL-002,Laptop Dell XPS,2024-04-30,6,salida,381.76,Cali
+LAP-HP15-001,Laptop HP 15,2024-04-30,10,salida,394.1,Bogotá
+MON-LG-002,Monitor LG 27,2024-04-30,5,salida,68.42,Medellín
+MON-SAM-001,Monitor Samsung 24,2024-04-30,5,salida,227.94,Cali
+MOU-APP-002,Mouse Apple Magic,2024-04-30,16,salida,188.55,Barranquilla
+MOU-LOG-001,Mouse Logitech MX,2024-04-30,26,salida,463.75,Cali
+RAM-16G-001,RAM 16GB DDR4,2024-04-30,22,salida,323.71,Medellín
+SSD-500-001,SSD 500GB,2024-04-30,30,salida,412.27,Medellín
+TEC-MEC-001,Teclado Mecánico,2024-04-30,16,salida,224.49,Medellín
+WEB-4K-001,Webcam 4K,2024-04-30,15,salida,117.48,Cali
+PAN-CAR-001,Pantalón Cargo,2024-05-01,33,salida,317.67,Barranquilla
+ZAP-DEP-001,Zapatos Deportivos,2024-05-01,22,salida,414.68,Medellín
+CAF-GRA-001,Café Grano 1kg,2024-05-02,38,salida,36.59,Bogotá
+LAP-DEL-002,Laptop Dell XPS,2024-05-03,5,salida,381.76,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-05-03,10,salida,394.1,Cali
+MON-SAM-001,Monitor Samsung 24,2024-05-03,8,salida,227.94,Barranquilla
+MOU-APP-002,Mouse Apple Magic,2024-05-03,15,salida,188.55,Bogotá
+MOU-LOG-001,Mouse Logitech MX,2024-05-03,18,salida,463.75,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-05-03,16,salida,224.49,Medellín
+AUR-SON-001,Auriculares Sony,2024-05-04,25,salida,222.24,Bogotá
+CAB-USB-001,Cable USB-C 2m,2024-05-05,52,salida,430.01,Barranquilla
+ACE-COC-001,Aceite de Coco 500ml,2024-05-06,46,salida,279.52,Bogotá
+CAF-GRA-001,Café Grano 1kg,2024-05-06,44,salida,36.59,Bogotá
+CAM-WOR-001,Camiseta Work,2024-05-06,46,salida,350.2,Bucaramanga
+IMP-HP-001,Impresora HP LaserJet,2024-05-06,3,salida,487.93,Bogotá
+PAN-CAR-001,Pantalón Cargo,2024-05-06,37,salida,317.67,Bogotá
+RAM-16G-001,RAM 16GB DDR4,2024-05-06,18,salida,323.71,Bogotá
+SSD-500-001,SSD 500GB,2024-05-06,31,salida,412.27,Bogotá
+WEB-4K-001,Webcam 4K,2024-05-06,16,salida,117.48,Bogotá
+ZAP-DEP-001,Zapatos Deportivos,2024-05-06,24,salida,414.68,Bogotá
+LAP-DEL-002,Laptop Dell XPS,2024-05-08,6,salida,381.76,Bogotá
+AUR-BOQ-002,Auriculares Bose QC,2024-05-09,11,salida,388.11,Bogotá
+AUR-SON-001,Auriculares Sony,2024-05-09,21,salida,222.24,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-05-09,46,salida,430.01,Cali
+MON-LG-002,Monitor LG 27,2024-05-09,5,salida,68.42,Medellín
+MON-SAM-001,Monitor Samsung 24,2024-05-09,7,salida,227.94,Bogotá
+MOU-APP-002,Mouse Apple Magic,2024-05-09,14,salida,188.55,Medellín
+TEC-MEC-001,Teclado Mecánico,2024-05-09,13,salida,224.49,Barranquilla
+SSD-500-001,SSD 500GB,2024-05-10,22,salida,412.27,Barranquilla
+IMP-HP-001,Impresora HP LaserJet,2024-05-11,3,salida,487.93,Bogotá
+WEB-4K-001,Webcam 4K,2024-05-11,15,salida,117.48,Bogotá
+ACE-COC-001,Aceite de Coco 500ml,2024-05-12,56,salida,279.52,Bogotá
+CAF-GRA-001,Café Grano 1kg,2024-05-12,37,salida,36.59,Bogotá
+PAN-CAR-001,Pantalón Cargo,2024-05-12,26,salida,317.67,Medellín
+ZAP-DEP-001,Zapatos Deportivos,2024-05-12,27,salida,414.68,Medellín
+LAP-DEL-002,Laptop Dell XPS,2024-05-13,6,salida,381.76,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-05-13,9,salida,394.1,Medellín
+MOU-APP-002,Mouse Apple Magic,2024-05-14,12,salida,188.55,Medellín
+AUR-SON-001,Auriculares Sony,2024-05-15,18,salida,222.24,Bogotá
+MON-LG-002,Monitor LG 27,2024-05-15,3,salida,68.42,Barranquilla
+MON-SAM-001,Monitor Samsung 24,2024-05-15,6,salida,227.94,Bogotá
+CAB-USB-001,Cable USB-C 2m,2024-05-16,44,salida,430.01,Bucaramanga
+CAM-WOR-001,Camiseta Work,2024-05-16,42,salida,350.2,Bogotá
+CAR-65W-001,Cargador 65W,2024-05-16,35,salida,51.62,Barranquilla
+IMP-HP-001,Impresora HP LaserJet,2024-05-16,3,salida,487.93,Bucaramanga
+RAM-16G-001,RAM 16GB DDR4,2024-05-16,16,salida,323.71,Bucaramanga
+SSD-500-001,SSD 500GB,2024-05-16,24,salida,412.27,Barranquilla
+WEB-4K-001,Webcam 4K,2024-05-16,15,salida,117.48,Cali
+ZAP-DEP-001,Zapatos Deportivos,2024-05-17,18,salida,414.68,Cali
+CAF-GRA-001,Café Grano 1kg,2024-05-18,40,salida,36.59,Cali
+LAP-HP15-001,Laptop HP 15,2024-05-19,4,salida,394.1,Bogotá
+MOU-APP-002,Mouse Apple Magic,2024-05-20,6,salida,188.55,Medellín
+MOU-LOG-001,Mouse Logitech MX,2024-05-20,10,salida,463.75,Medellín
+MON-SAM-001,Monitor Samsung 24,2024-05-21,3,salida,227.94,Barranquilla
+AUR-BOQ-002,Auriculares Bose QC,2024-05-22,6,salida,388.11,Medellín
+AUR-SON-001,Auriculares Sony,2024-05-22,9,salida,222.24,Medellín
+CAR-65W-001,Cargador 65W,2024-05-23,17,salida,51.62,Cali
+ACE-COC-001,Aceite de Coco 500ml,2024-05-30,27,salida,279.52,Bogotá
+MOU-APP-002,Mouse Apple Magic,2024-06-04,8,salida,188.55,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-06-05,5,salida,227.94,Medellín
+WEB-4K-001,Webcam 4K,2024-06-12,8,salida,117.48,Medellín
+PAN-CAR-001,Pantalón Cargo,2024-06-14,15,salida,317.67,Bogotá
+AUR-BOQ-002,Auriculares Bose QC,2024-06-18,11,salida,388.11,Medellín
+AUR-SON-001,Auriculares Sony,2024-06-18,18,salida,222.24,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-06-18,51,salida,430.01,Bogotá
+CAR-65W-001,Cargador 65W,2024-06-18,41,salida,51.62,Medellín
+IMP-HP-001,Impresora HP LaserJet,2024-06-18,3,salida,487.93,Cali
+LAP-DEL-002,Laptop Dell XPS,2024-06-18,4,salida,381.76,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-06-18,8,salida,394.1,Bucaramanga
+MON-LG-002,Monitor LG 27,2024-06-18,4,salida,68.42,Bucaramanga
+MON-SAM-001,Monitor Samsung 24,2024-06-18,7,salida,227.94,Medellín
+MOU-APP-002,Mouse Apple Magic,2024-06-18,11,salida,188.55,Bogotá
+MOU-LOG-001,Mouse Logitech MX,2024-06-18,26,salida,463.75,Medellín
+RAM-16G-001,RAM 16GB DDR4,2024-06-18,18,salida,323.71,Barranquilla
+SSD-500-001,SSD 500GB,2024-06-18,30,salida,412.27,Cali
+TEC-MEC-001,Teclado Mecánico,2024-06-18,15,salida,224.49,Barranquilla
+WEB-4K-001,Webcam 4K,2024-06-18,14,salida,117.48,Medellín
+ACE-COC-001,Aceite de Coco 500ml,2024-06-19,59,salida,279.52,Cali
+CAF-GRA-001,Café Grano 1kg,2024-06-19,48,salida,36.59,Bogotá
+PAN-CAR-001,Pantalón Cargo,2024-06-19,26,salida,317.67,Cali
+ZAP-DEP-001,Zapatos Deportivos,2024-06-19,24,salida,414.68,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-06-20,9,salida,394.1,Cali
+MON-LG-002,Monitor LG 27,2024-06-21,4,salida,68.42,Barranquilla
+MON-SAM-001,Monitor Samsung 24,2024-06-21,6,salida,227.94,Bogotá
+MOU-APP-002,Mouse Apple Magic,2024-06-21,12,salida,188.55,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-06-21,21,salida,463.75,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-06-21,17,salida,224.49,Cali
+CAB-USB-001,Cable USB-C 2m,2024-06-23,52,salida,430.01,Bogotá
+CAR-65W-001,Cargador 65W,2024-06-23,35,salida,51.62,Bucaramanga
+RAM-16G-001,RAM 16GB DDR4,2024-06-23,17,salida,323.71,Bogotá
+SSD-500-001,SSD 500GB,2024-06-23,25,salida,412.27,Bucaramanga
+WEB-4K-001,Webcam 4K,2024-06-23,15,salida,117.48,Barranquilla
+ACE-COC-001,Aceite de Coco 500ml,2024-06-25,38,salida,279.52,Medellín
+CAF-GRA-001,Café Grano 1kg,2024-06-25,39,salida,36.59,Cali
+PAN-CAR-001,Pantalón Cargo,2024-06-25,32,salida,317.67,Cali
+ZAP-DEP-001,Zapatos Deportivos,2024-06-25,20,salida,414.68,Bucaramanga
+LAP-HP15-001,Laptop HP 15,2024-06-26,10,salida,394.1,Bogotá
+MOU-LOG-001,Mouse Logitech MX,2024-06-27,18,salida,463.75,Medellín
+MON-SAM-001,Monitor Samsung 24,2024-06-29,6,salida,227.94,Bogotá
+AUR-SON-001,Auriculares Sony,2024-06-30,19,salida,222.24,Cali
+CAB-USB-001,Cable USB-C 2m,2024-07-01,45,salida,430.01,Bogotá
+ACE-COC-001,Aceite de Coco 500ml,2024-07-02,51,salida,279.52,Medellín
+CAM-WOR-001,Camiseta Work,2024-07-02,39,salida,350.2,Medellín
+IMP-HP-001,Impresora HP LaserJet,2024-07-02,4,salida,487.93,Medellín
+PAN-CAR-001,Pantalón Cargo,2024-07-02,29,salida,317.67,Medellín
+RAM-16G-001,RAM 16GB DDR4,2024-07-02,21,salida,323.71,Cali
+SSD-500-001,SSD 500GB,2024-07-02,20,salida,412.27,Cali
+WEB-4K-001,Webcam 4K,2024-07-02,16,salida,117.48,Medellín
+ZAP-DEP-001,Zapatos Deportivos,2024-07-02,28,salida,414.68,Medellín
+LAP-HP15-001,Laptop HP 15,2024-07-04,7,salida,394.1,Bucaramanga
+AUR-BOQ-002,Auriculares Bose QC,2024-07-05,9,salida,388.11,Bogotá
+AUR-SON-001,Auriculares Sony,2024-07-05,23,salida,222.24,Bogotá
+CAB-USB-001,Cable USB-C 2m,2024-07-05,35,salida,430.01,Bogotá
+CAR-65W-001,Cargador 65W,2024-07-05,26,salida,51.62,Cali
+MON-LG-002,Monitor LG 27,2024-07-05,5,salida,68.42,Medellín
+MON-SAM-001,Monitor Samsung 24,2024-07-05,7,salida,227.94,Cali
+MOU-APP-002,Mouse Apple Magic,2024-07-05,10,salida,188.55,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-07-05,19,salida,463.75,Bogotá
+SSD-500-001,SSD 500GB,2024-07-05,26,salida,412.27,Barranquilla
+TEC-MEC-001,Teclado Mecánico,2024-07-05,18,salida,224.49,Cali
+ACE-COC-001,Aceite de Coco 500ml,2024-07-07,43,salida,279.52,Bogotá
+CAF-GRA-001,Café Grano 1kg,2024-07-07,33,salida,36.59,Medellín
+CAM-WOR-001,Camiseta Work,2024-07-07,34,salida,350.2,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-07-07,3,salida,487.93,Bogotá
+PAN-CAR-001,Pantalón Cargo,2024-07-07,30,salida,317.67,Bogotá
+ZAP-DEP-001,Zapatos Deportivos,2024-07-07,17,salida,414.68,Bucaramanga
+LAP-DEL-002,Laptop Dell XPS,2024-07-08,6,salida,381.76,Medellín
+LAP-HP15-001,Laptop HP 15,2024-07-08,10,salida,394.1,Medellín
+MOU-APP-002,Mouse Apple Magic,2024-07-08,10,salida,188.55,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-07-08,23,salida,463.75,Medellín
+TEC-MEC-001,Teclado Mecánico,2024-07-08,18,salida,224.49,Bucaramanga
+AUR-BOQ-002,Auriculares Bose QC,2024-07-09,11,salida,388.11,Cali
+AUR-SON-001,Auriculares Sony,2024-07-09,24,salida,222.24,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-07-09,49,salida,430.01,Medellín
+CAR-65W-001,Cargador 65W,2024-07-09,36,salida,51.62,Bucaramanga
+MON-LG-002,Monitor LG 27,2024-07-09,4,salida,68.42,Cali
+RAM-16G-001,RAM 16GB DDR4,2024-07-09,14,salida,323.71,Bucaramanga
+SSD-500-001,SSD 500GB,2024-07-09,17,salida,412.27,Bogotá
+WEB-4K-001,Webcam 4K,2024-07-09,13,salida,117.48,Barranquilla
+CAM-WOR-001,Camiseta Work,2024-07-10,39,salida,350.2,Cali
+PAN-CAR-001,Pantalón Cargo,2024-07-10,29,salida,317.67,Bogotá
+ACE-COC-001,Aceite de Coco 500ml,2024-07-11,54,salida,279.52,Medellín
+CAF-GRA-001,Café Grano 1kg,2024-07-11,44,salida,36.59,Cali
+AUR-BOQ-002,Auriculares Bose QC,2024-07-12,15,salida,388.11,Bogotá
+AUR-SON-001,Auriculares Sony,2024-07-12,19,salida,222.24,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-07-12,56,salida,430.01,Barranquilla
+CAR-65W-001,Cargador 65W,2024-07-12,33,salida,51.62,Bogotá
+LAP-DEL-002,Laptop Dell XPS,2024-07-12,6,salida,381.76,Medellín
+LAP-HP15-001,Laptop HP 15,2024-07-12,10,salida,394.1,Medellín
+MON-LG-002,Monitor LG 27,2024-07-12,6,salida,68.42,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-07-12,10,salida,227.94,Bucaramanga
+MOU-APP-002,Mouse Apple Magic,2024-07-12,14,salida,188.55,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-07-12,23,salida,463.75,Bogotá
+SSD-500-001,SSD 500GB,2024-07-12,24,salida,412.27,Bucaramanga
+TEC-MEC-001,Teclado Mecánico,2024-07-12,17,salida,224.49,Barranquilla
+ACE-COC-001,Aceite de Coco 500ml,2024-07-14,56,salida,279.52,Bogotá
+CAF-GRA-001,Café Grano 1kg,2024-07-14,50,salida,36.59,Barranquilla
+CAM-WOR-001,Camiseta Work,2024-07-14,48,salida,350.2,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-07-14,4,salida,487.93,Bucaramanga
+PAN-CAR-001,Pantalón Cargo,2024-07-14,36,salida,317.67,Cali
+ZAP-DEP-001,Zapatos Deportivos,2024-07-14,21,salida,414.68,Cali
+ACE-COC-001,Aceite de Coco 500ml,2024-07-16,49,salida,279.52,Bogotá
+AUR-BOQ-002,Auriculares Bose QC,2024-07-16,10,salida,388.11,Barranquilla
+AUR-SON-001,Auriculares Sony,2024-07-16,23,salida,222.24,Bogotá
+CAB-USB-001,Cable USB-C 2m,2024-07-16,48,salida,430.01,Bogotá
+CAF-GRA-001,Café Grano 1kg,2024-07-16,45,salida,36.59,Bogotá
+CAM-WOR-001,Camiseta Work,2024-07-16,32,salida,350.2,Cali
+CAR-65W-001,Cargador 65W,2024-07-16,34,salida,51.62,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-07-16,3,salida,487.93,Bucaramanga
+LAP-DEL-002,Laptop Dell XPS,2024-07-16,6,salida,381.76,Cali
+MON-LG-002,Monitor LG 27,2024-07-16,4,salida,68.42,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-07-16,7,salida,227.94,Bogotá
+MOU-APP-002,Mouse Apple Magic,2024-07-16,15,salida,188.55,Bogotá
+MOU-LOG-001,Mouse Logitech MX,2024-07-16,21,salida,463.75,Cali
+PAN-CAR-001,Pantalón Cargo,2024-07-16,30,salida,317.67,Barranquilla
+RAM-16G-001,RAM 16GB DDR4,2024-07-16,17,salida,323.71,Bogotá
+SSD-500-001,SSD 500GB,2024-07-16,21,salida,412.27,Barranquilla
+TEC-MEC-001,Teclado Mecánico,2024-07-16,13,salida,224.49,Bogotá
+WEB-4K-001,Webcam 4K,2024-07-16,14,salida,117.48,Barranquilla
+ZAP-DEP-001,Zapatos Deportivos,2024-07-16,24,salida,414.68,Bucaramanga
+AUR-BOQ-002,Auriculares Bose QC,2024-07-17,10,salida,388.11,Cali
+AUR-SON-001,Auriculares Sony,2024-07-17,16,salida,222.24,Cali
+CAB-USB-001,Cable USB-C 2m,2024-07-17,55,salida,430.01,Barranquilla
+CAR-65W-001,Cargador 65W,2024-07-17,39,salida,51.62,Bogotá
+LAP-DEL-002,Laptop Dell XPS,2024-07-17,7,salida,381.76,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-07-17,9,salida,394.1,Bogotá
+MON-LG-002,Monitor LG 27,2024-07-17,4,salida,68.42,Medellín
+MON-SAM-001,Monitor Samsung 24,2024-07-17,6,salida,227.94,Cali
+MOU-APP-002,Mouse Apple Magic,2024-07-17,13,salida,188.55,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-07-17,24,salida,463.75,Barranquilla
+TEC-MEC-001,Teclado Mecánico,2024-07-17,12,salida,224.49,Bogotá
+RAM-16G-001,RAM 16GB DDR4,2024-07-18,15,salida,323.71,Cali
+ACE-COC-001,Aceite de Coco 500ml,2024-07-19,58,salida,279.52,Bogotá
+CAF-GRA-001,Café Grano 1kg,2024-07-19,53,salida,36.59,Bogotá
+CAM-WOR-001,Camiseta Work,2024-07-19,47,salida,350.2,Cali
+IMP-HP-001,Impresora HP LaserJet,2024-07-19,4,salida,487.93,Bucaramanga
+PAN-CAR-001,Pantalón Cargo,2024-07-19,24,salida,317.67,Cali
+ZAP-DEP-001,Zapatos Deportivos,2024-07-19,22,salida,414.68,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-07-20,7,salida,394.1,Cali
+MOU-APP-002,Mouse Apple Magic,2024-07-21,8,salida,188.55,Bogotá
+MOU-LOG-001,Mouse Logitech MX,2024-07-21,13,salida,463.75,Barranquilla
+MON-LG-002,Monitor LG 27,2024-07-23,4,salida,68.42,Cali
+AUR-BOQ-002,Auriculares Bose QC,2024-07-24,9,salida,388.11,Bogotá
+CAB-USB-001,Cable USB-C 2m,2024-07-24,26,salida,430.01,Bogotá
+SSD-500-001,SSD 500GB,2024-07-25,17,salida,412.27,Bogotá
+ZAP-DEP-001,Zapatos Deportivos,2024-07-30,16,salida,414.68,Bucaramanga
+CAF-GRA-001,Café Grano 1kg,2024-07-31,25,salida,36.59,Medellín
+LAP-DEL-002,Laptop Dell XPS,2024-08-01,5,salida,381.76,Cali
+LAP-HP15-001,Laptop HP 15,2024-08-01,7,salida,394.1,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-08-01,16,salida,463.75,Medellín
+AUR-BOQ-002,Auriculares Bose QC,2024-08-02,12,salida,388.11,Bogotá
+AUR-SON-001,Auriculares Sony,2024-08-02,23,salida,222.24,Bucaramanga
+CAB-USB-001,Cable USB-C 2m,2024-08-02,41,salida,430.01,Bogotá
+CAR-65W-001,Cargador 65W,2024-08-02,25,salida,51.62,Medellín
+MON-LG-002,Monitor LG 27,2024-08-02,4,salida,68.42,Cali
+MON-SAM-001,Monitor Samsung 24,2024-08-02,6,salida,227.94,Cali
+TEC-MEC-001,Teclado Mecánico,2024-08-02,18,salida,224.49,Bucaramanga
+ACE-COC-001,Aceite de Coco 500ml,2024-08-03,46,salida,279.52,Bogotá
+CAF-GRA-001,Café Grano 1kg,2024-08-03,46,salida,36.59,Medellín
+CAM-WOR-001,Camiseta Work,2024-08-03,36,salida,350.2,Medellín
+IMP-HP-001,Impresora HP LaserJet,2024-08-03,3,salida,487.93,Medellín
+PAN-CAR-001,Pantalón Cargo,2024-08-03,22,salida,317.67,Bogotá
+RAM-16G-001,RAM 16GB DDR4,2024-08-03,17,salida,323.71,Bogotá
+WEB-4K-001,Webcam 4K,2024-08-03,12,salida,117.48,Bogotá
+ZAP-DEP-001,Zapatos Deportivos,2024-08-03,19,salida,414.68,Bogotá
+LAP-DEL-002,Laptop Dell XPS,2024-08-04,3,salida,381.76,Medellín
+LAP-HP15-001,Laptop HP 15,2024-08-04,3,salida,394.1,Cali
+MON-SAM-001,Monitor Samsung 24,2024-08-07,3,salida,227.94,Cali
+AUR-BOQ-002,Auriculares Bose QC,2024-08-09,6,salida,388.11,Medellín
+CAM-WOR-001,Camiseta Work,2024-08-14,15,salida,350.2,Medellín
+IMP-HP-001,Impresora HP LaserJet,2024-08-14,1,salida,487.93,Bogotá
+ZAP-DEP-001,Zapatos Deportivos,2024-08-15,9,salida,414.68,Medellín
+LAP-DEL-002,Laptop Dell XPS,2024-08-19,2,salida,381.76,Bogotá
+MOU-APP-002,Mouse Apple Magic,2024-08-19,6,salida,188.55,Bogotá
+MOU-LOG-001,Mouse Logitech MX,2024-08-19,11,salida,463.75,Medellín
+MON-SAM-001,Monitor Samsung 24,2024-08-20,4,salida,227.94,Medellín
+AUR-BOQ-002,Auriculares Bose QC,2024-08-21,5,salida,388.11,Bogotá
+AUR-SON-001,Auriculares Sony,2024-08-21,10,salida,222.24,Medellín
+CAR-65W-001,Cargador 65W,2024-08-22,15,salida,51.62,Medellín
+RAM-16G-001,RAM 16GB DDR4,2024-08-23,11,salida,323.71,Cali
+IMP-HP-001,Impresora HP LaserJet,2024-08-24,2,salida,487.93,Cali
+ZAP-DEP-001,Zapatos Deportivos,2024-08-26,12,salida,414.68,Cali
+LAP-DEL-002,Laptop Dell XPS,2024-08-29,6,salida,381.76,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-08-29,7,salida,394.1,Cali
+MOU-APP-002,Mouse Apple Magic,2024-08-29,14,salida,188.55,Medellín
+MOU-LOG-001,Mouse Logitech MX,2024-08-29,23,salida,463.75,Medellín
+AUR-SON-001,Auriculares Sony,2024-08-30,15,salida,222.24,Cali
+MON-LG-002,Monitor LG 27,2024-08-30,4,salida,68.42,Medellín
+MON-SAM-001,Monitor Samsung 24,2024-08-30,5,salida,227.94,Medellín
+ACE-COC-001,Aceite de Coco 500ml,2024-08-31,56,salida,279.52,Cali
+CAB-USB-001,Cable USB-C 2m,2024-08-31,42,salida,430.01,Barranquilla
+CAF-GRA-001,Café Grano 1kg,2024-08-31,32,salida,36.59,Bucaramanga
+CAM-WOR-001,Camiseta Work,2024-08-31,36,salida,350.2,Medellín
+CAR-65W-001,Cargador 65W,2024-08-31,36,salida,51.62,Medellín
+IMP-HP-001,Impresora HP LaserJet,2024-08-31,3,salida,487.93,Cali
+PAN-CAR-001,Pantalón Cargo,2024-08-31,21,salida,317.67,Bogotá
+RAM-16G-001,RAM 16GB DDR4,2024-08-31,15,salida,323.71,Barranquilla
+SSD-500-001,SSD 500GB,2024-08-31,24,salida,412.27,Medellín
+WEB-4K-001,Webcam 4K,2024-08-31,14,salida,117.48,Bogotá
+ZAP-DEP-001,Zapatos Deportivos,2024-08-31,25,salida,414.68,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-09-01,4,salida,394.1,Barranquilla
+MOU-LOG-001,Mouse Logitech MX,2024-09-02,10,salida,463.75,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-09-04,3,salida,227.94,Bogotá
+AUR-BOQ-002,Auriculares Bose QC,2024-09-06,5,salida,388.11,Bogotá
+CAB-USB-001,Cable USB-C 2m,2024-09-06,28,salida,430.01,Bogotá
+CAM-WOR-001,Camiseta Work,2024-09-10,20,salida,350.2,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-09-10,1,salida,487.93,Cali
+ACE-COC-001,Aceite de Coco 500ml,2024-09-12,23,salida,279.52,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-09-18,3,salida,227.94,Barranquilla
+TEC-MEC-001,Teclado Mecánico,2024-09-18,10,salida,224.49,Barranquilla
+AUR-BOQ-002,Auriculares Bose QC,2024-09-20,7,salida,388.11,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-09-20,35,salida,430.01,Bogotá
+RAM-16G-001,RAM 16GB DDR4,2024-09-21,10,salida,323.71,Cali
+SSD-500-001,SSD 500GB,2024-09-21,18,salida,412.27,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-09-22,3,salida,487.93,Medellín
+ACE-COC-001,Aceite de Coco 500ml,2024-09-25,39,salida,279.52,Bucaramanga
+LAP-DEL-002,Laptop Dell XPS,2024-09-27,5,salida,381.76,Bucaramanga
+LAP-HP15-001,Laptop HP 15,2024-09-27,10,salida,394.1,Cali
+MON-LG-002,Monitor LG 27,2024-09-27,6,salida,68.42,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-09-27,9,salida,227.94,Cali
+MOU-APP-002,Mouse Apple Magic,2024-09-27,14,salida,188.55,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-09-27,22,salida,463.75,Medellín
+TEC-MEC-001,Teclado Mecánico,2024-09-27,17,salida,224.49,Cali
+AUR-BOQ-002,Auriculares Bose QC,2024-09-28,9,salida,388.11,Bogotá
+CAB-USB-001,Cable USB-C 2m,2024-09-28,50,salida,430.01,Bogotá
+CAM-WOR-001,Camiseta Work,2024-09-29,43,salida,350.2,Medellín
+IMP-HP-001,Impresora HP LaserJet,2024-09-29,3,salida,487.93,Bogotá
+RAM-16G-001,RAM 16GB DDR4,2024-09-29,25,salida,323.71,Bogotá
+SSD-500-001,SSD 500GB,2024-09-29,22,salida,412.27,Barranquilla
+WEB-4K-001,Webcam 4K,2024-09-29,11,salida,117.48,Bucaramanga
+ACE-COC-001,Aceite de Coco 500ml,2024-09-30,62,salida,279.52,Medellín
+CAF-GRA-001,Café Grano 1kg,2024-09-30,46,salida,36.59,Barranquilla
+ZAP-DEP-001,Zapatos Deportivos,2024-09-30,22,salida,414.68,Bucaramanga
+LAP-DEL-002,Laptop Dell XPS,2024-10-01,7,salida,381.76,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-10-01,8,salida,394.1,Medellín
+MOU-APP-002,Mouse Apple Magic,2024-10-01,12,salida,188.55,Medellín
+MOU-LOG-001,Mouse Logitech MX,2024-10-01,21,salida,463.75,Bogotá
+AUR-BOQ-002,Auriculares Bose QC,2024-10-03,15,salida,388.11,Cali
+AUR-SON-001,Auriculares Sony,2024-10-03,26,salida,222.24,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-10-03,39,salida,430.01,Medellín
+CAR-65W-001,Cargador 65W,2024-10-03,39,salida,51.62,Bogotá
+MON-LG-002,Monitor LG 27,2024-10-03,5,salida,68.42,Bogotá
+SSD-500-001,SSD 500GB,2024-10-03,22,salida,412.27,Bucaramanga
+ACE-COC-001,Aceite de Coco 500ml,2024-10-04,42,salida,279.52,Bogotá
+CAF-GRA-001,Café Grano 1kg,2024-10-04,41,salida,36.59,Bogotá
+CAM-WOR-001,Camiseta Work,2024-10-04,49,salida,350.2,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-10-04,4,salida,487.93,Medellín
+PAN-CAR-001,Pantalón Cargo,2024-10-04,25,salida,317.67,Medellín
+WEB-4K-001,Webcam 4K,2024-10-04,16,salida,117.48,Medellín
+ZAP-DEP-001,Zapatos Deportivos,2024-10-04,20,salida,414.68,Bogotá
+LAP-DEL-002,Laptop Dell XPS,2024-10-06,3,salida,381.76,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-10-08,12,salida,224.49,Barranquilla
+RAM-16G-001,RAM 16GB DDR4,2024-10-14,10,salida,323.71,Cali
+SSD-500-001,SSD 500GB,2024-10-14,12,salida,412.27,Cali
+ZAP-DEP-001,Zapatos Deportivos,2024-10-18,16,salida,414.68,Cali
+CAF-GRA-001,Café Grano 1kg,2024-10-19,28,salida,36.59,Cali
+LAP-HP15-001,Laptop HP 15,2024-10-20,5,salida,394.1,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-10-23,6,salida,224.49,Medellín
+RAM-16G-001,RAM 16GB DDR4,2024-10-29,7,salida,323.71,Medellín
+SSD-500-001,SSD 500GB,2024-10-29,12,salida,412.27,Bogotá
+ZAP-DEP-001,Zapatos Deportivos,2024-11-02,14,salida,414.68,Barranquilla
+LAP-DEL-002,Laptop Dell XPS,2024-11-05,6,salida,381.76,Medellín
+LAP-HP15-001,Laptop HP 15,2024-11-05,10,salida,394.1,Cali
+MOU-LOG-001,Mouse Logitech MX,2024-11-05,21,salida,463.75,Barranquilla
+AUR-BOQ-002,Auriculares Bose QC,2024-11-06,13,salida,388.11,Medellín
+AUR-SON-001,Auriculares Sony,2024-11-06,27,salida,222.24,Bucaramanga
+CAB-USB-001,Cable USB-C 2m,2024-11-06,61,salida,430.01,Medellín
+CAR-65W-001,Cargador 65W,2024-11-06,41,salida,51.62,Barranquilla
+MON-LG-002,Monitor LG 27,2024-11-06,7,salida,68.42,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-11-06,9,salida,227.94,Medellín
+SSD-500-001,SSD 500GB,2024-11-06,22,salida,412.27,Medellín
+TEC-MEC-001,Teclado Mecánico,2024-11-06,14,salida,224.49,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-11-07,5,salida,487.93,Medellín
+WEB-4K-001,Webcam 4K,2024-11-07,14,salida,117.48,Bucaramanga
+ACE-COC-001,Aceite de Coco 500ml,2024-11-08,57,salida,279.52,Cali
+CAF-GRA-001,Café Grano 1kg,2024-11-08,45,salida,36.59,Bogotá
+PAN-CAR-001,Pantalón Cargo,2024-11-08,41,salida,317.67,Bogotá
+ZAP-DEP-001,Zapatos Deportivos,2024-11-08,28,salida,414.68,Bogotá
+MOU-APP-002,Mouse Apple Magic,2024-11-11,10,salida,188.55,Bogotá
+MOU-LOG-001,Mouse Logitech MX,2024-11-11,15,salida,463.75,Bucaramanga
+TEC-MEC-001,Teclado Mecánico,2024-11-11,12,salida,224.49,Medellín
+AUR-BOQ-002,Auriculares Bose QC,2024-11-13,8,salida,388.11,Bogotá
+AUR-SON-001,Auriculares Sony,2024-11-13,17,salida,222.24,Medellín
+WEB-4K-001,Webcam 4K,2024-11-17,9,salida,117.48,Bogotá
+LAP-HP15-001,Laptop HP 15,2024-11-24,6,salida,394.1,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-11-27,8,salida,224.49,Cali
+AUR-BOQ-002,Auriculares Bose QC,2024-11-28,8,salida,388.11,Cali
+AUR-SON-001,Auriculares Sony,2024-11-28,13,salida,222.24,Bucaramanga
+CAB-USB-001,Cable USB-C 2m,2024-11-28,17,salida,430.01,Cali
+MON-LG-002,Monitor LG 27,2024-11-28,3,salida,68.42,Medellín
+IMP-HP-001,Impresora HP LaserJet,2024-12-01,2,salida,487.93,Cali
+WEB-4K-001,Webcam 4K,2024-12-01,7,salida,117.48,Bucaramanga
+PAN-CAR-001,Pantalón Cargo,2024-12-02,17,salida,317.67,Cali
+ACE-COC-001,Aceite de Coco 500ml,2024-12-03,23,salida,279.52,Bucaramanga
+LAP-DEL-002,Laptop Dell XPS,2024-12-05,8,salida,381.76,Cali
+LAP-HP15-001,Laptop HP 15,2024-12-05,13,salida,394.1,Barranquilla
+MOU-LOG-001,Mouse Logitech MX,2024-12-05,17,salida,463.75,Bogotá
+AUR-BOQ-002,Auriculares Bose QC,2024-12-06,13,salida,388.11,Cali
+AUR-SON-001,Auriculares Sony,2024-12-06,33,salida,222.24,Medellín
+CAB-USB-001,Cable USB-C 2m,2024-12-06,49,salida,430.01,Medellín
+CAM-WOR-001,Camiseta Work,2024-12-06,52,salida,350.2,Cali
+CAR-65W-001,Cargador 65W,2024-12-06,37,salida,51.62,Bucaramanga
+IMP-HP-001,Impresora HP LaserJet,2024-12-06,4,salida,487.93,Bucaramanga
+MON-LG-002,Monitor LG 27,2024-12-06,5,salida,68.42,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-12-06,8,salida,227.94,Cali
+RAM-16G-001,RAM 16GB DDR4,2024-12-06,16,salida,323.71,Cali
+SSD-500-001,SSD 500GB,2024-12-06,27,salida,412.27,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-12-06,13,salida,224.49,Bogotá
+WEB-4K-001,Webcam 4K,2024-12-06,13,salida,117.48,Bogotá
+ACE-COC-001,Aceite de Coco 500ml,2024-12-07,53,salida,279.52,Cali
+CAF-GRA-001,Café Grano 1kg,2024-12-07,35,salida,36.59,Medellín
+ZAP-DEP-001,Zapatos Deportivos,2024-12-07,33,salida,414.68,Bucaramanga
+MOU-APP-002,Mouse Apple Magic,2024-12-10,7,salida,188.55,Medellín
+MOU-LOG-001,Mouse Logitech MX,2024-12-10,11,salida,463.75,Bucaramanga
+CAB-USB-001,Cable USB-C 2m,2024-12-15,27,salida,430.01,Medellín
+RAM-16G-001,RAM 16GB DDR4,2024-12-17,11,salida,323.71,Cali
+WEB-4K-001,Webcam 4K,2024-12-17,7,salida,117.48,Bogotá
+LAP-DEL-002,Laptop Dell XPS,2024-12-25,8,salida,381.76,Medellín
+AUR-BOQ-002,Auriculares Bose QC,2024-12-26,19,salida,388.11,Barranquilla
+AUR-SON-001,Auriculares Sony,2024-12-26,34,salida,222.24,Bucaramanga
+MON-LG-002,Monitor LG 27,2024-12-26,6,salida,68.42,Barranquilla
+MON-SAM-001,Monitor Samsung 24,2024-12-26,10,salida,227.94,Bogotá
+MOU-APP-002,Mouse Apple Magic,2024-12-26,13,salida,188.55,Medellín
+TEC-MEC-001,Teclado Mecánico,2024-12-26,13,salida,224.49,Bogotá
+CAR-65W-001,Cargador 65W,2024-12-27,38,salida,51.62,Bogotá
+IMP-HP-001,Impresora HP LaserJet,2024-12-27,4,salida,487.93,Cali
+RAM-16G-001,RAM 16GB DDR4,2024-12-27,17,salida,323.71,Cali
+SSD-500-001,SSD 500GB,2024-12-27,19,salida,412.27,Cali
+WEB-4K-001,Webcam 4K,2024-12-27,12,salida,117.48,Barranquilla
+ACE-COC-001,Aceite de Coco 500ml,2024-12-28,60,salida,279.52,Cali
+CAF-GRA-001,Café Grano 1kg,2024-12-28,36,salida,36.59,Barranquilla
+PAN-CAR-001,Pantalón Cargo,2024-12-28,37,salida,317.67,Bogotá
+ZAP-DEP-001,Zapatos Deportivos,2024-12-28,25,salida,414.68,Bogotá
+MON-SAM-001,Monitor Samsung 24,2024-12-31,4,salida,227.94,Cali
+MOU-APP-002,Mouse Apple Magic,2024-12-31,7,salida,188.55,Barranquilla
+MOU-LOG-001,Mouse Logitech MX,2024-12-31,9,salida,463.75,Bogotá
+TEC-MEC-001,Teclado Mecánico,2024-12-31,8,salida,224.49,Medellín
+CAB-USB-001,Cable USB-C 2m,2025-01-03,24,salida,430.01,Cali
+SSD-500-001,SSD 500GB,2025-01-04,13,salida,412.27,Bogotá
+PAN-CAR-001,Pantalón Cargo,2025-01-08,15,salida,317.67,Medellín
+ZAP-DEP-001,Zapatos Deportivos,2025-01-08,15,salida,414.68,Barranquilla
