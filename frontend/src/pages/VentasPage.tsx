@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
+import { Upload } from 'lucide-react'
 import { api, fmt } from '../services/api'
 import type { Venta, Producto, VentaCreateDetalle, VentaHistorialItem, Usuario, OpcionCatalogo } from '../types'
 import { useRol } from '../hooks/useRol'
 import { FloatCard, FloatSection } from '../components/FloatCard'
+import ImportCsvModal from '../components/ImportCsvModal'
 
 export default function VentasPage({ usuario }: { usuario: Usuario | null }) {
   const { esAdmin } = useRol(usuario)
@@ -11,6 +13,7 @@ export default function VentasPage({ usuario }: { usuario: Usuario | null }) {
   const [historialVentas, setHistorialVentas] = useState<VentaHistorialItem[]>([])
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
+  const [importOpen, setImportOpen] = useState(false)
   const [detalleOpen, setDetalleOpen] = useState<number | null>(null)
   const [tab, setTab] = useState<'lista' | 'historial'>('lista')
   const [historialProdId, setHistorialProdId] = useState<number>(0)
@@ -120,6 +123,10 @@ export default function VentasPage({ usuario }: { usuario: Usuario | null }) {
           <span className="text-xs text-t2">a</span>
           <input type="date" className="text-xs px-2.5 py-[7px] rounded-lg border-[0.5px] border-border bg-bg1 text-t1 font-sans w-full max-w-[160px]" value={hasta} onChange={e => setHasta(e.target.value)} />
           <div className="ml-auto flex gap-2">
+            <button onClick={() => setImportOpen(true)}
+              className="flex items-center gap-1.5 text-xs px-3 py-[7px] rounded-lg cursor-pointer font-sans bg-transparent text-t1 border-[0.5px] border-border">
+              <Upload className="w-3.5 h-3.5" /> Cargar CSV
+            </button>
             <button onClick={() => { setForm({ sede: '', items: [{ producto_id: 0, cantidad: 1, precio_unitario: 0 }] }); setModalOpen(true) }}
               className="text-xs px-3.5 py-[7px] rounded-lg cursor-pointer font-sans border-0 bg-[#1D9E75] text-white">
               + Nueva venta
@@ -221,6 +228,11 @@ export default function VentasPage({ usuario }: { usuario: Usuario | null }) {
             </FloatSection>
         }
       </>}
+
+      {/* Modal cargar CSV de ventas */}
+      {importOpen && (
+        <ImportCsvModal tipo="ventas" onClose={() => setImportOpen(false)} onDone={cargar} />
+      )}
 
       {/* Modal nueva venta */}
       {modalOpen && (

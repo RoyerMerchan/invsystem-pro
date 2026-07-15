@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from 'react'
 import { api } from '../services/api'
 import type { Proveedor, Usuario } from '../types'
 import { FloatCard, FloatSection, KpiFloat } from '../components/FloatCard'
+import ImportCsvModal from '../components/ImportCsvModal'
 import { useRol } from '../hooks/useRol'
-import { Truck, Building2, Phone, Mail, MapPin, Edit3, Trash2, Plus, Search, CheckCircle, PauseCircle, AlertCircle, Eye, User } from 'lucide-react'
+import { Truck, Building2, Phone, Mail, MapPin, Edit3, Trash2, Plus, Search, CheckCircle, PauseCircle, AlertCircle, Eye, User, Upload } from 'lucide-react'
 
 const BLANK = { nombre: '', contacto: '', email: '', telefono: '', direccion: '', activo: true }
 
@@ -68,6 +69,7 @@ export default function ProveedoresPage({ usuario }: Props) {
   const [query, setQuery] = useState('')
   const [soloActivos, setSoloActivos] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
+  const [importOpen, setImportOpen] = useState(false)
   const [form, setForm] = useState(BLANK)
   const [editId, setEditId] = useState<number | null>(null)
   const [saving, setSaving] = useState(false)
@@ -178,11 +180,18 @@ export default function ProveedoresPage({ usuario }: Props) {
             Solo activos
           </label>
           {esAdmin && (
-            <button onClick={() => abrirModal()}
-              className="ml-auto text-sm px-4 py-2 rounded-lg border-none bg-primary text-white cursor-pointer font-semibold"
-              style={{ boxShadow: '0 4px 12px rgba(29,158,117,0.3)' }}>
-              + Nuevo proveedor
-            </button>
+            <div className="ml-auto flex gap-2">
+              <button onClick={() => setImportOpen(true)}
+                className="flex items-center gap-1.5 text-sm px-3.5 py-2 rounded-lg bg-transparent text-t1 cursor-pointer font-medium"
+                style={{ border: '0.5px solid var(--border)' }}>
+                <Upload className="w-3.5 h-3.5" /> Cargar CSV
+              </button>
+              <button onClick={() => abrirModal()}
+                className="text-sm px-4 py-2 rounded-lg border-none bg-primary text-white cursor-pointer font-semibold"
+                style={{ boxShadow: '0 4px 12px rgba(29,158,117,0.3)' }}>
+                + Nuevo proveedor
+              </button>
+            </div>
           )}
         </div>
       </FloatCard>
@@ -213,6 +222,11 @@ export default function ProveedoresPage({ usuario }: Props) {
             <ProveedorCard key={p.id} p={p} esAdmin={esAdmin} onEditar={abrirModal} onDesactivar={desactivar} />
           ))}
         </div>
+      )}
+
+      {/* Modal cargar CSV de proveedores */}
+      {importOpen && (
+        <ImportCsvModal tipo="proveedores" onClose={() => setImportOpen(false)} onDone={cargar} />
       )}
 
       {/* Modal */}

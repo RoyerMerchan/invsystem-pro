@@ -199,6 +199,40 @@ export default function DashboardPage() {
         {kpis.map(k => <KpiCard key={k.label} {...k} />)}
       </div>
 
+      {/* Mayor demanda + Menor rotación — subido al segundo lugar */}
+      <div className="grid-2 mb-4">
+        <FloatCard style={{ padding: 20 }}>
+          <div className="text-[13px] font-semibold mb-3">Mayor demanda (30 días)</div>
+          {topDemanda.length === 0
+            ? <div className="text-[12px] text-t2">Sin datos</div>
+            : <div className="flex flex-col gap-2">
+                {topDemanda.map((t, i) => (
+                  <div key={t.id} className="flex items-center gap-[10px] py-1.5 border-b border-border">
+                    <div className="w-[22px] h-[22px] rounded-[6px] text-white text-[10px] font-bold flex items-center justify-center" style={{ background: COLORS[i] }}>{i + 1}</div>
+                    <div className="flex-1 text-[12px]">{t.nombre}</div>
+                    <div className="text-[12px] font-semibold text-primary">{t.total_vendido} u.</div>
+                  </div>
+                ))}
+              </div>
+          }
+        </FloatCard>
+        <FloatCard style={{ padding: 20 }}>
+          <div className="text-[13px] font-semibold mb-3">Menor rotación (60 días)</div>
+          {menorRotacion.length === 0
+            ? <div className="text-[12px] text-t2">Sin datos</div>
+            : <div className="flex flex-col gap-2">
+                {menorRotacion.map((t, i) => (
+                  <div key={t.id} className="flex items-center gap-[10px] py-1.5 border-b border-border">
+                    <div className="w-[22px] h-[22px] rounded-[6px] bg-warning text-white text-[10px] font-bold flex items-center justify-center">{i + 1}</div>
+                    <div className="flex-1 text-[12px]">{t.nombre}</div>
+                    <div className="text-[12px] font-semibold text-warning">{t.total_vendido_60d} u.</div>
+                  </div>
+                ))}
+              </div>
+          }
+        </FloatCard>
+      </div>
+
       {/* Gráficas flotantes */}
       <div className="grid-2 mb-4">
         <FloatCard style={{ padding: 20 }}>
@@ -298,71 +332,6 @@ export default function DashboardPage() {
         </ResponsiveContainer>
       </FloatCard>
 
-      {/* Top demanda + Menor rotación */}
-      <div className="grid-2 mb-4">
-        <FloatCard style={{ padding: 20 }}>
-          <div className="text-[13px] font-semibold mb-3">Mayor demanda (30 días)</div>
-          {topDemanda.length === 0
-            ? <div className="text-[12px] text-t2">Sin datos</div>
-            : <div className="flex flex-col gap-2">
-                {topDemanda.map((t, i) => (
-                  <div key={t.id} className="flex items-center gap-[10px] py-1.5 border-b border-border">
-                    <div className="w-[22px] h-[22px] rounded-[6px] text-white text-[10px] font-bold flex items-center justify-center" style={{ background: COLORS[i] }}>{i + 1}</div>
-                    <div className="flex-1 text-[12px]">{t.nombre}</div>
-                    <div className="text-[12px] font-semibold text-primary">{t.total_vendido} u.</div>
-                  </div>
-                ))}
-              </div>
-          }
-        </FloatCard>
-        <FloatCard style={{ padding: 20 }}>
-          <div className="text-[13px] font-semibold mb-3">Menor rotación (60 días)</div>
-          {menorRotacion.length === 0
-            ? <div className="text-[12px] text-t2">Sin datos</div>
-            : <div className="flex flex-col gap-2">
-                {menorRotacion.map((t, i) => (
-                  <div key={t.id} className="flex items-center gap-[10px] py-1.5 border-b border-border">
-                    <div className="w-[22px] h-[22px] rounded-[6px] bg-warning text-white text-[10px] font-bold flex items-center justify-center">{i + 1}</div>
-                    <div className="flex-1 text-[12px]">{t.nombre}</div>
-                    <div className="text-[12px] font-semibold text-warning">{t.total_vendido_60d} u.</div>
-                  </div>
-                ))}
-              </div>
-          }
-        </FloatCard>
-      </div>
-
-      {/* Alertas flotantes */}
-      {(stats.sin_stock > 0 || stats.stock_bajo > 0) && (
-        <div className="grid-2">
-          {stats.sin_stock > 0 && (
-            <FloatCard style={{ padding: '16px 20px' }}>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-danger-subtle flex items-center justify-center shrink-0">
-                  <CircleX className="w-5 h-5 text-danger" />
-                </div>
-                <div>
-                  <div className="text-[13px] font-bold text-danger">{stats.sin_stock} sin stock</div>
-                  <div className="text-[11px] text-t2">Productos agotados — acción inmediata</div>
-                </div>
-              </div>
-            </FloatCard>
-          )}
-          {stats.stock_bajo > 0 && (
-            <FloatCard style={{ padding: '16px 20px' }}>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-warning-subtle flex items-center justify-center shrink-0">
-                  <AlertTriangle className="w-5 h-5 text-warning" />
-                </div>
-                <div>
-                  <div className="text-[13px] font-bold text-warning">{stats.stock_bajo} stock bajo</div>
-                  <div className="text-[11px] text-t2">Requieren reposición pronto</div>
-                </div>
-              </div>
-            </FloatCard>
-          )}
-        </div>
-      )}
     </div>
   )
 }

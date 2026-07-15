@@ -15,14 +15,13 @@ import ProveedoresPage from './pages/ProveedoresPage'
 import UsuariosPage from './pages/UsuariosPage'
 import CatalogosPage from './pages/CatalogosPage'
 import VentasPage from './pages/VentasPage'
-import ValidacionPage from './pages/ValidacionPage'
 import XAIPage from './pages/XAIPage'
 import ImportarPage from './pages/ImportarPage'
 import LoginPage, { RegisterPage } from './pages/LoginPage'
 import { useRol } from './hooks/useRol'
 import type { Usuario } from './types'
 
-type Page = 'dashboard' | 'inventario' | 'alertas' | 'proyecciones' | 'xai' | 'reportes' | 'scanner' | 'proveedores' | 'ventas' | 'validacion' | 'usuarios' | 'importar' | 'catalogos'
+type Page = 'dashboard' | 'inventario' | 'alertas' | 'proyecciones' | 'xai' | 'reportes' | 'scanner' | 'proveedores' | 'ventas' | 'usuarios' | 'importar' | 'catalogos'
 type AuthPage = 'login' | 'registro'
 
 function useIsMobile() {
@@ -39,8 +38,7 @@ const NAV_ICONS: Record<Page, React.ElementType> = {
   dashboard: LayoutDashboard, inventario: Package, alertas: Bell,
   proyecciones: TrendingUp, xai: Sparkles, reportes: BarChart3,
   ventas: Receipt, scanner: ScanLine, proveedores: Truck,
-  validacion: ShieldCheck, usuarios: Users, importar: Upload,
-  catalogos: Database,
+  usuarios: Users, importar: Upload, catalogos: Database,
 }
 
 export default function App() {
@@ -80,12 +78,11 @@ export default function App() {
     { id: 'inventario'   as Page, label: 'Inventario',   visible: true },
     { id: 'alertas'      as Page, label: 'Alertas',      visible: true },
     { id: 'proyecciones' as Page, label: 'Proyecciones', visible: !esConsulta },
-    { id: 'xai'          as Page, label: 'IA Explicable', visible: !esConsulta },
+    { id: 'xai'          as Page, label: 'IA',           visible: !esConsulta },
     { id: 'reportes'     as Page, label: 'Reportes',     visible: !esConsulta },
     { id: 'ventas'       as Page, label: 'Ventas',       visible: !esConsulta },
     { id: 'scanner'      as Page, label: 'Escáner',      visible: !esConsulta },
     { id: 'proveedores'  as Page, label: 'Proveedores',  visible: true },
-    { id: 'validacion'   as Page, label: 'Validación',   visible: !esConsulta },
     { id: 'importar'     as Page, label: 'Importar',     visible: !esConsulta },
     { id: 'catalogos'    as Page, label: 'Datos maestros', visible: esAdmin },
     { id: 'usuarios'     as Page, label: 'Usuarios',     visible: esAdmin },
@@ -239,7 +236,6 @@ export default function App() {
           {page === 'scanner'      && <ScannerPage />}
           {page === 'proveedores'  && <ProveedoresPage usuario={usuario} />}
           {page === 'ventas'       && <VentasPage usuario={usuario} />}
-          {page === 'validacion'   && <ValidacionPage />}
           {page === 'importar'     && <ImportarPage />}
           {page === 'catalogos'    && <CatalogosPage usuario={usuario} />}
           {page === 'usuarios'     && <UsuariosPage usuario={usuario} />}

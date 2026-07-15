@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
+import { Upload } from 'lucide-react'
 import { api, fmt } from '../services/api'
 import type { Producto, Usuario, OpcionCatalogo, TipoControl } from '../types'
 import { FloatCard } from '../components/FloatCard'
+import ImportCsvModal from '../components/ImportCsvModal'
 import { PageHeader } from './DashboardPage'
 import { useRol } from '../hooks/useRol'
 
@@ -48,6 +50,7 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
   const [catFilter, setCatFilter] = useState('')
   const [inactivos, setInactivos] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
+  const [importOpen, setImportOpen] = useState(false)
   const [movModalOpen, setMovModalOpen] = useState(false)
   const [form, setForm] = useState<ProductoForm>(BLANK)
   const [movForm, setMovForm] = useState({ producto_id: 0, tipo: 'entrada', cantidad: 1, motivo: '' })
@@ -168,6 +171,12 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
           Ver inactivos
         </label>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
+          {esAdmin && (
+            <button onClick={() => setImportOpen(true)}
+              style={{ fontSize: 12, padding: '7px 14px', borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit', background: 'transparent', color: 'var(--t1)', border: '0.5px solid var(--border)', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <Upload className="w-3.5 h-3.5" /> Cargar CSV
+            </button>
+          )}
           <Btn label="+ Movimiento" onClick={() => { setMovForm({ producto_id: productos[0]?.id ?? 0, tipo: 'entrada', cantidad: 1, motivo: '' }); setMovModalOpen(true) }} />
           {esAdmin && <Btn label="+ Producto" primary onClick={() => { setForm({ ...BLANK, categoria: categorias[0] ?? '', unidad_medida: unidades[0] ?? 'unidad' }); setEditId(null); setModalOpen(true) }} />}
         </div>
@@ -223,6 +232,11 @@ export default function InventarioPage({ usuario }: { usuario: Usuario | null })
         <span>Mostrando <b>{filtrados.length}</b> de {productos.length} productos</span>
         <span>Valor total filtrado: <b>{fmt(filtrados.reduce((a, p) => a + p.stock_actual * p.precio_unitario, 0))}</b></span>
       </div>
+
+      {/* Modal cargar CSV de inventario */}
+      {importOpen && (
+        <ImportCsvModal tipo="inventario" onClose={() => setImportOpen(false)} onDone={cargar} />
+      )}
 
       {/* Modal nuevo/editar producto */}
       {modalOpen && (

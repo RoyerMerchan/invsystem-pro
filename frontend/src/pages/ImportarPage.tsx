@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react'
-import { Upload, FileSpreadsheet, CheckCircle, XCircle, AlertTriangle, Download, Loader2, Table } from 'lucide-react'
+import { Upload, FileSpreadsheet, CheckCircle, XCircle, AlertTriangle, Download, Loader2, Table, Package, Truck, Receipt } from 'lucide-react'
 import { apiUrl } from '../services/api'
 import { FloatCard, FloatSection } from '../components/FloatCard'
+import CsvImporter from '../components/CsvImporter'
 
 interface FilaPreview {
   sku: string; nombre: string; fecha: string; cantidad: number; tipo: string; precio_unitario: number; sede: string
@@ -119,6 +120,7 @@ export default function ImportarPage() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<ImportResult | null>(null)
   const [error, setError] = useState('')
+  const [tab, setTab] = useState<'ventas' | 'inventario' | 'proveedores'>('ventas')
   const inputRef = useRef<HTMLInputElement>(null)
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -207,23 +209,95 @@ export default function ImportarPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <div className="text-xl font-bold text-t1 tracking-tight">Importar datos hist&oacute;ricos</div>
-        <div className="text-xs text-muted mt-1">Sube un CSV con ventas pasadas para alimentar las proyecciones de demanda</div>
+      <div className="mb-5">
+        <div className="text-xl font-bold text-t1 tracking-tight">Importar datos desde CSV</div>
+        <div className="text-xs text-muted mt-1">Carga ventas hist&oacute;ricas, inventario o proveedores. Cada secci&oacute;n tambi&eacute;n tiene su propio bot&oacute;n &laquo;Cargar CSV&raquo;.</div>
       </div>
 
-      {/* Drop zone */}
-      <FloatCard hover={false} style={{ padding: 0, marginBottom: 20 }}>
+      {/* Pestañas por tipo de dato */}
+      <div className="flex gap-1 mb-5 bg-bg2 p-1 rounded-xl flex-wrap">
+        {([
+          { id: 'ventas', label: 'Ventas / Demanda', icon: <Receipt className="w-4 h-4" /> },
+          { id: 'inventario', label: 'Inventario', icon: <Package className="w-4 h-4" /> },
+          { id: 'proveedores', label: 'Proveedores', icon: <Truck className="w-4 h-4" /> },
+        ] as const).map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)}
+            className={`flex-1 min-w-[140px] flex items-center justify-center gap-2 px-3 py-2 rounded-lg border-none cursor-pointer text-xs transition-colors ${
+              tab === t.id ? 'bg-surface text-t1 shadow-sm font-semibold' : 'bg-transparent text-muted hover:text-t1 font-medium'
+            }`}>
+            {t.icon} {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'inventario' && <CsvImporter tipo="inventario" />}
+      {tab === 'proveedores' && <CsvImporter tipo="proveedores" />}
+
+      {tab === 'ventas' && (<>
+      {/* Zona de carga única: seleccionar → vista previa → importar en un solo recuadro */}
+      <FloatCard hover={false} style={{ padding: 0, marginBottom: 20, overflow: 'hidden' }}>
         <div
           onClick={() => inputRef.current?.click()}
-          className="flex flex-col items-center justify-center py-16 px-6 cursor-pointer rounded-xl border-2 border-dashed border-border hover:border-primary hover:bg-primary-subtle/50 transition-all duration-200"
+          className={`flex flex-col items-center justify-center px-6 cursor-pointer border-2 border-dashed border-border hover:border-primary hover:bg-primary-subtle/50 transition-all duration-200 ${preview.length > 0 ? 'py-8 rounded-t-xl' : 'py-16 rounded-xl'}`}
         >
           <Upload className="w-10 h-10 text-muted mb-4" />
-          <div className="text-sm font-semibold text-t1 mb-1">Haz clic para seleccionar archivo CSV</div>
+          <div className="text-sm font-semibold text-t1 mb-1">
+            {file ? `Archivo seleccionado: ${file.name} — clic para cambiar` : 'Haz clic para seleccionar archivo CSV'}
+          </div>
           <div className="text-xs text-muted">Formato principal: <b>sku, nombre, fecha, cantidad, tipo, precio, sede</b></div>
           <div className="text-[11px] text-muted/70 mt-1">Obligatorias: fecha, cantidad y (sku o nombre) · se adapta a otros formatos y nombres de columna · delimitador , ; tab o | · fechas AAAA-MM-DD o DD/MM/AAAA</div>
           <input ref={inputRef} type="file" accept=".csv" onChange={handleFile} className="hidden" />
         </div>
+
+        {/* Vista previa + importar dentro del mismo recuadro */}
+        {preview.length > 0 && (
+          <div className="border-t border-border p-4">
+            <div className="text-[11px] font-semibold text-muted uppercase tracking-wider mb-2">
+              Vista previa · primeras {preview.length} filas del archivo
+            </div>
+            <div className="table-wrap">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">SKU</th>
+                    <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Nombre</th>
+                    <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Fecha</th>
+                    <th className="text-right font-medium text-muted px-3 py-2 uppercase tracking-wider">Cantidad</th>
+                    <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Tipo</th>
+                    <th className="text-right font-medium text-muted px-3 py-2 uppercase tracking-wider">Precio</th>
+                    <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Sede</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {preview.map((r, i) => (
+                    <tr key={i} className="border-b border-border hover:bg-bg2 transition-colors">
+                      <td className="px-3 py-2.5 font-mono text-t1">{r.sku || '—'}</td>
+                      <td className="px-3 py-2.5 text-t1">{r.nombre || '—'}</td>
+                      <td className="px-3 py-2.5 text-t1">{r.fecha}</td>
+                      <td className="px-3 py-2.5 text-right font-semibold text-t1">{r.cantidad}</td>
+                      <td className="px-3 py-2.5">
+                        <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${r.tipo === 'entrada' ? 'bg-info-subtle text-info' : 'bg-success-subtle text-success'}`}>
+                          {r.tipo === 'entrada' ? 'entrada' : 'salida'}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2.5 text-right text-muted">${r.precio_unitario.toFixed(2)}</td>
+                      <td className="px-3 py-2.5 text-muted">{r.sede || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <button onClick={importar} disabled={loading || !file}
+              className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white text-sm font-semibold border-none cursor-pointer hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              {loading ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Importando...</>
+              ) : (
+                <><Upload className="w-4 h-4" /> Importar {file?.name}</>
+              )}
+            </button>
+          </div>
+        )}
       </FloatCard>
 
       {/* Plantilla / Exportar */}
@@ -238,53 +312,6 @@ export default function ImportarPage() {
           Exportar ventas (re-importable)
         </button>
       </div>
-
-      {/* Preview */}
-      {preview.length > 0 && (
-        <FloatSection title="Vista previa" sub={`Primeras ${preview.length} filas del archivo`}>
-          <div className="table-wrap">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">SKU</th>
-                  <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Nombre</th>
-                  <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Fecha</th>
-                  <th className="text-right font-medium text-muted px-3 py-2 uppercase tracking-wider">Cantidad</th>
-                  <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Tipo</th>
-                  <th className="text-right font-medium text-muted px-3 py-2 uppercase tracking-wider">Precio</th>
-                  <th className="text-left font-medium text-muted px-3 py-2 uppercase tracking-wider">Sede</th>
-                </tr>
-              </thead>
-              <tbody>
-                {preview.map((r, i) => (
-                  <tr key={i} className="border-b border-border hover:bg-bg2 transition-colors">
-                    <td className="px-3 py-2.5 font-mono text-t1">{r.sku || '—'}</td>
-                    <td className="px-3 py-2.5 text-t1">{r.nombre || '—'}</td>
-                    <td className="px-3 py-2.5 text-t1">{r.fecha}</td>
-                    <td className="px-3 py-2.5 text-right font-semibold text-t1">{r.cantidad}</td>
-                    <td className="px-3 py-2.5">
-                      <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${r.tipo === 'entrada' ? 'bg-info-subtle text-info' : 'bg-success-subtle text-success'}`}>
-                        {r.tipo === 'entrada' ? 'entrada' : 'salida'}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2.5 text-right text-muted">${r.precio_unitario.toFixed(2)}</td>
-                    <td className="px-3 py-2.5 text-muted">{r.sede || '—'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <button onClick={importar} disabled={loading || !file}
-            className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white text-sm font-semibold border-none cursor-pointer hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-            {loading ? (
-              <><Loader2 className="w-4 h-4 animate-spin" /> Importando...</>
-            ) : (
-              <><Upload className="w-4 h-4" /> Importar {file?.name}</>
-            )}
-          </button>
-        </FloatSection>
-      )}
 
       {error && (
         <FloatCard color="#EF4444" style={{ padding: '14px 18px', marginBottom: 16 }}>
@@ -387,16 +414,12 @@ export default function ImportarPage() {
       )}
 
       {!file && !result && (
-        <FloatCard hover={false} style={{ padding: '60px 20px', textAlign: 'center' }}>
-          <FileSpreadsheet className="w-12 h-12 text-muted mx-auto mb-4" />
-          <div className="text-sm font-semibold text-t1 mb-2">Sube un archivo CSV</div>
-          <div className="text-xs text-muted max-w-md mx-auto leading-relaxed">
-            Formato principal: <b>sku, nombre, fecha, cantidad, tipo, precio, sede</b>.
-            El sistema crea automáticamente las ventas (tipo <b>salida</b>) y los movimientos de inventario;
-            las filas <b>entrada</b> suman stock. Obligatorias: <b>fecha</b>, <b>cantidad</b> y (<b>sku</b> o <b>nombre</b>).
-          </div>
-        </FloatCard>
+        <div className="text-[11px] text-muted/80 leading-relaxed px-1">
+          El sistema crea autom&aacute;ticamente las ventas (tipo <b>salida</b>) y los movimientos de inventario;
+          las filas <b>entrada</b> suman stock. Obligatorias: <b>fecha</b>, <b>cantidad</b> y (<b>sku</b> o <b>nombre</b>).
+        </div>
       )}
+      </>)}
     </div>
   )
 }

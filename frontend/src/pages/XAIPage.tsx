@@ -5,9 +5,10 @@ import {
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { Brain, Scale, Search, TrendingUp, TrendingDown, BarChart3, Package, Timer, Lightbulb, FolderOpen, Trophy, Loader2, AlertTriangle, Ruler } from 'lucide-react'
+import { Brain, Scale, Search, TrendingUp, TrendingDown, BarChart3, Package, Timer, Lightbulb, FolderOpen, Trophy, Loader2, AlertTriangle, Ruler, Crosshair } from 'lucide-react'
 import { api } from '../services/api'
 import { FloatCard } from '../components/FloatCard'
+import ValidacionPage from './ValidacionPage'
 import type { Producto } from '../types'
 
 const C = { teal: '#1D9E75', blue: '#2563EB', amber: '#D97706', coral: '#DC2626', purple: '#7C3AED' }
@@ -58,6 +59,7 @@ export default function XAIPage() {
   const [data, setData] = useState<XAIData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [seccion, setSeccion] = useState<'analisis' | 'validacion'>('analisis')
   const [tab, setTab] = useState<'resumen' | 'factores' | 'razonamiento' | 'grafica'>('resumen')
 
   useEffect(() => {
@@ -105,18 +107,38 @@ export default function XAIPage() {
   return (
     <div>
       {/* Header */}
-      <div className="mb-5">
+      <div className="mb-4">
         <div className="flex items-center gap-[10px] mb-1">
           <div style={{ width: 36, height: 36, borderRadius: 10, background: `linear-gradient(135deg, ${C.purple}, ${C.blue})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Brain className="w-5 h-5" style={{color: 'white'}} />
           </div>
           <div>
-            <div className="text-xl font-bold">IA Explicable — XAI</div>
-            <div className="text-xs text-t2">Explainable Artificial Intelligence · Proyecciones con razonamiento transparente</div>
+            <div className="text-xl font-bold">Inteligencia Artificial</div>
+            <div className="text-xs text-t2">Proyecciones con razonamiento transparente y validaci&oacute;n de precisi&oacute;n</div>
           </div>
         </div>
       </div>
 
+      {/* Secciones IA: Análisis + Validación */}
+      <div className="flex gap-1 mb-4 bg-bg2 p-1 rounded-[10px] flex-wrap">
+        {([
+          { id: 'analisis', label: <><Brain className="w-4 h-4" /> An&aacute;lisis IA</> },
+          { id: 'validacion', label: <><Crosshair className="w-4 h-4" /> Validaci&oacute;n</> },
+        ] as const).map(s => (
+          <button key={s.id} onClick={() => setSeccion(s.id)} style={{
+            flex: 1, minWidth: 140, padding: '8px 12px', borderRadius: 7, border: 'none', cursor: 'pointer',
+            fontFamily: 'inherit', fontSize: 12, fontWeight: seccion === s.id ? 600 : 400,
+            background: seccion === s.id ? 'var(--bg1)' : 'transparent',
+            color: seccion === s.id ? 'var(--t1)' : 'var(--t2)',
+            boxShadow: seccion === s.id ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
+            display: 'inline-flex', alignItems: 'center', gap: 6, justifyContent: 'center',
+          }}>{s.label}</button>
+        ))}
+      </div>
+
+      {seccion === 'validacion' && <ValidacionPage />}
+
+      {seccion === 'analisis' && (<>
       {/* Config panel */}
       <div className="bg-bg1 border border-border rounded-xl p-4 mb-4">
         <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3 items-end">
@@ -146,7 +168,7 @@ export default function XAIPage() {
             fontWeight: 600, opacity: loading ? 0.7 : 1, borderRadius: 9,
             display: 'inline-flex', alignItems: 'center', gap: 6, justifyContent: 'center',
           }}>
-            {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Analizando…</> : <><Brain className="w-4 h-4" /> Analizar con XAI</>}
+            {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Analizando…</> : <><Brain className="w-4 h-4" /> Analizar con IA</>}
           </button>
         </div>
       </div>
@@ -158,9 +180,9 @@ export default function XAIPage() {
       {!data && !loading && (
         <div className="text-center py-20 px-5 text-t2">
           <div className="flex justify-center mb-4"><Brain className="w-[56px] h-[56px]" style={{color: 'var(--t3)'}} /></div>
-          <div className="text-base font-semibold mb-2">IA Explicable lista para analizar</div>
+          <div className="text-base font-semibold mb-2">IA lista para analizar</div>
           <div className="text-[13px] max-w-[440px] mx-auto leading-[1.6]">
-            Selecciona un producto y presiona <b>Analizar con XAI</b>. El sistema explicará
+            Selecciona un producto y presiona <b>Analizar con IA</b>. El sistema explicará
             en lenguaje natural por qué predice lo que predice, qué factores influyen
             y qué acción se recomienda tomar.
           </div>
@@ -449,6 +471,7 @@ export default function XAIPage() {
           )}
         </>
       )}
+      </>)}
     </div>
   )
 }

@@ -6,19 +6,30 @@ Cualquier usuario autenticado puede listar.
 """
 
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File, status
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
+from app.core.security import sanitizar_texto
 from app.models.models import Proveedor, Producto, Usuario
 from app.routers.auth import get_current_user
 from app.schemas import (
     ProveedorCreate, ProveedorUpdate,
     ProveedorResponse, ProveedorResumen,
 )
+from app.services.csv_import import decodificar, leer_csv
 
 router = APIRouter()
+
+# Alias de columnas para importar proveedores (cabeceras ya normalizadas).
+PROVEEDOR_ALIAS: dict[str, list[str]] = {
+    "nombre": ["nombre", "proveedor", "empresa", "razon_social", "company", "name", "supplier"],
+    "contacto": ["contacto", "contact", "persona", "persona_contacto", "responsable", "encargado", "vendedor"],
+    "email": ["email", "correo", "e_mail", "mail", "correo_electronico"],
+    "telefono": ["telefono", "phone", "tel", "celular", "movil", "numero", "contacto_telefono"],
+    "direccion": ["direccion", "address", "dir", "ubicacion", "domicilio"],
+}
 
 
 
@@ -122,6 +133,88 @@ async def crear_proveedor(
     await db.flush()
     await db.refresh(proveedor)
     return proveedor
+
+
+# ── POST /importar ── Importar proveedores desde CSV (solo admin) ─
+@router.post("/importar", summary="Importar proveedores desde CSV (admin)")
+async def importar_proveedores_csv(
+    file: UploadFile = File(...),
+    db: AsyncSession = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user),
+):
+    """Crea o actualiza proveedores desde un CSV.
+
+    Se empareja por **nombre** (sin distinguir mayúsculas): si ya existe se
+    actualizan los campos presentes; si no, se crea. Única columna obligatoria:
+    **nombre**.
+    """
+    _require_admin(current_user)
+    if not (file.filename or "").lower().endswith(".csv"):
+        raise HTTPException(400, detail="Solo se aceptan archivos CSV.")
+
+    text = decodificar(await file.read())
+    filas, mapa, valor = leer_csv(text, PROVEEDOR_ALIAS)
+
+    if "nombre" not in mapa:
+        reconocidas = ", ".join(mapa) or "ninguna"
+        raise HTTPException(400, detail=f"Falta la columna obligatoria: nombre. Columnas reconocidas: {reconocidas}")
+
+    proveedores = (await db.execute(select(Proveedor))).scalars().all()
+    por_nombre = {(p.nombre or "").strip().lower(): p for p in proveedores}
+
+    results = {
+        "ok": 0, "creados": 0, "actualizados": 0,
+        "errores": [], "total_registros": len(filas), "detalles": [],
+    }
+
+    try:
+        for i, row in enumerate(filas, 2):  # fila 1 = cabecera
+            nombre = sanitizar_texto(valor(row, "nombre"), max_len=200)
+            if not nombre:
+                results["errores"].append({"linea": i, "error": "Nombre vacío", "sku": ""}); continue
+
+            # Longitudes acotadas a las columnas de la BD.
+            contacto = sanitizar_texto(valor(row, "contacto"), max_len=100) if "contacto" in mapa else None
+            direccion = sanitizar_texto(valor(row, "direccion")) if "direccion" in mapa else None
+            telefono = valor(row, "telefono").strip()[:30] if "telefono" in mapa else None
+            email = valor(row, "email").strip()[:200] if "email" in mapa else None
+            email = email or None  # cadena vacía -> None (la columna es nullable)
+
+            existente = por_nombre.get(nombre.strip().lower())
+            if existente:
+                if contacto is not None:
+                    existente.contacto = contacto
+                if direccion is not None:
+                    existente.direccion = direccion
+                if telefono is not None:
+                    existente.telefono = telefono
+                if email is not None:
+                    existente.email = email
+                results["actualizados"] += 1
+                results["detalles"].append({"accion": "actualizado", "nombre": nombre})
+            else:
+                nuevo = Proveedor(
+                    nombre=nombre,
+                    contacto=contacto or "",
+                    direccion=direccion or "",
+                    telefono=telefono or "",
+                    email=email,
+                    activo=True,
+                )
+                db.add(nuevo)
+                por_nombre[nombre.strip().lower()] = nuevo
+                results["creados"] += 1
+                results["detalles"].append({"accion": "creado", "nombre": nombre})
+
+        await db.flush()
+    except HTTPException:
+        raise
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(500, detail=f"Error durante la importación; no se guardó nada (se revirtió todo). Detalle: {e}")
+
+    results["ok"] = results["creados"] + results["actualizados"]
+    return results
 
 
 # ── PATCH /{id} ── Actualizar proveedor (solo admin) ─────────────
